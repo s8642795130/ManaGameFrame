@@ -80,6 +80,7 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PollNet.cpp" />
     <ClCompile Include="ServerNet.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
@@ -92,6 +93,7 @@
     <ClInclude Include="IApplication.h" />
     <ClInclude Include="IModule.h" />
     <ClInclude Include="IPlugin.h" />
+    <ClInclude Include="PollNet.h" />
     <ClInclude Include="ServerNet.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="ThreadRouter.h" />
