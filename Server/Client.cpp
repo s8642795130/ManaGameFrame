@@ -7,9 +7,9 @@ bool Client::ReadReady()
 	std::string data_buffer;
 
 	//we must drain the entire read buffer as we won't get another event until client sends more data
-	while (1)
+	while (true)
 	{
-		bytes_read = recv(fd_, buffer, size_t(1024), 0);
+		bytes_read = recv(m_fd, buffer, size_t(1024), 0);
 		if (bytes_read <= 0)
 			break;
 
@@ -20,9 +20,9 @@ bool Client::ReadReady()
 	if (data_buffer.length() == 0)
 		return true;
 
-	printf("[i] client %s:%d said: %s\n", inet_ntoa(client_addr_), client_port_, data_buffer.c_str());
+	// std::cout << "[i] client %s:%d said: %s\n", inet_ntoa(client_addr_), client_port_, data_buffer.c_str());
 
-	write(fd_, data_buffer.c_str(), data_buffer.size());
+	write(m_fd, data_buffer.c_str(), data_buffer.size());
 
 	//update last active time to prevent timeout
 	last_active_ = time(0);
@@ -43,7 +43,7 @@ bool Client::WriteReady()
 bool Client::HeartBeat()
 {
 	//if no operations occurred during timeout period return false to signal server to close socket
-	if (static_cast<time_t>(last_active_ + timeout_) < time(0))
+	if (static_cast<time_t>(last_active_ + m_timeout) < time(0))
 	{
 		printf("[i] connection %s:%d has timed out\n", inet_ntoa(client_addr_), client_port_);
 		return false;

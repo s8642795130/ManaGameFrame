@@ -2,6 +2,7 @@
 
 #include <netinet/in.h>
 #include <stdexcept>
+#include <string>
 
 
 /*
@@ -11,13 +12,16 @@
 */
 class ClientDescriptor
 {
+protected:
+	const int m_timeout = 30;
+	int m_fd = -1;
+	in_addr m_client_addr;
+	uint16_t m_client_port;
+	std::string m_uid;
 public:
-	ClientDescriptor(int fd, in_addr client_addr, uint16_t client_port, uint32_t timeout) :
-		fd_(fd),
-		client_addr_(client_addr),
-		client_port_(client_port),
-		timeout_(timeout)
+	ClientDescriptor()
 	{
+
 	}
 
 	virtual ~ClientDescriptor()
@@ -41,11 +45,11 @@ public:
 	virtual void ClientClose() { throw std::runtime_error("ClientClose() not implemented"); }
 
 	//client's unique id
-	int uid() { return fd_; }
+	const int GetSid() { return m_fd; }
 
-protected:
-	int fd_;
-	in_addr client_addr_;
-	uint16_t client_port_;
-	uint32_t timeout_;
+	// client uuid
+	const std::string& GetUid() const
+	{
+		return m_uid;
+	}
 };

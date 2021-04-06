@@ -1,23 +1,6 @@
-#include <iostream>
-
-#include <cstring>
-
-#include "ConfigFile.h"
-#include "Application.h"
-#include "ServerNet.h"
-#include "Client.h"
 #include "MasterObj.h"
 
-void SendData(int socket, const int& value)
-{
-    std::array<char, sizeof(value) + 4> buffer;
-    int len = sizeof(value);
-    std::memcpy(buffer.data(), &len, sizeof(len));
-    std::memcpy(buffer.data() + 4, &value, sizeof(value));
-    send(socket, buffer.data(), buffer.size(), 0);
-}
-
-int ConnectMaster()
+int MasterObj::ConnectMaster()
 {
     int sock_cli = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -34,8 +17,8 @@ int ConnectMaster()
         std::cout << "connect" << std::endl;
     }
 
-    
-    // char sendbuf[1024 * 4];
+
+    char sendbuf[1024 * 4];
     /*
     char recvbuf[BUFFER_SIZE];
 
@@ -57,23 +40,4 @@ int ConnectMaster()
     SendData(sock_cli, 4201);
 
     return sock_cli;
-}
-
-int main(int argc, char** argv)
-{
-	std::cout << "test !!!" << std::endl;
-
-	// application
-	std::shared_ptr<Application> app{ std::make_shared<Application>() };
-	app->StartThreadPool();
-
-	// Master
-    MasterObj* master_obj = new MasterObj();
-    master_obj->ConnectMaster();
-
-	ServerNet<Client> server("0.0.0.0", 3010, 30);
-    server.AddFD(master_obj);
-	server.EventLoop();
-
-	return 0;
 }
