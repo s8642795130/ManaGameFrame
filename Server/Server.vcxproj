@@ -80,6 +80,8 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MasterObj.cpp" />
+    <ClCompile Include="PollNet.cpp" />
     <ClCompile Include="ServerNet.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
@@ -92,6 +94,8 @@
     <ClInclude Include="IApplication.h" />
     <ClInclude Include="IModule.h" />
     <ClInclude Include="IPlugin.h" />
+    <ClInclude Include="MasterObj.h" />
+    <ClInclude Include="PollNet.h" />
     <ClInclude Include="ServerNet.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="ThreadRouter.h" />
@@ -106,6 +110,21 @@
     <Link>
       <AdditionalDependencies>-lpthread;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
+    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

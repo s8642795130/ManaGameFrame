@@ -4,7 +4,7 @@
 #include <netinet/ip.h> 
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <stdio.h>
+
 #include "ClientDescriptor.h"
 
 class Client : public ClientDescriptor
