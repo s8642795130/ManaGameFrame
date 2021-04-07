@@ -11,5 +11,6 @@ public:
 	virtual ~DynLib() = default;
 	//
 	bool LoadLib();
+	void* GetSymbol(const std::string& proc_name);
 };
 

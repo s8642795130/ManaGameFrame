@@ -14,3 +14,8 @@ bool DynLib::LoadLib()
 	str_lib_path += ".so";
 	m_instance = dlopen(str_lib_path.c_str(), RTLD_LAZY | RTLD_GLOBAL);
 }
+
+void* DynLib::GetSymbol(const std::string& proc_name)
+{
+	return dlsym(m_instance, proc_name.c_str());
+}

@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "IPlugin.h"
+#include "DynLib.h"
 
 class PluginManager
 {
