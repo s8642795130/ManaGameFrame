@@ -9,19 +9,14 @@
 
 class Client : public ClientDescriptor
 {
-public:
-	Client(int fd, in_addr client_addr, uint16_t client_port, uint32_t timeout) :
-		ClientDescriptor(fd, client_addr, client_port, timeout),
-		last_active_(time(0))
-	{
-	}
-
-	bool ReadReady();
-	bool WriteReady();
-	bool HeartBeat();
-	void ClientClose();
-	void ServerClose();
-
 protected:
-	time_t last_active_;
+	time_t m_last_active;
+public:
+	virtual bool ReadReady();
+	virtual bool WriteReady();
+	virtual bool HeartBeat();
+	virtual void ClientClose();
+	virtual void ServerClose();
+	//
+	virtual void SendData(const int& value);
 };

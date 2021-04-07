@@ -14,7 +14,7 @@ protected:
 	std::map<std::string, std::shared_ptr<IModule>> m_map_module;
 
 	/// <summary>
-	/// ×¢²á¼ÓÈëÄ£¿é
+	/// 
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	template <typename T>

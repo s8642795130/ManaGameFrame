@@ -23,7 +23,7 @@ private:
 	int m_listen_fd = -1;
 	int m_epoll_fd = -1;
 	std::array<epoll_event, 64> m_arr_events;
-	std::map<int, ClientDescriptor*> clients_;
+	std::map<int, ClientDescriptor*> m_map_clients;
 	uint32_t timeout_secs_;
 	time_t last_socket_check_;
 public:
@@ -74,7 +74,7 @@ public:
 
 	~ServerNet()
 	{
-		if (listen_fd_ != -1)
+		if (m_listen_fd != -1)
 		{
 			close(m_listen_fd);
 		}
@@ -87,11 +87,36 @@ public:
 
 	void CreateEpoll()
 	{
-		epoll_fd = epoll_create1(0);
+		m_epoll_fd = epoll_create1(0);
 		if (m_epoll_fd == -1)
 		{
 			throw std::runtime_error("epoll_create1() failed, error code: " + std::to_string(errno));
 		}
+	}
+
+	bool AddFD(ClientDescriptor* ptr_client)
+	{
+		if (!SetNonblocking(ptr_client->m_client_fd))
+		{
+			std::cout << "failed to put fd into non-blocking mode, error code: " << errno << std::endl;
+			return false;
+		}
+
+		epoll_event ev;
+		ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	//client events will be handled in edge-triggered mode
+		ev.data.ptr = ptr_client;						//we will pass client descriptor with every event
+
+		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->m_client_fd, &ev) == 1)
+		{
+			std::cout << "epoll_ctl() failed, error code: " << errno << std::endl;
+			delete ptr_client;
+			return false;
+		}
+
+		//store new client descriptor into the map of clients
+		m_map_clients[ptr_client->m_client_fd] = ptr_client;
+
+		return true;
 	}
 
 	void EventLoop()
@@ -105,7 +130,7 @@ public:
 				for (int i = 0; i < num_fds; i++)
 				{
 					//notifications on listening fd are incoming client connections
-					if (m_arr_events[i].data.fd == listen_fd_)
+					if (m_arr_events[i].data.fd == m_listen_fd)
 					{
 						HandleAccept();
 					}
@@ -117,10 +142,11 @@ public:
 			}
 
 			//perform cleanup every second and remove timed-out sockets
-			if ((last_socket_check_ + 1) < time(0) && clients_.size() > 0)
+			/*
+			if ((last_socket_check_ + 1) < time(0) && m_map_clients.size() > 0)
 			{
-				std::map<int, ClientDescriptor*>::iterator it = clients_.begin();
-				while (it != clients_.end())
+				std::map<int, ClientDescriptor*>::iterator it = m_map_clients.begin();
+				while (it != m_map_clients.end())
 				{
 					ClientDescriptor* client = (*it).second;
 
@@ -138,48 +164,8 @@ public:
 
 				last_socket_check_ = time(0);
 			}
+			*/
 		}
-	}
-
-	// temp code
-	bool TempHandleAccept(int temp_socket)
-	{
-		sockaddr_in client_sin;
-		// socklen_t sin_size = sizeof(client_sin);
-		ClientDescriptorType* client;
-
-		int client_fd = temp_socket;
-		if (client_fd == -1)
-		{
-			std::cout << "accept() failed, error code: " << errno << std::endl;
-			return false;
-		}
-
-		if (!SetNonblocking(client_fd))
-		{
-			std::cout << "failed to put fd into non-blocking mode, error code: " << errno << std::endl;
-			return false;
-		}
-
-		//allocate and initialize a new descriptor for the client
-		client = new ClientDescriptorType(client_fd, client_sin.sin_addr, ntohs(client_sin.sin_port));
-
-		epoll_event ev;
-		ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	//client events will be handled in edge-triggered mode
-		ev.data.ptr = client;						//we will pass client descriptor with every event
-
-		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, client_fd, &ev) == 1)
-		{
-			std::cout << "epoll_ctl() failed, error code: " << errno << std::endl;
-			delete client;
-			return false;
-		}
-
-		//store new client descriptor into the map of clients
-		clients_[client_fd] = client;
-
-		std::cout << "[+] new client: ", inet_ntoa(client_sin.sin_addr) << ":" << ntohs(client_sin.sin_port) << std::endl;
-		return true;
 	}
 
 private:
@@ -205,20 +191,21 @@ private:
 	bool HandleAccept()
 	{
 		// allocate and initialize a new descriptor for the client
-		ClientDescriptorType* client = new ClientDescriptorType(client_fd, client_sin.sin_addr, ntohs(client_sin.sin_port));
+		ClientDescriptorType* client = new ClientDescriptorType();
 
-		sockaddr_in client_sin;
-		socklen_t sin_size = sizeof(client_sin);
-		
+		// get sin struct size
+		socklen_t sin_size = sizeof(client->m_client_sin);
 
-		int client_fd = accept(listen_fd_, reinterpret_cast<sockaddr*>(&client->client_sin), &sin_size);
-		if (client_fd == -1)
+		client->m_client_fd = accept(m_listen_fd, reinterpret_cast<sockaddr*>(&client->m_client_sin), &sin_size);
+		if (client->m_client_fd == -1)
 		{
 			std::cout << "accept() failed, error code: " << errno << std::endl;
 			return false;
 		}
 
-		if (!SetNonblocking(client_fd))
+		return AddFD(client);
+		/*
+		if (!SetNonblocking(client->m_client_fd))
 		{
 			std::cout << "failed to put fd into non-blocking mode, error code: " << errno << std::endl;
 			return false;
@@ -228,18 +215,18 @@ private:
 		ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	//client events will be handled in edge-triggered mode
 		ev.data.ptr = client;						//we will pass client descriptor with every event
 
-		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, client_fd, &ev) == 1)
+		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, client->m_client_fd, &ev) == 1)
 		{
-			printf("epoll_ctl() failed, error code: %d\n", errno);
+			std::cout << "epoll_ctl() failed, error code: " << errno << std::endl;
 			delete client;
 			return false;
 		}
 
 		//store new client descriptor into the map of clients
-		clients_[client_fd] = client;
+		m_map_clients[client->m_client_fd] = client;
+		*/
 
 		// std::cout << "[+] new client: " << inet_ntoa(client_sin.sin_addr) << ":" << ntohs(client_sin.sin_port) << std::endl;
-		return true;
 	}
 
 	//called whenever and EPOLLIN event occurs on a client fd
@@ -286,7 +273,7 @@ private:
 
 	void RemoveClient(ClientDescriptor* client)
 	{
-		std::map<int, ClientDescriptor*>::iterator it = clients_.find(client->uid());
-		clients_.erase(it);
+		std::map<int, ClientDescriptor*>::iterator it = m_map_clients.find(client->GetSid());
+		m_map_clients.erase(it);
 	}
 };

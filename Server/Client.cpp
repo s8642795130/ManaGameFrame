@@ -1,3 +1,7 @@
+#include <cstring>
+#include <array>
+#include <iostream>
+
 #include "Client.h"
 
 bool Client::ReadReady()
@@ -25,7 +29,7 @@ bool Client::ReadReady()
 	write(m_fd, data_buffer.c_str(), data_buffer.size());
 
 	//update last active time to prevent timeout
-	last_active_ = time(0);
+	m_last_active = time(0);
 
 	return true;
 }
@@ -42,10 +46,10 @@ bool Client::WriteReady()
 
 bool Client::HeartBeat()
 {
-	//if no operations occurred during timeout period return false to signal server to close socket
-	if (static_cast<time_t>(last_active_ + m_timeout) < time(0))
+	// if no operations occurred during timeout period return false to signal server to close socket
+	if (static_cast<time_t>(m_last_active + m_timeout) < time(0))
 	{
-		printf("[i] connection %s:%d has timed out\n", inet_ntoa(client_addr_), client_port_);
+		std::cout << "[i] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " has timed out" << std::endl;
 		return false;
 	}
 
@@ -54,14 +58,23 @@ bool Client::HeartBeat()
 
 void Client::ClientClose()
 {
-	close(fd_);
+	close(m_fd);
 
-	printf("[-] connection %s:%d closed by client\n", inet_ntoa(client_addr_), client_port_);
+	std::cout << "[-] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by client" << std::endl;
 }
 
 void Client::ServerClose()
 {
-	close(fd_);
+	close(m_fd);
 
-	printf("[-] connection %s:%d closed by server\n", inet_ntoa(client_addr_), client_port_);
+	std::cout << "[-] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by server" << std::endl;
+}
+
+void Client::SendData(const int& value)
+{
+	std::array<char, sizeof(value) + 4> buffer;
+	int len = sizeof(value);
+	std::memcpy(buffer.data(), &len, sizeof(len));
+	std::memcpy(buffer.data() + 4, &value, sizeof(value));
+	send(m_fd, buffer.data(), buffer.size(), 0);
 }

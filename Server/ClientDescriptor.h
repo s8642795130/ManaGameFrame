@@ -15,8 +15,6 @@ class ClientDescriptor
 protected:
 	const int m_timeout = 30;
 	int m_fd = -1;
-	in_addr m_client_addr;
-	uint16_t m_client_port;
 	std::string m_uid;
 public:
 	ClientDescriptor()
@@ -28,6 +26,10 @@ public:
 	{
 
 	}
+
+	// member
+	int m_client_fd = 0;
+	sockaddr_in m_client_sin = {0};
 
 	//called when a client fd becomes available for writing
 	virtual bool ReadReady() { throw std::runtime_error("ReadReady() not implemented"); }

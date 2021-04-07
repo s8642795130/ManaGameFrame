@@ -3,6 +3,6 @@
 class MasterObj : public Client
 {
 public:
-	int ConnectMaster();
+	void ConnectMaster();
 };
 
