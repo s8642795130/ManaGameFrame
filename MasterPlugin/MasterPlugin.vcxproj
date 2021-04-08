@@ -77,10 +77,12 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="MasterActor.cpp" />
     <ClCompile Include="MasterModule.cpp" />
     <ClCompile Include="MasterPlugin.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MasterActor.h" />
     <ClInclude Include="MasterModule.h" />
     <ClInclude Include="MasterPlugin.h" />
   </ItemGroup>
@@ -88,6 +90,33 @@
     <ClCompile>
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
+    <Link>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <ClCompile>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <ClCompile>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
+    </ClCompile>
+    <Link>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

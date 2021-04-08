@@ -2,7 +2,7 @@
 #include <algorithm>
 
 #include "IPlugin.h"
-// #include "IModule.h"
+#include "IModule.h"
 
 class Plugin : public IPlugin
 {

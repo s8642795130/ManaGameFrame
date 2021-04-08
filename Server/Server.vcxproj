@@ -76,7 +76,6 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ConfigFile.cpp" />

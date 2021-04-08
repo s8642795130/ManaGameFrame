@@ -1,6 +1,24 @@
 #include <functional>
+#include <iostream>
 
 #include "PluginManager.h"
+
+void PluginManager::LoadAllPluginLibrary()
+{
+	// for (const auto& item : m_map_lib)
+	// {
+		// std::function<void(void)> ptr_func{ reinterpret_cast<void*>(item.second->GetSymbol("DllStartPlugin")) };
+		// ptr_func(this);
+	// }
+
+	// test code
+	using MyTestFunc = void(*)();
+	// typedef void (*MyTestFunc)();
+	std::shared_ptr<DynLib> ptr_dll{ std::make_shared<DynLib>("libMasterPlugin") };
+	ptr_dll->LoadLib();
+	MyTestFunc func = (MyTestFunc)ptr_dll->GetSymbol("DllStartPlugin");
+	func();
+}
 
 bool PluginManager::LoadPluginLibrary(const std::string& pluginDLLName)
 {

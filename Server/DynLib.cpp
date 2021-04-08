@@ -14,6 +14,16 @@ bool DynLib::LoadLib()
 	str_lib_path += ".so";
 	m_instance = dlopen(str_lib_path.c_str(), RTLD_LAZY | RTLD_GLOBAL);
 
+	// test code
+	if (!m_instance)
+	{
+		char* errstr;
+
+		errstr = dlerror();
+		if (errstr != NULL)
+			printf("A dynamic linking error occurred: (%s)\n", errstr);
+	}
+
 	return true;
 }
 

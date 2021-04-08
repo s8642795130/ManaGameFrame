@@ -7,6 +7,9 @@
 #include "ServerNet.h"
 #include "Client.h"
 #include "MasterObj.h"
+#include "PluginManager.h"
+
+std::shared_ptr<IApplication> IApplication::m_app;
 
 int main(int argc, char* argv[])
 {
@@ -14,19 +17,21 @@ int main(int argc, char* argv[])
 	std::cout << "test !!!" << std::endl;
 
 	// Application
-	std::shared_ptr<Application> app{ std::make_shared<Application>() };
-	app->StartThreadPool();
+	//std::shared_ptr<Application> app{ std::make_shared<Application>() };
+	//app->StartThreadPool();
 
 	// Connect Master
-    MasterObj* master_obj = new MasterObj();
-    master_obj->ConnectMaster();
+    //MasterObj* master_obj = new MasterObj();
+    //master_obj->ConnectMaster();
 
-	// Actor Manager
+	// Plugin Manager
+	std::shared_ptr<PluginManager> pluginManager{ std::make_shared<PluginManager>() };
+	pluginManager->LoadAllPluginLibrary();
 
 	// Network
-	ServerNet<Client> server("0.0.0.0", 3010, 30);
-    server.AddFD(master_obj);
-	server.EventLoop();
+	//ServerNet<Client> server("0.0.0.0", 3010, 30);
+    //server.AddFD(master_obj);
+	//server.EventLoop();
 
 	return 0;
 }

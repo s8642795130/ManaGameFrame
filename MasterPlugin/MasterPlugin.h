@@ -5,6 +5,6 @@ class MasterPlugin : public Plugin
 {
 public:
 	void Install() override;
-	void Uninstall();
+	void Uninstall() override;
 };
 
