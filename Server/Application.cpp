@@ -6,6 +6,11 @@ Application::Application() : m_thread_pool(std::make_unique<ThreadPool>())
 {
 }
 
+void Application::AddReceiveCallBack(const int msgID, void* pBase, std::function<void(void)> call_func)
+{
+
+}
+
 void Application::SendMsgToActor(const std::string& sender_uuid, const std::string& receiver_uuid, std::function<void(void)> call_func, std::function<void(void)> callback)
 {
 

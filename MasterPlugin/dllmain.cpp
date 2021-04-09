@@ -6,7 +6,7 @@
 
 std::shared_ptr<IApplication> IApplication::m_app;
 
-extern "C" __attribute((visibility("default"))) void DllStartPlugin()
+extern "C" __attribute((visibility("default"))) void DllStartPlugin(std::shared_ptr<IApplication> app)
 {
 	//CREATE_PLUGIN(pm, NFChatPlugin)
 	std::shared_ptr<MasterPlugin> ptr{ std::make_shared<MasterPlugin>() };

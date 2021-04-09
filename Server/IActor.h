@@ -3,7 +3,7 @@
 
 class IActor
 {
-private:
+protected:
 	std::string m_uuid;
 public:
 	IActor()

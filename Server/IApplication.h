@@ -15,6 +15,7 @@ public:
 		return m_app;
 	}
 
+	virtual void AddReceiveCallBack(const int msgID, void* pBase, std::function<void(void)> call_func) = 0;
 	virtual void SendMsgToActor(const std::string& sender_uuid, const std::string& receiver_uuid, std::function<void(void)> call_func, std::function<void(void)> callback) = 0;
 	virtual void RpcCall() = 0;
 	virtual void ResponseMsg() = 0;
