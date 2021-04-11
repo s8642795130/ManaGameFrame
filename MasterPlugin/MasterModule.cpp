@@ -9,6 +9,7 @@ void MasterModule::Init()
 void MasterModule::AfterInit()
 {
 	// m_plugin->
+	m_plugin->GetAppPtr()->AddReceiveCallBack(, this, );
 }
 
 void MasterModule::ReadyExecute()

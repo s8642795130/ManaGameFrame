@@ -7,6 +7,12 @@
 class Plugin : public IPlugin
 {
 public:
+	Plugin(std::shared_ptr<IApplication> app) : IPlugin(app)
+	{
+
+	}
+
+
 	virtual void Init()
 	{
 		std::for_each(std::begin(m_map_module), std::end(m_map_module), [](auto& it) -> void

@@ -4,6 +4,7 @@
 #include <string>
 
 // #include "IModule.h"
+#include "IApplication.h"
 
 class IModule;
 
@@ -12,9 +13,10 @@ class IPlugin : public std::enable_shared_from_this<IPlugin>
 protected:
 	// std::shared_ptr<IModuleManager> m_module_manager;
 	std::map<std::string, std::shared_ptr<IModule>> m_map_module;
+	std::shared_ptr<IApplication> m_app;
 
 	/// <summary>
-	/// 
+	/// RegisterModule
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	template <typename T>
@@ -27,11 +29,25 @@ protected:
 		m_map_module.emplace(pair);
 	}
 public:
+	/// <summary>
+	/// IPlugin
+	/// </summary>
+	/// <param name="app"></param>
+	IPlugin(std::shared_ptr<IApplication> app)
+	{
+		m_app = app;
+	}
+
 	virtual void Install() = 0;
 	virtual void Uninstall() = 0;
 
+	std::shared_ptr<IApplication>& GetAppPtr()
+	{
+		return m_app;
+	}
+
 	/// <summary>
-	/// 
+	/// GetModule
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <returns></returns>

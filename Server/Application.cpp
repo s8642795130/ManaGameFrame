@@ -6,7 +6,7 @@ Application::Application() : m_thread_pool(std::make_unique<ThreadPool>())
 {
 }
 
-void Application::AddReceiveCallBack(const int msgID, void* pBase, std::function<void(void)> call_func)
+void Application::AddReceiveCallBack(const int msgID, std::function<void(void)> call_func)
 {
 
 }

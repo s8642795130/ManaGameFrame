@@ -12,12 +12,16 @@ void PluginManager::LoadAllPluginLibrary()
 	// }
 
 	// test code
-	using MyTestFunc = void(*)();
+	using MyTestFunc = std::shared_ptr<IPlugin>(*)();
 	// typedef void (*MyTestFunc)();
 	std::shared_ptr<DynLib> ptr_dll{ std::make_shared<DynLib>("libMasterPlugin") };
 	ptr_dll->LoadLib();
 	MyTestFunc func = (MyTestFunc)ptr_dll->GetSymbol("DllStartPlugin");
-	func();
+
+	if (func != nullptr)
+	{
+		m_map_lib.emplace("MasterPlugin", func());
+	}
 }
 
 bool PluginManager::LoadPluginLibrary(const std::string& pluginDLLName)

@@ -77,23 +77,26 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BackendClient.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="DynLib.cpp" />
+    <ClCompile Include="FrontendClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MasterObj.cpp" />
     <ClCompile Include="PluginManager.cpp" />
     <ClCompile Include="PollNet.cpp" />
-    <ClCompile Include="ServerNet.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BackendClient.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientDescriptor.h" />
     <ClInclude Include="ConfigFile.h" />
     <ClInclude Include="DynLib.h" />
+    <ClInclude Include="FrontendClient.h" />
     <ClInclude Include="IActor.h" />
     <ClInclude Include="IApplication.h" />
     <ClInclude Include="IModule.h" />

@@ -3,6 +3,7 @@
 
 // #include "IModuleManager.h"
 #include "IPlugin.h"
+#include "IApplication.h"
 
 class IModule
 {
