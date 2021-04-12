@@ -1,9 +1,9 @@
 #pragma once
-#include "Client.h"
-class MasterObj : public Client
+#include "ClientNet.h"
+class MasterObj : public ClientNet
 {
 public:
-	MasterObj(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*, int, char*)>>>& receive_callBack) : Client(receive_callBack)
+	MasterObj(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*, int, char*)>>>& receive_callBack) : ClientNet(receive_callBack)
 	{
 
 	}

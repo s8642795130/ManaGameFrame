@@ -1,6 +1,6 @@
 #pragma once
-#include "Client.h"
-class FrontendClient : public Client
+#include "ClientNet.h"
+class FrontendClient : public ClientNet
 {
 };
 
