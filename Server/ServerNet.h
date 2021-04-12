@@ -12,6 +12,7 @@
 
 #include <string>
 #include <map>
+#include <functional>
 #include <iostream>
 
 #include "ClientDescriptor.h"
@@ -26,13 +27,39 @@ private:
 	std::map<int, ClientDescriptor*> m_map_clients;
 	uint32_t timeout_secs_;
 	time_t last_socket_check_;
+
+	//
+	std::shared_ptr<std::map<int, std::function<void(ClientDescriptorType*, int, char*)>>> m_ptr_callback_map;
+
 public:
-	ServerNet(const char* listen_addr, uint16_t listen_port, uint32_t timeout_secs) :
+	ServerNet() :
 		m_listen_fd(-1),
 		m_epoll_fd(-1),
-		timeout_secs_(timeout_secs),
 		last_socket_check_(0)
 	{
+		// test code
+		m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(ClientDescriptorType*, int, char*)>>>();
+	}
+
+	~ServerNet()
+	{
+		if (m_listen_fd != -1)
+		{
+			close(m_listen_fd);
+		}
+			
+		if (m_epoll_fd != -1)
+		{
+			close(m_epoll_fd);
+		}
+	}
+
+	void StartNetwork(const char* listen_addr, uint16_t listen_port, uint32_t timeout_secs)
+	{
+		// test code
+		timeout_secs_ = timeout_secs;
+
+		//
 		sockaddr_in sin = { 0 };
 
 		sin.sin_addr.s_addr = inet_addr(listen_addr);
@@ -44,7 +71,7 @@ public:
 		{
 			throw std::runtime_error("socket() failed, error code: " + std::to_string(errno));
 		}
-			
+
 		if (bind(m_listen_fd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)))
 		{
 			throw std::runtime_error("bind() failed, error code: " + std::to_string(errno));
@@ -69,19 +96,6 @@ public:
 		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_listen_fd, &e_event) == -1)
 		{
 			throw std::runtime_error("epoll_ctl() failed, error code: " + std::to_string(errno));
-		}
-	}
-
-	~ServerNet()
-	{
-		if (m_listen_fd != -1)
-		{
-			close(m_listen_fd);
-		}
-			
-		if (m_epoll_fd != -1)
-		{
-			close(m_epoll_fd);
 		}
 	}
 
@@ -117,6 +131,12 @@ public:
 		m_map_clients[ptr_client->m_client_fd] = ptr_client;
 
 		return true;
+	}
+
+	void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*, int, char*)> call_func)
+	{
+		// test code
+		m_ptr_callback_map->emplace(msgID, call_func);
 	}
 
 	void EventLoop()
@@ -191,7 +211,7 @@ private:
 	bool HandleAccept()
 	{
 		// allocate and initialize a new descriptor for the client
-		ClientDescriptorType* client = new ClientDescriptorType();
+		ClientDescriptorType* client = new ClientDescriptorType(m_ptr_callback_map);
 
 		// get sin struct size
 		socklen_t sin_size = sizeof(client->m_client_sin);

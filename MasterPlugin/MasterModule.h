@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "../Server/IModule.h"
+#include "../Server/ClientDescriptor.h"
 #include "MasterActor.h"
 
 class MasterModule : public IModule
@@ -17,4 +18,7 @@ public:
 	virtual void AfterInit();
 	virtual void ReadyExecute();
 	virtual void Execute();
+
+	//
+	void OnServerOnlineCallback(ClientDescriptor* ptr_client, int length, char* value);
 };

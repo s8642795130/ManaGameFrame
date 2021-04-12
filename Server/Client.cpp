@@ -6,18 +6,21 @@
 
 bool Client::ReadReady()
 {
-	char buffer[1024];
+	std::array<char, DEFAULT_BUFLEN> buffer;
 	size_t bytes_read;
 	std::string data_buffer;
 
 	//we must drain the entire read buffer as we won't get another event until client sends more data
 	while (true)
 	{
-		bytes_read = recv(m_fd, buffer, size_t(1024), 0);
+		bytes_read = recv(m_fd, buffer.data(), size_t(1024), 0);
 		if (bytes_read <= 0)
+		{
 			break;
+		}
 
-		data_buffer.append(buffer, bytes_read);
+		this->Parsing(buffer, bytes_read);
+		// data_buffer.append(buffer, bytes_read);
 	}
 
 	//client triggered EPOLLIN but sent no data (usually due to remote socket being closed)

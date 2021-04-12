@@ -12,15 +12,15 @@ namespace NetMessage
 		ACCOUNT_LOCKED
 	};
 
-	enum class ServerMsg : int
-	{
-		SERVER_ONLINE,
-		SERVER_OFFLINE
-	};
-
 	enum class ServerType : int
 	{
 		FRONTEND,
 		BACKEND
+	};
+
+	enum class ServerMsg : int
+	{
+		SERVER_ONLINE,
+		SERVER_OFFLINE
 	};
 }

@@ -17,8 +17,8 @@ int main(int argc, char* argv[])
 	std::cout << "test !!!" << std::endl;
 
 	// Application
-	//std::shared_ptr<Application> app{ std::make_shared<Application>() };
-	//app->StartThreadPool();
+	std::shared_ptr<Application> app{ std::make_shared<Application>() };
+	app->StartThreadPool();
 
 	// Connect Master
     //MasterObj* master_obj = new MasterObj();
@@ -29,6 +29,7 @@ int main(int argc, char* argv[])
 	pluginManager->LoadAllPluginLibrary();
 
 	// Network
+	app->StartNetwork();
 	//ServerNet<Client> server("0.0.0.0", 3010, 30);
     //server.AddFD(master_obj);
 	//server.EventLoop();

@@ -92,6 +92,7 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="BackendClient.h" />
+    <ClInclude Include="ByteBuffer.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="ClientDescriptor.h" />
     <ClInclude Include="ConfigFile.h" />
