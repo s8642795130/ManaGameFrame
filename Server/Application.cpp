@@ -2,7 +2,10 @@
 
 #include "ThreadRouter.h"
 
-Application::Application() : m_thread_pool(std::make_unique<ThreadPool>()), m_server_net(std::make_unique<ServerNet<Client>>())
+Application::Application() : 
+	m_thread_pool(std::make_unique<ThreadPool>()),
+	m_server_net(std::make_unique<ServerNet<ClientNet>>()),
+	m_plugin_manager(std::make_unique<PluginManager>())
 {
 }
 
@@ -44,6 +47,11 @@ void Application::AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor)
 void Application::RemoveActorToThreadCell(const std::string& uuid)
 {
 
+}
+
+void Application::StartLoadAllLibrary()
+{
+	m_plugin_manager->LoadAllPluginLibrary();
 }
 
 void Application::StartThreadPool()

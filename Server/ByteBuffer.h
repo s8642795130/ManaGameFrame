@@ -1,15 +1,22 @@
 #pragma once
 #include <string>
 
+#include "DefineHeader.h"
+
 class ByteBuffer
 {
 private:
 	int m_buf_length = 0;
 	char* m_buf_ptr = nullptr;
+	char m_msg_header[HEADER_LENGTH] = { 0 };
 	char m_length_buf[4] = { 0 };
-	int m_len_recv_num = 0;
+	std::size_t m_len_recv_num = 0;
 	int m_cur_pos = 0;
-	int m_remain_len = 4;
+	std::size_t m_remain_len = HEADER_LENGTH; // majorId: 4 minorId: 4 dataLength: 4
+	bool m_is_received_header = false;
+	//
+	int m_major_id = 0;
+	int m_minor_id = 0;
 public:
 	ByteBuffer() = default;
 
@@ -18,14 +25,32 @@ public:
 		delete[] m_buf_ptr;
 	}
 
+	int GetMajorId()
+	{
+		return m_major_id;
+	}
+
+	int GetMinorId()
+	{
+		return m_minor_id;
+	}
+
 	int GetSize()
 	{
 		return m_buf_length;
 	}
 
-	void ResetSize()
+	bool GetHeaderStatus()
 	{
-		std::memcpy(&m_buf_length, m_length_buf, 4);
+		return m_is_received_header;
+	}
+
+	void ResetHeader()
+	{
+		std::memcpy(&m_major_id, m_msg_header, MAJOR_LENGTH); // recv major
+		std::memcpy(&m_minor_id, m_msg_header + MAJOR_LENGTH, MINOR_LENGTH); // recv minor
+		std::memcpy(&m_buf_length, m_msg_header + MAJOR_LENGTH + MINOR_LENGTH, INT_LENGTH); // recv length
+
 		m_buf_ptr = new char[m_buf_length];
 		m_len_recv_num = m_buf_length;
 	}
@@ -38,25 +63,26 @@ public:
 		m_len_recv_num = 0;
 		m_cur_pos = 0;
 		m_remain_len = 4;
+		m_msg_header[HEADER_LENGTH] = { 0 };
 	}
 
-	int GetRemainLen()
+	std::size_t GetRemainLen()
 	{
 		return m_remain_len;
 	}
 
-	void RecvLength(char* buf, int len)
+	void RecvHeader(char* buf, std::size_t len)
 	{
-		std::memcpy(m_length_buf + (4 - m_remain_len), buf, len);
+		std::memcpy(m_msg_header + (HEADER_LENGTH - m_remain_len), buf, len);
 		m_remain_len -= len;
 	}
 
-	int GetUnreceivedLen()
+	std::size_t GetUnreceivedLen()
 	{
 		return m_len_recv_num;
 	}
 
-	void PushData(char* buf, int len)
+	void PushData(char* buf, std::size_t len)
 	{
 		std::memcpy(m_buf_ptr, buf, len);
 		m_len_recv_num -= len;

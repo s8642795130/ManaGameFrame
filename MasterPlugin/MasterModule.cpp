@@ -29,7 +29,8 @@ void MasterModule::Execute()
 
 //
 
-void MasterModule::OnServerOnlineCallback(ClientDescriptor* ptr_client, int major_id, int minor_id, int length, char* value)
+void MasterModule::OnServerOnlineCallback(ClientDescriptor* ptr_client)
 {
-
+	// notify other servers that a server online
+	this->m_plugin->GetAppPtr()->SendMsgToActor("", m_master_actor->GetUUID(), );
 }

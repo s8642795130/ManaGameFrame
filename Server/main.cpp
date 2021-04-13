@@ -5,7 +5,6 @@
 #include "ConfigFile.h"
 #include "Application.h"
 #include "ServerNet.h"
-#include "Client.h"
 #include "MasterObj.h"
 #include "PluginManager.h"
 
@@ -18,6 +17,7 @@ int main(int argc, char* argv[])
 
 	// Application
 	std::shared_ptr<Application> app{ std::make_shared<Application>() };
+	app->StartLoadAllLibrary();
 	app->StartThreadPool();
 
 	// Connect Master
@@ -25,8 +25,8 @@ int main(int argc, char* argv[])
     //master_obj->ConnectMaster();
 
 	// Plugin Manager
-	std::shared_ptr<PluginManager> pluginManager{ std::make_shared<PluginManager>() };
-	pluginManager->LoadAllPluginLibrary();
+	// std::shared_ptr<PluginManager> pluginManager{ std::make_shared<PluginManager>() };
+	// pluginManager->LoadAllPluginLibrary();
 
 	// Network
 	app->StartNetwork();

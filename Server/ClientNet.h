@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#include "MessageDefine.h"
 #include "ClientDescriptor.h"
 
 class ClientNet : public ClientDescriptor

@@ -35,9 +35,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{ed3f9003-2363-4115-ae66-cccc9844b52a}</ProjectGuid>
+    <ProjectGuid>{3869d92a-d857-4713-b9bf-64e5baf2733e}</ProjectGuid>
     <Keyword>Linux</Keyword>
-    <RootNamespace>Server</RootNamespace>
+    <RootNamespace>ServerControlPlugin</RootNamespace>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <ApplicationType>Linux</ApplicationType>
     <ApplicationTypeRevision>1.0</ApplicationTypeRevision>
@@ -59,7 +59,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <UseDebugLibraries>true</UseDebugLibraries>
-    <UseOfStl>libstdc++_shared</UseOfStl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -76,67 +75,15 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="BackendClient.cpp" />
-    <ClCompile Include="ConfigFile.cpp" />
-    <ClCompile Include="DynLib.cpp" />
-    <ClCompile Include="FrontendClient.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MasterObj.cpp" />
-    <ClCompile Include="PluginManager.cpp" />
-    <ClCompile Include="PollNet.cpp" />
-    <ClCompile Include="ThreadPool.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ServerControlModule.cpp" />
+    <ClCompile Include="ServerControlPlugin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actor.h" />
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="BackendClient.h" />
-    <ClInclude Include="ByteBuffer.h" />
-    <ClInclude Include="ClientNet.h" />
-    <ClInclude Include="ClientDescriptor.h" />
-    <ClInclude Include="ConfigFile.h" />
-    <ClInclude Include="DefineHeader.h" />
-    <ClInclude Include="DynLib.h" />
-    <ClInclude Include="FrontendClient.h" />
-    <ClInclude Include="IActor.h" />
-    <ClInclude Include="IApplication.h" />
-    <ClInclude Include="IModule.h" />
-    <ClInclude Include="IPlugin.h" />
-    <ClInclude Include="MasterObj.h" />
-    <ClInclude Include="MessageDefine.h" />
-    <ClInclude Include="Plugin.h" />
-    <ClInclude Include="PluginManager.h" />
-    <ClInclude Include="PollNet.h" />
-    <ClInclude Include="ServerNet.h" />
-    <ClInclude Include="ThreadPool.h" />
-    <ClInclude Include="ThreadRouter.h" />
-    <ClInclude Include="ThreadSafeMap.h" />
-    <ClInclude Include="ThreadSafeQueue.h" />
-    <ClInclude Include="UUID.h" />
+    <ClInclude Include="ServerControlModule.h" />
+    <ClInclude Include="ServerControlPlugin.h" />
   </ItemGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <CppLanguageStandard>c++17</CppLanguageStandard>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>-lpthread;-ldl;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <ClCompile>
-      <CppLanguageStandard>c++17</CppLanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
-    <ClCompile>
-      <CppLanguageStandard>c++17</CppLanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <ClCompile>
-      <CppLanguageStandard>c++17</CppLanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
+  <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

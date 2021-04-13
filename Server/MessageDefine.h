@@ -18,6 +18,14 @@ namespace NetMessage
 		BACKEND
 	};
 
+	enum class ClientType : int
+	{
+		CLIENT,
+		SERVER,
+		FAKE,
+		MASTER
+	};
+
 	enum class ServerMsg : int
 	{
 		SERVER_ONLINE,

@@ -8,9 +8,8 @@
 #include <memory>
 #include <cstring>
 
+#include "DefineHeader.h"
 #include "ByteBuffer.h"
-
-#define DEFAULT_BUFLEN (4096)
 
 /*
 	This is a base client descriptor and virtual methods should be implemented by a derived class.
@@ -35,49 +34,6 @@ public:
 	virtual ~ClientDescriptor()
 	{
 
-	}
-
-	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, int len)
-	{
-		int buf_remain_len = len;
-		if (m_buffer->GetSize() == 0)
-		{
-			// is not read length
-			int remain_len = m_buffer->GetRemainLen();
-			int len_buf = remain_len < len ? remain_len : len;
-
-			//
-			m_buffer->RecvLength(buffer.data(), len_buf);
-			buf_remain_len -= len_buf;
-
-			//
-			if (m_buffer->GetRemainLen() == 0)
-			{
-				m_buffer->ResetSize();
-			}
-		}
-
-		if (buf_remain_len != 0)
-		{
-			//
-			int unreceived_len = m_buffer->GetUnreceivedLen();
-			int push_data_len = unreceived_len < buf_remain_len ? unreceived_len : buf_remain_len;
-			m_buffer->PushData(buffer.data() + (len - buf_remain_len), push_data_len);
-			buf_remain_len -= push_data_len;
-		}
-
-		if (m_buffer->GetRemainLen() == 0)
-		{
-			// io
-			ProccessIO();
-		}
-
-		if (buf_remain_len != 0)
-		{
-			std::array<char, DEFAULT_BUFLEN> buf;
-			std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
-			Parsing(buf, buf_remain_len);
-		}
 	}
 
 	// member
@@ -109,5 +65,62 @@ public:
 	const std::string& GetUid() const
 	{
 		return m_uid;
+	}
+
+	/// <summary>
+	/// GetBuffer
+	/// </summary>
+	/// <returns></returns>
+	std::shared_ptr<ByteBuffer>& GetBuffer()
+	{
+		return m_buffer;
+	}
+
+	/// <summary>
+	/// Parsing
+	/// </summary>
+	/// <param name="buffer"></param>
+	/// <param name="len"></param>
+	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, std::size_t len)
+	{
+		auto buf_remain_len = len;
+		if (m_buffer->GetHeaderStatus() == false)
+		{
+			// is not read length
+			auto remain_len = m_buffer->GetRemainLen();
+			auto len_buf = remain_len < len ? remain_len : len;
+
+			//
+			m_buffer->RecvHeader(buffer.data(), len_buf);
+			buf_remain_len -= len_buf;
+
+			//
+			if (m_buffer->GetRemainLen() == 0)
+			{
+				m_buffer->ResetHeader();
+			}
+		}
+
+		if (buf_remain_len != 0)
+		{
+			//
+			auto unreceived_len = m_buffer->GetUnreceivedLen();
+			auto push_data_len = unreceived_len < buf_remain_len ? unreceived_len : buf_remain_len;
+			m_buffer->PushData(buffer.data() + (len - buf_remain_len), push_data_len);
+			buf_remain_len -= push_data_len;
+		}
+
+		if (m_buffer->GetRemainLen() == 0)
+		{
+			// io
+			ProccessIO();
+		}
+
+		if (buf_remain_len != 0)
+		{
+			std::array<char, DEFAULT_BUFLEN> buf;
+			std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
+			Parsing(buf, buf_remain_len);
+		}
 	}
 };
