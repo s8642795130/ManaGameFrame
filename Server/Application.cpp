@@ -9,7 +9,7 @@ Application::Application() :
 {
 }
 
-void Application::AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*, int, char*)> call_func)
+void Application::AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func)
 {
 	return m_server_net->AddReceiveCallBack(msg_id, call_func);
 }

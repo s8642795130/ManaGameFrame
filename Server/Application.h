@@ -17,7 +17,7 @@ private:
 	std::unique_ptr<PluginManager> m_plugin_manager;
 public:
 	Application();
-	virtual void AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*, int, char*)> call_func);
+	virtual void AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func);
 	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg);
 	virtual void RpcCall();
 	virtual void ResponseMsg();

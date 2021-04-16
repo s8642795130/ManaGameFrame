@@ -30,7 +30,7 @@ private:
 	time_t last_socket_check_;
 
 	//
-	std::shared_ptr<std::map<int, std::function<void(ClientDescriptorType*, int, char*)>>> m_ptr_callback_map;
+	std::shared_ptr<std::map<int, std::function<void(ClientDescriptorType*)>>> m_ptr_callback_map;
 
 public:
 	ServerNet() :
@@ -39,7 +39,7 @@ public:
 		last_socket_check_(0)
 	{
 		// test code
-		m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(ClientDescriptorType*, int, char*)>>>();
+		m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(ClientDescriptorType*)>>>();
 	}
 
 	~ServerNet()
@@ -134,7 +134,7 @@ public:
 		return true;
 	}
 
-	void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*, int, char*)> call_func)
+	void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*)> call_func)
 	{
 		// test code
 		m_ptr_callback_map->emplace(msgID, call_func);

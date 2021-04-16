@@ -17,7 +17,7 @@ public:
 		return m_app;
 	}
 
-	virtual void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*, int, char*)> call_func) = 0;
+	virtual void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*)> call_func) = 0;
 	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg) = 0;
 	virtual void RpcCall() = 0;
 	virtual void ResponseMsg() = 0;
