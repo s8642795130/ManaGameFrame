@@ -2,7 +2,7 @@
 
 #include "MasterModule.h"
 #include "../Server/MessageDefine.h"
-
+#include "../Server/ActorMsg.h"
 
 void MasterModule::Init()
 {
@@ -13,18 +13,8 @@ void MasterModule::Init()
 void MasterModule::AfterInit()
 {
 	int e = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::SERVER_ONLINE);
-	std::function<void(ClientDescriptor*, int, char*)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	std::function<void(ClientDescriptor*, int, char*)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1);
 	m_plugin->GetAppPtr()->AddReceiveCallBack(e, call_func);
-}
-
-void MasterModule::ReadyExecute()
-{
-
-}
-
-void MasterModule::Execute()
-{
-
 }
 
 //
@@ -32,5 +22,6 @@ void MasterModule::Execute()
 void MasterModule::OnServerOnlineCallback(ClientDescriptor* ptr_client)
 {
 	// notify other servers that a server online
-	this->m_plugin->GetAppPtr()->SendMsgToActor("", m_master_actor->GetUUID(), );
+	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, MasterActor>>("", m_master_actor->GetUUID(), &MasterActor::ServerOnline);
+	this->m_plugin->GetAppPtr()->SendMsgToActor(ptr);
 }

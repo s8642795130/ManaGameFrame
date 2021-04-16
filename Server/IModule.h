@@ -16,9 +16,21 @@ public:
 
 	virtual ~IModule() = default;
 
-	virtual void Init() = 0;
-	virtual void AfterInit() = 0;
-	virtual void ReadyExecute() = 0;
-	virtual void Execute() = 0;
+	virtual void Init()
+	{
+	}
+
+	virtual void AfterInit()
+	{
+	}
+
+	virtual void ReadyExecute()
+	{
+	}
+
+	virtual void Execute()
+	{
+
+	}
 };
 

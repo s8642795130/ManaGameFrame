@@ -18,7 +18,7 @@ private:
 public:
 	Application();
 	virtual void AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*, int, char*)> call_func);
-	virtual void SendMsgToActor(const std::string& sender_uuid, const std::string& receiver_uuid, std::function<void(void)> call_func, std::function<void(void)> callback);
+	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg);
 	virtual void RpcCall();
 	virtual void ResponseMsg();
 	virtual void PushMsg();

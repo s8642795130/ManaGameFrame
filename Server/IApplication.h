@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "IActor.h"
+#include "IActorMsg.h"
 #include "ClientDescriptor.h"
 
 class IApplication
@@ -17,7 +18,7 @@ public:
 	}
 
 	virtual void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*, int, char*)> call_func) = 0;
-	virtual void SendMsgToActor(const std::string& sender_uuid, const std::string& receiver_uuid, std::function<void(void)> call_func, std::function<void(void)> callback) = 0;
+	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg) = 0;
 	virtual void RpcCall() = 0;
 	virtual void ResponseMsg() = 0;
 	virtual void PushMsg() = 0;

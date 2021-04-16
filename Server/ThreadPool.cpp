@@ -16,3 +16,9 @@ void ThreadPool::AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor)
 	unsigned long thread_index{ ThreadRouter::GetThreadIndexByUUID(m_thread_count, ptr_actor->GetUUID()) };
 	m_thread_pool[thread_index]->AddActorToMap(ptr_actor);
 }
+
+void ThreadPool::AddActorMsgToThreadCell(std::unique_ptr<IActorMsg>& ptr_actor_msg)
+{
+	unsigned long thread_index{ ThreadRouter::GetThreadIndexByUUID(m_thread_count, ptr_actor_msg->GetReceiverActorUUID()) };
+	m_thread_pool[thread_index]->AddActorMsgToMap(ptr_actor_msg);
+}

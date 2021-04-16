@@ -5,10 +5,10 @@
 #include <map>
 #include <functional>
 
-// #include "ThreadSafeDeque.h"
 #include "ThreadSafeQueue.h"
 #include "ThreadSafeMap.h"
 #include "IActor.h"
+#include "IActorMsg.h"
 
 /// <summary>
 /// ThreadTask
@@ -16,13 +16,22 @@
 class ThreadTask
 {
 private:
-	std::function<void()> m_call;
-	std::function<void()> m_callback;
+	std::unique_ptr<IActorMsg> m_actor_msg;
 public:
-	void Call()
+	ThreadTask(std::unique_ptr<IActorMsg>& actor_msg) : 
+		m_actor_msg(std::move(actor_msg))
 	{
-		m_call();
-		m_callback();
+
+	}
+
+	const std::string& GetReceiverActorUUID()
+	{
+		return m_actor_msg->GetReceiverActorUUID();
+	}
+
+	void Call(std::shared_ptr<IActor> ptr)
+	{
+		m_actor_msg->Act(ptr.get());
 	}
 };
 
@@ -35,16 +44,18 @@ private:
 	std::unique_ptr<std::thread> m_thread;
 	ThreadSafeMap<std::string, std::shared_ptr<IActor>> m_map_actor;
 	// ThreadSafeDeque<ThreadTask> m_task_deque;
-	ThreadSafeQueue<ThreadTask> m_task_queue;
+	ThreadSafeQueue<std::shared_ptr<ThreadTask>> m_task_queue;
 
 	void WorkThread()
 	{
 		while (true)
 		{
 			std::cout << "run thread" << std::endl;
-			ThreadTask task;
-			m_task_queue.WaitAndPop(task);
-			task.Call();
+			// m_task_queue.WaitAndPop(task);
+			std::shared_ptr<ThreadTask> ptr_task = *m_task_queue.WaitAndPop();
+			//
+			std::shared_ptr<IActor> ptr_actor = m_map_actor.GetElement(ptr_task->GetReceiverActorUUID());
+			ptr_task->Call(ptr_actor);
 		}
 	}
 public:
@@ -61,6 +72,12 @@ public:
 	void DelActorFromMap(std::string& str_key)
 	{
 		m_map_actor.Erase(str_key);
+	}
+
+	void AddActorMsgToMap(std::unique_ptr<IActorMsg>& ptr_actor_msg)
+	{
+		std::shared_ptr<ThreadTask> ptr_task = std::make_shared<ThreadTask>(ptr_actor_msg);
+		m_task_queue.Push(ptr_task);
 	}
 
 	virtual ~ThreadCell()
@@ -83,5 +100,6 @@ private:
 public:
 	void StartThreadPool();
 	void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
+	void AddActorMsgToThreadCell(std::unique_ptr<IActorMsg>& ptr_actor_msg);
 };
 

@@ -1,5 +1,7 @@
 #include "ServerControlPlugin.h"
 
+#include "ServerControlModule.h"
+
 void ServerControlPlugin::Install()
 {
 	// load module

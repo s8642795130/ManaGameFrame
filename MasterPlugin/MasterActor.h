@@ -13,5 +13,7 @@ public:
 	{
 
 	}
+
+	void ServerOnline();
 };
 

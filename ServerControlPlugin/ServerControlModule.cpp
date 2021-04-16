@@ -1,5 +1,7 @@
 #include "ServerControlModule.h"
 
+#include "../Server/MessageDefine.h"
+
 void ServerControlModule::Init()
 {
 	// load actor
@@ -9,7 +11,8 @@ void ServerControlModule::Init()
 void ServerControlModule::AfterInit()
 {
 	int e = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::SERVER_ONLINE);
-	std::function<void(ClientDescriptor*, int, char*)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+	std::function<void(ClientDescriptor*, int, char*)> call_func = std::bind(&ServerControlModule::OnServerOnlineCallback, this, std::placeholders::_1);
+	
 	m_plugin->GetAppPtr()->AddReceiveCallBack(e, call_func);
 }
 

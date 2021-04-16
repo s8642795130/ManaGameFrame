@@ -3,6 +3,7 @@
 
 class ServerControlPlugin : public Plugin
 {
+public:
 	ServerControlPlugin(std::shared_ptr<IApplication> app) : Plugin(app)
 	{
 

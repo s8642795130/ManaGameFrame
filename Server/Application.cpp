@@ -14,9 +14,9 @@ void Application::AddReceiveCallBack(const int msg_id, std::function<void(Client
 	return m_server_net->AddReceiveCallBack(msg_id, call_func);
 }
 
-void Application::SendMsgToActor(const std::string& sender_uuid, const std::string& receiver_uuid, std::function<void(void)> call_func, std::function<void(void)> callback)
+void Application::SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg)
 {
-
+	m_thread_pool->AddActorMsgToThreadCell(actor_msg);
 }
 
 void Application::RpcCall()
