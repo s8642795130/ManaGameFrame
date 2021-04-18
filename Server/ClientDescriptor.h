@@ -23,10 +23,10 @@ protected:
 	int m_fd = -1;
 	std::string m_uid;
 	//
-	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*, int, char*)>>> m_receive_callBack;
+	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_receive_callBack;
 	std::shared_ptr<ByteBuffer> m_buffer;
 public:
-	ClientDescriptor(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*, int, char*)>>>& receive_callBack)
+	ClientDescriptor(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>>& receive_callBack)
 	{
 		m_receive_callBack = receive_callBack;
 	}

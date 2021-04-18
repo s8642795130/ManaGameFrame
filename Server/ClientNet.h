@@ -15,7 +15,7 @@ protected:
 	// Client Type
 	time_t m_last_active;
 public:
-	ClientNet(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*, int, char*)>>>& receive_callBack) : ClientDescriptor(receive_callBack)
+	ClientNet(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>>& receive_callBack) : ClientDescriptor(receive_callBack)
 	{
 
 	}
@@ -86,7 +86,7 @@ public:
 
 	void ProccessIO()
 	{
-
+		// 1230 1386
 	}
 
 	void SendData(const int& value)

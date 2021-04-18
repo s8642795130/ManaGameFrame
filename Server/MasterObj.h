@@ -3,7 +3,7 @@
 class MasterObj : public ClientNet
 {
 public:
-	MasterObj(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*, int, char*)>>>& receive_callBack) : ClientNet(receive_callBack)
+	MasterObj(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>>& receive_callBack) : ClientNet(receive_callBack)
 	{
 
 	}

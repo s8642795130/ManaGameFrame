@@ -20,20 +20,21 @@ int main(int argc, char* argv[])
 	std::shared_ptr<Application> app{ std::make_shared<Application>() };
 	app->StartLoadAllLibrary();
 	app->StartThreadPool();
+	app->StartNetwork();
 
 	// Connect Master
-    //MasterObj* master_obj = new MasterObj();
-    //master_obj->ConnectMaster();
+    MasterObj* master_obj = new MasterObj();
+    master_obj->ConnectMaster();
 
 	// Plugin Manager
-	// std::shared_ptr<PluginManager> pluginManager{ std::make_shared<PluginManager>() };
-	// pluginManager->LoadAllPluginLibrary();
+	std::shared_ptr<PluginManager> pluginManager{ std::make_shared<PluginManager>() };
+	pluginManager->LoadAllPluginLibrary();
 
 	// Network
 	app->StartNetwork();
-	//ServerNet<Client> server("0.0.0.0", 3010, 30);
-    //server.AddFD(master_obj);
-	//server.EventLoop();
+	ServerNet<Client> server("0.0.0.0", 3010, 30);
+    server.AddFD(master_obj);
+	server.EventLoop();
 
 	return 0;
 }
