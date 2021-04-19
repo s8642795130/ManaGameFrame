@@ -51,6 +51,11 @@ void Application::RemoveActorToThreadCell(const std::string& uuid)
 
 }
 
+void Application::LoadConfig()
+{
+	// load config
+}
+
 void Application::StartLoadAllLibrary()
 {
 	m_plugin_manager->LoadAllPluginLibrary();

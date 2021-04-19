@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
 
 	// Application
 	std::shared_ptr<Application> app{ std::make_shared<Application>() };
+	app->LoadConfig();
 	app->StartLoadAllLibrary();
 	app->StartThreadPool();
 	app->StartNetwork();

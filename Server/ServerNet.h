@@ -16,7 +16,6 @@
 #include <iostream>
 
 #include "DefineHeader.h"
-#include "ClientDescriptor.h"
 #include "ClientNet.h"
 
 // template <class ClientDescriptorType> class ServerNet
@@ -230,29 +229,6 @@ private:
 		}
 
 		return AddFD(ptr_client);
-		/*
-		if (!SetNonblocking(client->m_client_fd))
-		{
-			std::cout << "failed to put fd into non-blocking mode, error code: " << errno << std::endl;
-			return false;
-		}
-
-		epoll_event ev;
-		ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	//client events will be handled in edge-triggered mode
-		ev.data.ptr = client;						//we will pass client descriptor with every event
-
-		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, client->m_client_fd, &ev) == 1)
-		{
-			std::cout << "epoll_ctl() failed, error code: " << errno << std::endl;
-			delete client;
-			return false;
-		}
-
-		//store new client descriptor into the map of clients
-		m_map_clients[client->m_client_fd] = client;
-		*/
-
-		// std::cout << "[+] new client: " << inet_ntoa(client_sin.sin_addr) << ":" << ntohs(client_sin.sin_port) << std::endl;
 	}
 
 	//called whenever and EPOLLIN event occurs on a client fd

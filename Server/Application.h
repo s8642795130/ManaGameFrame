@@ -27,6 +27,7 @@ public:
 	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
 	virtual void RemoveActorToThreadCell(const std::string& uuid);
 	//
+	void LoadConfig();
 	void StartLoadAllLibrary();
 	void StartThreadPool();
 	void StartNetwork();
