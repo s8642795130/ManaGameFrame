@@ -15,7 +15,7 @@ protected:
 	// Client Type
 	time_t m_last_active;
 public:
-	ClientNet(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>>& receive_callBack) : ClientDescriptor(receive_callBack)
+	ClientNet()
 	{
 
 	}
@@ -82,19 +82,5 @@ public:
 		close(m_fd);
 
 		std::cout << "[-] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by server" << std::endl;
-	}
-
-	void ProccessIO()
-	{
-		// 1230 1386
-	}
-
-	void SendData(const int& value)
-	{
-		std::array<char, sizeof(value) + 4> buffer;
-		int len = sizeof(value);
-		std::memcpy(buffer.data(), &len, sizeof(len));
-		std::memcpy(buffer.data() + 4, &value, sizeof(value));
-		send(m_fd, buffer.data(), buffer.size(), 0);
 	}
 };

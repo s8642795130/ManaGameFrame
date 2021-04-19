@@ -26,9 +26,8 @@ protected:
 	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_receive_callBack;
 	std::shared_ptr<ByteBuffer> m_buffer;
 public:
-	ClientDescriptor(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>>& receive_callBack)
+	ClientDescriptor()
 	{
-		m_receive_callBack = receive_callBack;
 	}
 
 	virtual ~ClientDescriptor()
@@ -55,9 +54,6 @@ public:
 	//called if the connection was forcibly closed by the client
 	virtual void ClientClose() { throw std::runtime_error("ClientClose() not implemented"); }
 
-	// ProccessIO
-	virtual void ProccessIO() = 0;
-
 	//client's unique id
 	const int GetSid() { return m_fd; }
 
@@ -67,13 +63,22 @@ public:
 		return m_uid;
 	}
 
-	/// <summary>
-	/// GetBuffer
-	/// </summary>
-	/// <returns></returns>
-	std::shared_ptr<ByteBuffer>& GetBuffer()
+	virtual void SetReceiveCallBackMapPtr(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> receive_callBack)
 	{
-		return m_buffer;
+		m_receive_callBack = receive_callBack;
+	}
+
+	/// <summary>
+	/// ProccessIO
+	/// </summary>
+	void ProccessIO()
+	{
+		// get major id
+		int major_id = m_buffer->GetMajorId();
+		
+		// process io callback
+		std::function<void(ClientDescriptor*)> callback = m_receive_callBack->at(major_id);
+		callback(this);
 	}
 
 	/// <summary>
@@ -122,5 +127,19 @@ public:
 			std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
 			Parsing(buf, buf_remain_len);
 		}
+	}
+
+	/// <summary>
+	/// SendData
+	/// </summary>
+	/// <param name="value"></param>
+	void SendData(const int& major, const int& minor, const char* ptr_value, const int& length)
+	{
+		char* temp_data = new char[HEADER_LENGTH + length];
+		std::memcpy(temp_data, &major, sizeof(MAJOR_LENGTH)); // copy major
+		std::memcpy(temp_data + MAJOR_LENGTH, &minor, sizeof(MINOR_LENGTH)); // copy minor
+		std::memcpy(temp_data + MAJOR_LENGTH + MINOR_LENGTH, &length, sizeof(INT_LENGTH)); // copy length
+		std::memcpy(temp_data + HEADER_LENGTH, ptr_value, length);
+		send(m_fd, temp_data, HEADER_LENGTH + length, 0);
 	}
 };

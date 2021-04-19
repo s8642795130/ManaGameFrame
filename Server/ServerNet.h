@@ -17,8 +17,10 @@
 
 #include "DefineHeader.h"
 #include "ClientDescriptor.h"
+#include "ClientNet.h"
 
-template <class ClientDescriptorType> class ServerNet
+// template <class ClientDescriptorType> class ServerNet
+class ServerNet
 {
 private:
 	const int m_worker_max_events = WORKER_MAX_EVENTS;
@@ -30,7 +32,7 @@ private:
 	time_t last_socket_check_;
 
 	//
-	std::shared_ptr<std::map<int, std::function<void(ClientDescriptorType*)>>> m_ptr_callback_map;
+	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_ptr_callback_map;
 
 public:
 	ServerNet() :
@@ -39,7 +41,7 @@ public:
 		last_socket_check_(0)
 	{
 		// test code
-		m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(ClientDescriptorType*)>>>();
+		m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(ClientDescriptor*)>>>();
 	}
 
 	~ServerNet()
@@ -118,18 +120,21 @@ public:
 		}
 
 		epoll_event ev;
-		ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	//client events will be handled in edge-triggered mode
-		ev.data.ptr = ptr_client;						//we will pass client descriptor with every event
+		ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	// client events will be handled in edge-triggered mode
+		ev.data.ptr = ptr_client;						// we will pass client descriptor with every event
 
 		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->m_client_fd, &ev) == 1)
 		{
 			std::cout << "epoll_ctl() failed, error code: " << errno << std::endl;
-			delete ptr_client;
+			// delete ptr_client;
 			return false;
 		}
 
-		//store new client descriptor into the map of clients
+		// store new client descriptor into the map of clients
 		m_map_clients[ptr_client->m_client_fd] = ptr_client;
+
+		// set callback map ptr
+		ptr_client->SetReceiveCallBackMapPtr(m_ptr_callback_map);
 
 		return true;
 	}
@@ -212,19 +217,19 @@ private:
 	bool HandleAccept()
 	{
 		// allocate and initialize a new descriptor for the client
-		ClientDescriptorType* client = new ClientDescriptorType(m_ptr_callback_map);
+		ClientNet* ptr_client = new ClientNet();
 
 		// get sin struct size
-		socklen_t sin_size = sizeof(client->m_client_sin);
+		socklen_t sin_size = sizeof(ptr_client->m_client_sin);
 
-		client->m_client_fd = accept(m_listen_fd, reinterpret_cast<sockaddr*>(&client->m_client_sin), &sin_size);
-		if (client->m_client_fd == -1)
+		ptr_client->m_client_fd = accept(m_listen_fd, reinterpret_cast<sockaddr*>(&ptr_client->m_client_sin), &sin_size);
+		if (ptr_client->m_client_fd == -1)
 		{
 			std::cout << "accept() failed, error code: " << errno << std::endl;
 			return false;
 		}
 
-		return AddFD(client);
+		return AddFD(ptr_client);
 		/*
 		if (!SetNonblocking(client->m_client_fd))
 		{
@@ -261,9 +266,10 @@ private:
 		{
 			if (!client->ReadReady())
 			{
-				RemoveClient(client);
 				client->ServerClose();
+				RemoveClient(client);
 				delete client;
+
 				return false;
 			}
 		}
@@ -271,9 +277,10 @@ private:
 		//the client closed the connection (should be after EPOLLIN as client can send data then close)
 		if (ev.events & EPOLLRDHUP)
 		{
+			client->ServerClose();
 			RemoveClient(client);
-			client->ClientClose();
-			delete client;
+			 delete client;
+
 			return false;
 		}
 
@@ -282,9 +289,9 @@ private:
 		{
 			if (!client->WriteReady())
 			{
-				RemoveClient(client);
 				client->ServerClose();
-				delete client;
+				RemoveClient(client);
+				// delete client;
 				return false;
 			}
 		}
@@ -292,9 +299,9 @@ private:
 		return true;
 	}
 
-	void RemoveClient(ClientDescriptor* client)
+	void RemoveClient(ClientDescriptor* ptr_client)
 	{
-		std::map<int, ClientDescriptor*>::iterator it = m_map_clients.find(client->GetSid());
+		std::map<int, ClientDescriptor*>::iterator it = m_map_clients.find(ptr_client->GetSid());
 		m_map_clients.erase(it);
 	}
 };

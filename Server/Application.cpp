@@ -1,10 +1,12 @@
 #include "Application.h"
 
 #include "ThreadRouter.h"
+#include "MasterObj.h"
 
 Application::Application() : 
 	m_thread_pool(std::make_unique<ThreadPool>()),
-	m_server_net(std::make_unique<ServerNet<ClientNet>>()),
+	// m_server_net(std::make_unique<ServerNet<ClientNet>>()),
+	m_server_net(std::make_unique<ServerNet>()),
 	m_plugin_manager(std::make_unique<PluginManager>())
 {
 }
@@ -62,4 +64,12 @@ void Application::StartThreadPool()
 void Application::StartNetwork()
 {
 	m_server_net->StartNetwork("0.0.0.0", 3010, 30);
+}
+
+void Application::ConnectMaster()
+{
+	// Connect Master
+	MasterObj* ptr_master_obj = new MasterObj();
+	ptr_master_obj->ConnectMaster();
+	m_server_net->AddFD(ptr_master_obj);
 }

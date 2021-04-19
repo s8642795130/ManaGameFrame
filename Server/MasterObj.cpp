@@ -18,26 +18,7 @@ void MasterObj::ConnectMaster()
     {
         std::cout << "connect" << std::endl;
     }
-
-    // char sendbuf[1024 * 4];
-    /*
-    char recvbuf[BUFFER_SIZE];
-
-    while (fgets(sendbuf, sizeof(sendbuf), stdin) != NULL)
-    {
-        // buf
-        send(sock_cli, sendbuf, strlen(sendbuf), 0); //
-        if (strcmp(sendbuf, "exit\n") == 0)
-            break;
-        recv(sock_cli, recvbuf, sizeof(recvbuf), 0); //
-        fputs(recvbuf, stdout);
-
-        memset(sendbuf, 0, sizeof(sendbuf)); //
-        memset(recvbuf, 0, sizeof(recvbuf));
-    }
-    close(sock_cli);
-    */
     
     // test
-    SendData(4201);
+    // SendData(4201);
 }
