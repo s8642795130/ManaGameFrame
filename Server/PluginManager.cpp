@@ -13,7 +13,6 @@ void PluginManager::LoadAllPluginLibrary()
 
 	// test code
 	using MyTestFunc = std::shared_ptr<IPlugin>(*)();
-	// typedef void (*MyTestFunc)();
 	
 	std::shared_ptr<DynLib> ptr_dll{ std::make_shared<DynLib>("libMasterPlugin") };
 	ptr_dll->LoadLib();

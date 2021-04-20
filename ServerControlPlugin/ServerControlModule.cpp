@@ -28,5 +28,5 @@ void ServerControlModule::Execute()
 
 void ServerControlModule::OnServerOnlineCallback(ClientDescriptor* ptr_client)
 {
-	// struct
+	// master told this module that the other server is online
 }

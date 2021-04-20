@@ -79,11 +79,13 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="ConnectServerActor.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ServerControlModule.cpp" />
     <ClCompile Include="ServerControlPlugin.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConnectServerActor.h" />
     <ClInclude Include="ServerControlModule.h" />
     <ClInclude Include="ServerControlPlugin.h" />
   </ItemGroup>
