@@ -8,5 +8,5 @@ class IActorMsg
 {
 public:
 	virtual const std::string& GetReceiverActorUUID() = 0;
-	virtual void Act(const IActor* ptr) = 0;
+	virtual void Act(IActor* ptr) = 0;
 };

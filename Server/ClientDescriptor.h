@@ -9,6 +9,7 @@
 #include <cstring>
 
 #include "DefineHeader.h"
+#include "Actor.h"
 #include "ByteBuffer.h"
 
 /*
@@ -16,7 +17,7 @@
 	Returning false from any of the methods will result in Cleanup() being called and the client
 	descriptor being deconstructed immediately.
 */
-class ClientDescriptor
+class ClientDescriptor : public Actor
 {
 protected:
 	const int m_timeout = 30;
@@ -133,13 +134,16 @@ public:
 	/// SendData
 	/// </summary>
 	/// <param name="value"></param>
-	void SendData(const int& major, const int& minor, const char* ptr_value, const int& length)
+	virtual void SendData(const int major, const int minor, const char* ptr_value, const int length)
 	{
 		char* temp_data = new char[HEADER_LENGTH + length];
 		std::memcpy(temp_data, &major, sizeof(MAJOR_LENGTH)); // copy major
 		std::memcpy(temp_data + MAJOR_LENGTH, &minor, sizeof(MINOR_LENGTH)); // copy minor
 		std::memcpy(temp_data + MAJOR_LENGTH + MINOR_LENGTH, &length, sizeof(INT_LENGTH)); // copy length
-		std::memcpy(temp_data + HEADER_LENGTH, ptr_value, length);
+		if (length != 0)
+		{
+			std::memcpy(temp_data + HEADER_LENGTH, ptr_value, length);
+		}
 		send(m_fd, temp_data, HEADER_LENGTH + length, 0);
 	}
 };

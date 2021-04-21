@@ -22,6 +22,6 @@ void MasterModule::AfterInit()
 void MasterModule::OnServerOnlineCallback(ClientDescriptor* ptr_client)
 {
 	// notify other servers that a server online
-	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, MasterActor>>("", m_master_actor->GetUUID(), &MasterActor::ServerOnline);
-	this->m_plugin->GetAppPtr()->SendMsgToActor(ptr);
+	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, MasterActor, int, int>>("", m_master_actor->GetUUID(), &MasterActor::ServerOnline, 10, 20);
+	m_plugin->GetAppPtr()->SendMsgToActor(ptr);
 }

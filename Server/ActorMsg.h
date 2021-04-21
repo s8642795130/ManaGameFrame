@@ -27,7 +27,7 @@ private:
 	std::string m_receiver_actor_uuid;
 	std::_Mem_fn<Return(BaseClass::*)(Params...)> m_f;
 	std::tuple<Params...> m_args;
-	BaseClass* m_base_ptr;
+	BaseClass* m_base_ptr = nullptr;
 public:
 	template <typename Func, typename... Args>
 	ActorMsg(const std::string& sender_actor_uuid, const std::string& receiver_actor_uuid, Func f, Args&&... args) :
@@ -43,14 +43,14 @@ public:
 	}
 
 	template <typename... Args, int... Is>
-	void func(const IActor* ptr, std::tuple<Args...>& tup, helper::index<Is...>)
+	void func(IActor* ptr, std::tuple<Args...>& tup, helper::index<Is...>)
 	{
 		m_base_ptr = (decltype(m_base_ptr))ptr;
 		m_f(m_base_ptr, std::get<Is>(tup)...);
 	}
 
 	template <typename... Args>
-	void func(const IActor* ptr, std::tuple<Args...>& tup)
+	void func(IActor* ptr, std::tuple<Args...>& tup)
 	{
 		func(ptr, tup, helper::gen_seq<sizeof...(Args)>{});
 	}
@@ -60,7 +60,7 @@ public:
 		return m_receiver_actor_uuid;
 	}
 
-	virtual void Act(const IActor* ptr)
+	virtual void Act(IActor* ptr)
 	{
 		func(ptr, m_args);
 	}

@@ -1,6 +1,8 @@
 #include "ServerControlModule.h"
 
 #include "../Server/MessageDefine.h"
+#include "../Server/ActorMsg.h"
+#include "../Server/ServerObj.h"
 
 void ServerControlModule::Init()
 {
@@ -25,6 +27,22 @@ void ServerControlModule::Execute()
 {
 
 }
+
+// function
+
+void ServerControlModule::ConnectMaster()
+{
+	//
+	std::shared_ptr<ServerObj> server_obj = std::make_shared<ServerObj>();
+	server_obj->ConnectServer("192.168.1.105", 3000);
+	m_plugin->GetAppPtr()->AddActorToThreadCell(server_obj);
+
+	const int server_online = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::SERVER_ONLINE);
+	std::unique_ptr<IActorMsg> ptr_actor_msg = std::make_unique<ActorMsg<void, ClientDescriptor, const int, const int, const char*, const int>>("", server_obj->GetUUID(), &ClientDescriptor::SendData, server_online, 0, nullptr, 0);
+	m_plugin->GetAppPtr()->SendMsgToActor(ptr_actor_msg);
+}
+
+// callback
 
 void ServerControlModule::OnServerOnlineCallback(ClientDescriptor* ptr_client)
 {

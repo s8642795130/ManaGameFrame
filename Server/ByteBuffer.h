@@ -22,7 +22,10 @@ public:
 
 	virtual ~ByteBuffer()
 	{
-		delete[] m_buf_ptr;
+		if (m_buf_ptr != nullptr)
+		{
+			delete[] m_buf_ptr;
+		}
 	}
 
 	int GetMajorId()
@@ -51,8 +54,14 @@ public:
 		std::memcpy(&m_minor_id, m_msg_header + MAJOR_LENGTH, MINOR_LENGTH); // recv minor
 		std::memcpy(&m_buf_length, m_msg_header + MAJOR_LENGTH + MINOR_LENGTH, INT_LENGTH); // recv length
 
-		m_buf_ptr = new char[m_buf_length];
+		// set recv length
 		m_len_recv_num = m_buf_length;
+
+		// alloc memory
+		if (m_buf_length != 0)
+		{
+			m_buf_ptr = new char[m_buf_length];
+		}
 	}
 
 	void ResetData()

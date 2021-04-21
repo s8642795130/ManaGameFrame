@@ -15,7 +15,9 @@ public:
 	virtual void ReadyExecute();
 	virtual void Execute();
 
-	//
+	// function
+	void ConnectMaster();
+	// callback
 	void OnServerOnlineCallback(ClientDescriptor* ptr_client);
 };
 

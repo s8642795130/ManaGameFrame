@@ -3,9 +3,13 @@
 #include <functional>
 #include <memory>
 
-#include "IActor.h"
-#include "IActorMsg.h"
-#include "ClientDescriptor.h"
+//#include "IActor.h"
+//#include "IActorMsg.h"
+//#include "ClientDescriptor.h"
+
+class IActor;
+class ClientDescriptor;
+class IActorMsg;
 
 class IApplication
 {
