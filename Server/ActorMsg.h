@@ -42,26 +42,26 @@ public:
 	{
 	}
 
-	template <typename... Args, int... Is>
-	void func(IActor* ptr, std::tuple<Args...>& tup, helper::index<Is...>)
+	template <typename... Args, long unsigned int... Is>
+	void func(std::tuple<Args...>& tup, helper::index<Is...>)
 	{
-		m_base_ptr = (decltype(m_base_ptr))ptr;
 		m_f(m_base_ptr, std::get<Is>(tup)...);
 	}
 
 	template <typename... Args>
-	void func(IActor* ptr, std::tuple<Args...>& tup)
+	void func(std::tuple<Args...>& tup)
 	{
-		func(ptr, tup, helper::gen_seq<sizeof...(Args)>{});
+		func(tup, helper::gen_seq<sizeof...(Args)>{});
+	}
+
+	virtual void Act(IActor* ptr)
+	{
+		m_base_ptr = (decltype(m_base_ptr))ptr;
+		func(m_args);
 	}
 
 	virtual const std::string& GetReceiverActorUUID()
 	{
 		return m_receiver_actor_uuid;
-	}
-
-	virtual void Act(IActor* ptr)
-	{
-		func(ptr, m_args);
 	}
 };
