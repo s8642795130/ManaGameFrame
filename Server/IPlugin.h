@@ -2,8 +2,8 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <iostream>
 
-// #include "IModule.h"
 #include "IApplication.h"
 
 class IModule;

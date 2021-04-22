@@ -12,7 +12,6 @@ public:
 
 	virtual void Init();
 	virtual void AfterInit();
-	virtual void ReadyExecute();
 	virtual void Execute();
 
 	// function

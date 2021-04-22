@@ -75,6 +75,10 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\..\..\..\..\out\</OutDir>
+    <IntDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="BackendClient.cpp" />
@@ -123,6 +127,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>-lpthread;-ldl;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(TargetPath)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">

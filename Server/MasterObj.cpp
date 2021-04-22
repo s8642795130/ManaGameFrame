@@ -10,13 +10,17 @@ void MasterObj::ConnectMaster()
     // sockaddr_in
     std::memset(&m_client_sin, 0, sizeof(m_client_sin));
     m_client_sin.sin_family = AF_INET;
-    m_client_sin.sin_port = htons(3000); //
-    m_client_sin.sin_addr.s_addr = inet_addr("192.168.1.105"); //
+    m_client_sin.sin_port = htons(3010); //
+    m_client_sin.sin_addr.s_addr = inet_addr("127.0.0.1"); //
 
     //
     if (connect(sock, (struct sockaddr*)&m_client_sin, sizeof(m_client_sin)) < 0)
     {
-        std::cout << "connect" << std::endl;
+        std::cout << "connect success" << std::endl;
+    }
+    else
+    {
+        std::cout << "connect failed" << std::endl;
     }
     
     // test

@@ -56,19 +56,56 @@ void Application::LoadConfig()
 	// load config
 }
 
-void Application::StartLoadAllLibrary()
+void Application::StartLoadAllLibrary(int test_code)
 {
-	m_plugin_manager->LoadAllPluginLibrary();
+	m_plugin_manager->LoadAllPluginLibrary(test_code);
 }
+
+//
+
+void Application::LibInit()
+{
+	m_plugin_manager->Init();
+}
+
+void Application::LibAfterInit()
+{
+	m_plugin_manager->AfterInit();
+}
+
+void Application::LibReadyExecute()
+{
+	m_plugin_manager->ReadyExecute();
+}
+
+void Application::LibExecute()
+{
+	m_plugin_manager->Execute();
+}
+
+//
 
 void Application::StartThreadPool()
 {
 	m_thread_pool->StartThreadPool();
 }
 
-void Application::StartNetwork()
+void Application::StartNetwork(int test_code)
 {
-	m_server_net->StartNetwork("0.0.0.0", 3010, 30);
+	if (test_code == 1)
+	{
+		m_server_net->StartNetwork("192.168.169.132", 3010, 30);
+	}
+	else
+	{
+		m_server_net->StartNetwork("192.168.169.132", 3020, 30);
+	}
+	
+}
+
+void Application::StartNetEventLoop()
+{
+	m_server_net->EventLoop();
 }
 
 void Application::ConnectMaster()

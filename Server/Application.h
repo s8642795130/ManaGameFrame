@@ -28,9 +28,16 @@ public:
 	virtual void RemoveActorToThreadCell(const std::string& uuid);
 	//
 	void LoadConfig();
-	void StartLoadAllLibrary();
+	void StartLoadAllLibrary(int test_code);
+	//
+	void LibInit();
+	void LibAfterInit();
+	void LibReadyExecute();
+	void LibExecute();
+	//
 	void StartThreadPool();
-	void StartNetwork();
+	void StartNetwork(int test_code);
+	void StartNetEventLoop();
 	void ConnectMaster();
 };
 

@@ -7,5 +7,6 @@ public:
 	~MasterObj() = default;
 
 	void ConnectMaster();
+	void SendOnline();
 };
 
