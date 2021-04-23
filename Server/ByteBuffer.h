@@ -50,6 +50,8 @@ public:
 
 	void ResetHeader()
 	{
+		std::cout << "recv header over" << std::endl;
+
 		std::memcpy(&m_major_id, m_msg_header, MAJOR_LENGTH); // recv major
 		std::memcpy(&m_minor_id, m_msg_header + MAJOR_LENGTH, MINOR_LENGTH); // recv minor
 		std::memcpy(&m_buf_length, m_msg_header + MAJOR_LENGTH + MINOR_LENGTH, INT_LENGTH); // recv length
@@ -57,11 +59,17 @@ public:
 		// set recv length
 		m_len_recv_num = m_buf_length;
 
+		// less length
+		m_remain_len = m_buf_length;
+
 		// alloc memory
 		if (m_buf_length != 0)
 		{
 			m_buf_ptr = new char[m_buf_length];
 		}
+
+		// set header flag
+		m_is_received_header = true;
 	}
 
 	void ResetData()
@@ -71,8 +79,9 @@ public:
 		m_buf_ptr = nullptr;
 		m_len_recv_num = 0;
 		m_cur_pos = 0;
-		m_remain_len = 4;
+		m_remain_len = HEADER_LENGTH;
 		m_msg_header[HEADER_LENGTH] = { 0 };
+		m_is_received_header = false;
 	}
 
 	std::size_t GetRemainLen()

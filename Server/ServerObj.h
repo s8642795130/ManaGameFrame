@@ -11,6 +11,10 @@ public:
 	{
         int sock = socket(AF_INET, SOCK_STREAM, 0);
 
+        // test code
+        int on = 1;
+        setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+
         // sockaddr_in
         std::memset(&m_client_sin, 0, sizeof(m_client_sin));
         m_client_sin.sin_family = AF_INET;

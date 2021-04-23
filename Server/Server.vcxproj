@@ -114,6 +114,7 @@
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="PollNet.h" />
     <ClInclude Include="ServerNet.h" />
+    <ClInclude Include="ServerNetTest.h" />
     <ClInclude Include="ServerObj.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="ThreadRouter.h" />

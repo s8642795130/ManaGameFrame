@@ -74,8 +74,10 @@ public:
 	/// </summary>
 	void ProccessIO()
 	{
+		std::cout << "ProccessIO" << std::endl;
 		// get major id
 		int major_id = m_buffer->GetMajorId();
+		std::cout << "m_buffer->GetMajorId(); " << major_id << std::endl;
 		
 		// process io callback
 		std::function<void(ClientDescriptor*)> callback = m_receive_callBack->at(major_id);
@@ -104,6 +106,20 @@ public:
 			if (m_buffer->GetRemainLen() == 0)
 			{
 				m_buffer->ResetHeader();
+
+				if (m_buffer->GetRemainLen() == 0)
+				{
+					// io
+					ProccessIO();
+					m_buffer->ResetData();
+					if (buf_remain_len != 0)
+					{
+						std::array<char, DEFAULT_BUFLEN> buf;
+						std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
+						Parsing(buf, buf_remain_len);
+						return;
+					}
+				}
 			}
 		}
 
@@ -120,13 +136,13 @@ public:
 		{
 			// io
 			ProccessIO();
-		}
-
-		if (buf_remain_len != 0)
-		{
-			std::array<char, DEFAULT_BUFLEN> buf;
-			std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
-			Parsing(buf, buf_remain_len);
+			m_buffer->ResetData();
+			if (buf_remain_len != 0)
+			{
+				std::array<char, DEFAULT_BUFLEN> buf;
+				std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
+				Parsing(buf, buf_remain_len);
+			}
 		}
 	}
 
@@ -144,6 +160,7 @@ public:
 		{
 			std::memcpy(temp_data + HEADER_LENGTH, ptr_value, length);
 		}
+		std::cout << "send data length: " << HEADER_LENGTH + length << std::endl;
 		send(m_fd, temp_data, HEADER_LENGTH + length, 0);
 	}
 };

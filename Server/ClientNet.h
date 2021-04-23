@@ -22,14 +22,27 @@ public:
 
 	virtual bool ReadReady()
 	{
+		bool ret = true;
+
 		std::array<char, DEFAULT_BUFLEN> buffer;
-		size_t bytes_read = 0;
+		ssize_t bytes_read = 0;
 
 		//we must drain the entire read buffer as we won't get another event until client sends more data
 		while (true)
 		{
-			bytes_read = recv(m_fd, buffer.data(), size_t(1024), 0);
-			if (bytes_read <= 0)
+			std::cout << "ReadReady()" << std::endl;
+			// bytes_read = recv(m_fd, buffer.data(), DEFAULT_BUFLEN, 0);
+			bytes_read = read(m_fd, buffer.data(), DEFAULT_BUFLEN);
+			std::cout << "recv data length: " << bytes_read << std::endl;
+
+			if (bytes_read == -1)
+			{
+				std::cout << "recv -1 " << std::endl;
+				ret = false;
+				break;
+			}
+
+			if (bytes_read <= 0) // EAGAIN
 			{
 				break;
 			}
@@ -45,7 +58,7 @@ public:
 		//update last active time to prevent timeout
 		m_last_active = time(0);
 
-		return true;
+		return ret;
 	}
 
 	virtual bool WriteReady()
@@ -55,6 +68,7 @@ public:
 			in this case the data which failed to send should be stored in a buffer and the operation should be
 			retried when WriteReady() is called to signal the fd is writable again (this is up to you to implement).
 		*/
+		std::cout << "WriteReady()" << std::endl;
 		return true;
 	}
 

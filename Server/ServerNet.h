@@ -64,7 +64,8 @@ public:
 		//
 		sockaddr_in sin = { 0 };
 
-		sin.sin_addr.s_addr = inet_addr(listen_addr);
+		// sin.sin_addr.s_addr = inet_addr(listen_addr);
+		sin.sin_addr.s_addr = htonl(INADDR_ANY);
 		sin.sin_family = AF_INET;
 		sin.sin_port = htons(listen_port);
 
@@ -74,14 +75,14 @@ public:
 			throw std::runtime_error("socket() failed, error code: " + std::to_string(errno));
 		}
 
-		if (bind(m_listen_fd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)))
-		{
-			throw std::runtime_error("bind() failed, error code: " + std::to_string(errno));
-		}
-
 		if (SetNonblocking(m_listen_fd) == false)
 		{
 			throw std::runtime_error("SetNonBlocking() failed, error code: " + std::to_string(errno));
+		}
+
+		if (bind(m_listen_fd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)))
+		{
+			throw std::runtime_error("bind() failed, error code: " + std::to_string(errno));
 		}
 
 		if (listen(m_listen_fd, SOMAXCONN) == -1)
@@ -119,13 +120,14 @@ public:
 		}
 
 		epoll_event ev;
-		ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	// client events will be handled in edge-triggered mode
+		// ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	// client events will be handled in edge-triggered mode
+		ev.events = EPOLLIN | EPOLLET;
 		ev.data.ptr = ptr_client;						// we will pass client descriptor with every event
 
 		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->m_client_fd, &ev) == 1)
 		{
 			std::cout << "epoll_ctl() failed, error code: " << errno << std::endl;
-			// delete ptr_client;
+			delete ptr_client;
 			return false;
 		}
 
@@ -148,7 +150,8 @@ public:
 	{
 		while (true)
 		{
-			int num_fds = epoll_wait(m_epoll_fd, m_arr_events.data(), m_worker_max_events, 1000);
+			int num_fds = epoll_wait(m_epoll_fd, m_arr_events.data(), m_worker_max_events, -1);
+			std::cout << "epoll_wait return" << std::endl;
 			if (num_fds != -1)
 			{
 				//iterate signaled fds
@@ -196,7 +199,7 @@ public:
 private:
 	bool SetNonblocking(int fd)
 	{
-		int flags = fcntl(fd, F_GETFL, 0);
+		int flags = fcntl(fd, F_GETFL);
 		if (flags == -1)
 		{
 			return false;
@@ -238,6 +241,7 @@ private:
 		ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
 
 		//we got some data from the client
+		std::cout << "we got some data from the client" << std::endl;
 		if (ev.events & EPOLLIN)
 		{
 			if (!client->ReadReady())
@@ -255,7 +259,7 @@ private:
 		{
 			client->ServerClose();
 			RemoveClient(client);
-			 delete client;
+			delete client;
 
 			return false;
 		}

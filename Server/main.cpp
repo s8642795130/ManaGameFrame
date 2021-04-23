@@ -22,19 +22,20 @@ int main(int argc, char* argv[])
 		type = std::stoi(argv[1]);
 		std::cout << "param is: " << type << std::endl;
 	}
+	type = 1;
 
 	// Application
 	std::shared_ptr<Application> app{ std::make_shared<Application>() };
 	IApplication::SetPtr(app);
 	//
 	app->LoadConfig();
-	app->StartLoadAllLibrary(type);
-	app->LibInit();
-	app->LibAfterInit();
+	// app->StartLoadAllLibrary(type);
+	// app->LibInit();
+	// app->LibAfterInit();
 	app->StartThreadPool();
 	app->StartNetwork(type);
-	app->LibReadyExecute();
-	app->LibExecute();
+	// app->LibReadyExecute();
+	// app->LibExecute();
 	app->StartNetEventLoop();
 
 	return 0;
