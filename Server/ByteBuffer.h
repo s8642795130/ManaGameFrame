@@ -48,13 +48,20 @@ public:
 		return m_is_received_header;
 	}
 
-	void ResetHeader()
+	bool ResetHeader()
 	{
 		std::cout << "recv header over" << std::endl;
 
 		std::memcpy(&m_major_id, m_msg_header, MAJOR_LENGTH); // recv major
 		std::memcpy(&m_minor_id, m_msg_header + MAJOR_LENGTH, MINOR_LENGTH); // recv minor
 		std::memcpy(&m_buf_length, m_msg_header + MAJOR_LENGTH + MINOR_LENGTH, INT_LENGTH); // recv length
+
+		std::cout << "m_major_id: " << m_major_id << " m_minor_id: " << m_minor_id << " m_buf_length " << m_buf_length << std::endl;
+		// check data is valid
+		if (m_major_id < 0 || m_minor_id < 0 || m_buf_length < 0)
+		{
+			return false;
+		}
 
 		// set recv length
 		m_len_recv_num = m_buf_length;
@@ -70,6 +77,7 @@ public:
 
 		// set header flag
 		m_is_received_header = true;
+		return true;
 	}
 
 	void ResetData()

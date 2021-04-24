@@ -8,13 +8,14 @@
 #include "ServerNet.h"
 #include "ClientNet.h"
 #include "PluginManager.h"
+// #include "ServerNetTest.h"
 
 class Application : public IApplication
 {
 private:
 	std::unique_ptr<ThreadPool> m_thread_pool;
-	// std::unique_ptr<ServerNet<ClientNet>> m_server_net;
 	std::unique_ptr<ServerNet> m_server_net;
+	// std::unique_ptr<ServerNetTest> m_server_net;
 	std::unique_ptr<PluginManager> m_plugin_manager;
 public:
 	Application();

@@ -21,13 +21,14 @@ class ClientDescriptor : public Actor
 {
 protected:
 	const int m_timeout = 30;
-	int m_fd = -1;
 	std::string m_uid;
 	//
 	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_receive_callBack;
-	std::shared_ptr<ByteBuffer> m_buffer;
+	std::unique_ptr<ByteBuffer> m_buffer;
 public:
-	ClientDescriptor()
+	ClientDescriptor() : 
+		m_receive_callBack(std::make_shared<std::map<int, std::function<void(ClientDescriptor*)>>>()),
+		m_buffer(std::make_unique<ByteBuffer>())
 	{
 	}
 
@@ -56,7 +57,7 @@ public:
 	virtual void ClientClose() { throw std::runtime_error("ClientClose() not implemented"); }
 
 	//client's unique id
-	const int GetSid() { return m_fd; }
+	const int GetSid() { return m_client_fd; }
 
 	// client uuid
 	const std::string& GetUid() const
@@ -105,7 +106,10 @@ public:
 			//
 			if (m_buffer->GetRemainLen() == 0)
 			{
-				m_buffer->ResetHeader();
+				if (m_buffer->ResetHeader() == false)
+				{
+					return;
+				}
 
 				if (m_buffer->GetRemainLen() == 0)
 				{
@@ -161,6 +165,6 @@ public:
 			std::memcpy(temp_data + HEADER_LENGTH, ptr_value, length);
 		}
 		std::cout << "send data length: " << HEADER_LENGTH + length << std::endl;
-		send(m_fd, temp_data, HEADER_LENGTH + length, 0);
+		send(m_client_fd, temp_data, HEADER_LENGTH + length, 0);
 	}
 };

@@ -56,7 +56,7 @@ public:
 		}
 	}
 
-	void StartNetwork(const char* listen_addr, uint16_t listen_port, uint32_t timeout_secs)
+	void StartNetwork(uint16_t listen_port, uint32_t timeout_secs)
 	{
 		// test code
 		timeout_secs_ = timeout_secs;
@@ -227,6 +227,10 @@ private:
 		ptr_client->m_client_fd = accept(m_listen_fd, reinterpret_cast<sockaddr*>(&ptr_client->m_client_sin), &sin_size);
 		if (ptr_client->m_client_fd == -1)
 		{
+			if (errno != EAGAIN && errno != ECONNABORTED && errno != EPROTO && errno != EINTR)
+			{
+				std::perror("accept");
+			}
 			std::cout << "accept() failed, error code: " << errno << std::endl;
 			return false;
 		}
@@ -241,7 +245,6 @@ private:
 		ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
 
 		//we got some data from the client
-		std::cout << "we got some data from the client" << std::endl;
 		if (ev.events & EPOLLIN)
 		{
 			if (!client->ReadReady())

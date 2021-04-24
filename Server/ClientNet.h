@@ -30,20 +30,16 @@ public:
 		//we must drain the entire read buffer as we won't get another event until client sends more data
 		while (true)
 		{
-			std::cout << "ReadReady()" << std::endl;
 			// bytes_read = recv(m_fd, buffer.data(), DEFAULT_BUFLEN, 0);
-			bytes_read = read(m_fd, buffer.data(), DEFAULT_BUFLEN);
-			std::cout << "recv data length: " << bytes_read << std::endl;
+			bytes_read = read(m_client_fd, buffer.data(), DEFAULT_BUFLEN);
 
 			if (bytes_read == -1)
 			{
-				std::cout << "recv -1 " << std::endl;
-				ret = false;
-				break;
-			}
-
-			if (bytes_read <= 0) // EAGAIN
-			{
+				if (errno != EAGAIN)
+				{
+					std::perror("read error");
+					ret = false;
+				}
 				break;
 			}
 
@@ -86,14 +82,14 @@ public:
 
 	virtual void ClientClose()
 	{
-		close(m_fd);
+		close(m_client_fd);
 
 		std::cout << "[-] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by client" << std::endl;
 	}
 
 	virtual void ServerClose()
 	{
-		close(m_fd);
+		close(m_client_fd);
 
 		std::cout << "[-] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by server" << std::endl;
 	}

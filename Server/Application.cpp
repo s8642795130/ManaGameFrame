@@ -5,7 +5,6 @@
 
 Application::Application() : 
 	m_thread_pool(std::make_unique<ThreadPool>()),
-	// m_server_net(std::make_unique<ServerNet<ClientNet>>()),
 	m_server_net(std::make_unique<ServerNet>()),
 	m_plugin_manager(std::make_unique<PluginManager>())
 {
@@ -13,7 +12,7 @@ Application::Application() :
 
 void Application::AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func)
 {
-	return m_server_net->AddReceiveCallBack(msg_id, call_func);
+	// return m_server_net->AddReceiveCallBack(msg_id, call_func);
 }
 
 void Application::SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg)
@@ -94,11 +93,12 @@ void Application::StartNetwork(int test_code)
 {
 	if (test_code == 1)
 	{
-		m_server_net->StartNetwork("192.168.169.132", 3010, 30);
+		// m_server_net->StartNetwork(3010);
+		m_server_net->StartNetwork(3010, 30);
 	}
 	else
 	{
-		m_server_net->StartNetwork("192.168.169.132", 3020, 30);
+		//m_server_net->StartNetwork("192.168.169.132", 3020, 30);
 	}
 	
 }
@@ -113,5 +113,5 @@ void Application::ConnectMaster()
 	// Connect Master
 	MasterObj* ptr_master_obj = new MasterObj();
 	ptr_master_obj->ConnectMaster();
-	m_server_net->AddFD(ptr_master_obj);
+	//m_server_net->AddFD(ptr_master_obj);
 }

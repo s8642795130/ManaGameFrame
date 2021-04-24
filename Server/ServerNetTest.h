@@ -20,12 +20,15 @@
 
 #include "DefineHeader.h"
 
+/*
 class ServerNetTest
 {
 private:
 	int m_epfd = 0;
 	int m_listenfd = 0;
-	struct epoll_event m_ev, m_events[WORKER_MAX_EVENTS];
+	std::array<epoll_event, WORKER_MAX_EVENTS> m_events;
+	std::map<int, ClientDescriptor*> m_map_clients;
+	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_ptr_callback_map;
 
 	void setnonblocking(int fd)
 	{
@@ -46,7 +49,7 @@ private:
 	}
 
 public:
-	void StartNetwork(int port)
+	void StartNetwork(uint16_t port)
 	{
 		// struct epoll_event ev, events[WORKER_MAX_EVENTS];
 		struct sockaddr_in local;
@@ -76,6 +79,8 @@ public:
 			perror("epoll_create");
 			exit(EXIT_FAILURE);
 		}
+
+		struct epoll_event m_ev;
 		m_ev.events = EPOLLIN;
 		m_ev.data.fd = m_listenfd;
 		if (epoll_ctl(m_epfd, EPOLL_CTL_ADD, m_listenfd, &m_ev) == -1)
@@ -100,7 +105,7 @@ public:
 
 		for (;;)
 		{
-			nfds = epoll_wait(m_epfd, m_events, WORKER_MAX_EVENTS, -1);
+			nfds = epoll_wait(m_epfd, m_events.data(), WORKER_MAX_EVENTS, -1);
 			if (nfds == -1)
 			{
 				perror("epoll_wait error");
@@ -114,16 +119,36 @@ public:
 				{
 					while ((connfd = accept(m_listenfd, (struct sockaddr*)&remote, &addrlen)) > 0)
 					{
+						//
+						// allocate and initialize a new descriptor for the client
+						ClientNet* ptr_client = new ClientNet();
+
+						// get sin struct size
+						socklen_t sin_size = sizeof(ptr_client->m_client_sin);
+
+						ptr_client->m_client_fd = connfd;
+						if (ptr_client->m_client_fd == -1)
+						{
+							std::cout << "accept() failed, error code: " << errno << std::endl;
+							// return false;
+						}
+						//
+
 						char* ipaddr = inet_ntoa(remote.sin_addr);
 						printf("accept a connection from [%s]\n", ipaddr);
 						setnonblocking(connfd);	//
-						m_ev.events = EPOLLIN | EPOLLET;	//
-						m_ev.data.fd = connfd;
-						if (epoll_ctl(m_epfd, EPOLL_CTL_ADD, connfd, &m_ev) == -1)
+
+						struct epoll_event ev;
+						ev.events = EPOLLIN | EPOLLET;	//
+						ev.data.fd = connfd;
+						if (epoll_ctl(m_epfd, EPOLL_CTL_ADD, connfd, &ev) == -1)
 						{
 							perror("epoll_ctl: add");
 							exit(EXIT_FAILURE);
 						}
+
+						// test code
+						m_map_clients[ptr_client->m_client_fd] = ptr_client;
 					}
 					if (connfd == -1)
 					{
@@ -135,6 +160,9 @@ public:
 				if (m_events[i].events & EPOLLIN)
 				{
 					std::cout << "got EPOLLIN" << std::endl;
+
+					ClientNet* client = reinterpret_cast<ClientNet*>(m_events[i].data.ptr);
+
 					n = 0;
 					while ((nread = read(sockfd, buf.data() + n, BUFSIZ - 1)) > 0)
 					{
@@ -157,6 +185,7 @@ public:
 						perror("epoll_ctl: mod");
 					}
 					*/
+/*
 				}
 				if (m_events[i].events & EPOLLOUT)
 				{
@@ -184,3 +213,4 @@ public:
 		}
 	}
 };
+*/
