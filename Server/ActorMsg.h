@@ -45,7 +45,14 @@ public:
 	template <typename... Args, long unsigned int... Is>
 	void func(std::tuple<Args...>& tup, helper::index<Is...>)
 	{
-		m_f(m_base_ptr, std::get<Is>(tup)...);
+		try
+		{
+			m_f(m_base_ptr, std::get<Is>(tup)...);
+		}
+		catch (...)
+		{
+			std::perror("m_f error: ");
+		}
 	}
 
 	template <typename... Args>

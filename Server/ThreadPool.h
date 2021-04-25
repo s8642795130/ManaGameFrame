@@ -50,7 +50,6 @@ private:
 	{
 		while (true)
 		{
-			std::cout << "run thread" << std::endl;
 			// m_task_queue.WaitAndPop(task);
 			std::shared_ptr<ThreadTask> ptr_task = *m_task_queue.WaitAndPop();
 			//

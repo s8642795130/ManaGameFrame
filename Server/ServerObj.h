@@ -9,11 +9,11 @@ public:
 
 	void ConnectServer(const std::string& ip, const short unsigned int port)
 	{
-        int sock = socket(AF_INET, SOCK_STREAM, 0);
+        m_client_fd = socket(AF_INET, SOCK_STREAM, 0);
 
         // test code
         int on = 1;
-        setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+        setsockopt(m_client_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 
         // sockaddr_in
         std::memset(&m_client_sin, 0, sizeof(m_client_sin));
@@ -22,7 +22,7 @@ public:
         m_client_sin.sin_addr.s_addr = inet_addr(ip.c_str()); //
 
         //
-        if (connect(sock, (struct sockaddr*)&m_client_sin, sizeof(m_client_sin)) < 0)
+        if (connect(m_client_fd, (struct sockaddr*)&m_client_sin, sizeof(m_client_sin)) < 0)
         {
             std::cout << "connect" << std::endl;
         }

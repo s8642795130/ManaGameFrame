@@ -10,9 +10,9 @@ private:
 	char* m_buf_ptr = nullptr;
 	char m_msg_header[HEADER_LENGTH] = { 0 };
 	char m_length_buf[4] = { 0 };
-	std::size_t m_len_recv_num = 0;
+	ssize_t m_len_recv_num = 0;
 	int m_cur_pos = 0;
-	std::size_t m_remain_len = HEADER_LENGTH; // majorId: 4 minorId: 4 dataLength: 4
+	ssize_t m_remain_len = HEADER_LENGTH; // majorId: 4 minorId: 4 dataLength: 4
 	bool m_is_received_header = false;
 	//
 	int m_major_id = 0;
@@ -50,13 +50,10 @@ public:
 
 	bool ResetHeader()
 	{
-		std::cout << "recv header over" << std::endl;
-
 		std::memcpy(&m_major_id, m_msg_header, MAJOR_LENGTH); // recv major
 		std::memcpy(&m_minor_id, m_msg_header + MAJOR_LENGTH, MINOR_LENGTH); // recv minor
 		std::memcpy(&m_buf_length, m_msg_header + MAJOR_LENGTH + MINOR_LENGTH, INT_LENGTH); // recv length
 
-		std::cout << "m_major_id: " << m_major_id << " m_minor_id: " << m_minor_id << " m_buf_length " << m_buf_length << std::endl;
 		// check data is valid
 		if (m_major_id < 0 || m_minor_id < 0 || m_buf_length < 0)
 		{
@@ -92,7 +89,7 @@ public:
 		m_is_received_header = false;
 	}
 
-	std::size_t GetRemainLen()
+	ssize_t GetRemainLen()
 	{
 		return m_remain_len;
 	}
@@ -103,7 +100,7 @@ public:
 		m_remain_len -= len;
 	}
 
-	std::size_t GetUnreceivedLen()
+	ssize_t GetUnreceivedLen()
 	{
 		return m_len_recv_num;
 	}

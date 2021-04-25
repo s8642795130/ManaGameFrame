@@ -29,7 +29,7 @@ void ServerControlModule::ConnectMaster()
 {
 	//
 	std::shared_ptr<ServerObj> server_obj = std::make_shared<ServerObj>();
-	server_obj->ConnectServer("192.168.169.132", 3010);
+	server_obj->ConnectServer("127.0.0.1", 3010);
 	m_plugin->GetAppPtr()->AddActorToThreadCell(server_obj);
 
 	const int server_online = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::SERVER_ONLINE);

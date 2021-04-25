@@ -75,14 +75,16 @@ public:
 	/// </summary>
 	void ProccessIO()
 	{
-		std::cout << "ProccessIO" << std::endl;
 		// get major id
 		int major_id = m_buffer->GetMajorId();
-		std::cout << "m_buffer->GetMajorId(); " << major_id << std::endl;
 		
 		// process io callback
-		std::function<void(ClientDescriptor*)> callback = m_receive_callBack->at(major_id);
-		callback(this);
+		auto it = m_receive_callBack->find(major_id);
+		if (it != std::cend(*m_receive_callBack)) // ->end()
+		{
+			std::function<void(ClientDescriptor*)> callback = it->second; // m_receive_callBack->at(major_id);
+			callback(this);
+		}
 	}
 
 	/// <summary>
@@ -90,7 +92,7 @@ public:
 	/// </summary>
 	/// <param name="buffer"></param>
 	/// <param name="len"></param>
-	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, std::size_t len)
+	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
 	{
 		auto buf_remain_len = len;
 		if (m_buffer->GetHeaderStatus() == false)

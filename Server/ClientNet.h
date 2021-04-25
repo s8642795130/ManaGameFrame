@@ -33,7 +33,8 @@ public:
 			// bytes_read = recv(m_fd, buffer.data(), DEFAULT_BUFLEN, 0);
 			bytes_read = read(m_client_fd, buffer.data(), DEFAULT_BUFLEN);
 
-			if (bytes_read == -1)
+			// if (bytes_read == -1)
+			if (bytes_read <= 0)
 			{
 				if (errno != EAGAIN)
 				{

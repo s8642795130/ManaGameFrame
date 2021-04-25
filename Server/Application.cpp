@@ -12,7 +12,7 @@ Application::Application() :
 
 void Application::AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func)
 {
-	// return m_server_net->AddReceiveCallBack(msg_id, call_func);
+	return m_server_net->AddReceiveCallBack(msg_id, call_func);
 }
 
 void Application::SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg)
@@ -98,7 +98,7 @@ void Application::StartNetwork(int test_code)
 	}
 	else
 	{
-		//m_server_net->StartNetwork("192.168.169.132", 3020, 30);
+		m_server_net->StartNetwork(3020, 30);
 	}
 	
 }

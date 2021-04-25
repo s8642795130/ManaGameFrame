@@ -151,7 +151,6 @@ public:
 		while (true)
 		{
 			int num_fds = epoll_wait(m_epoll_fd, m_arr_events.data(), m_worker_max_events, -1);
-			std::cout << "epoll_wait return" << std::endl;
 			if (num_fds != -1)
 			{
 				//iterate signaled fds
