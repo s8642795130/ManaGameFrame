@@ -18,7 +18,6 @@
 #include "DefineHeader.h"
 #include "ClientNet.h"
 
-// template <class ClientDescriptorType> class ServerNet
 class ServerNet
 {
 private:
@@ -26,12 +25,12 @@ private:
 	int m_listen_fd = -1;
 	int m_epoll_fd = -1;
 	std::array<epoll_event, WORKER_MAX_EVENTS> m_arr_events;
-	std::map<int, std::shared_ptr<ClientNet>> m_map_clients;
+	std::map<int, std::shared_ptr<ClientDescriptor>> m_map_clients;
 	uint32_t timeout_secs_;
 	time_t last_socket_check_;
 
 	//
-	std::shared_ptr<std::map<int, std::function<void(std::shared_ptr<ClientDescriptor>&)>>> m_ptr_callback_map;
+	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_ptr_callback_map;
 
 public:
 	ServerNet() :
@@ -40,7 +39,7 @@ public:
 		last_socket_check_(0)
 	{
 		// test code
-		m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(std::shared_ptr<ClientDescriptor>&)>>>();
+		m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(ClientDescriptor*)>>>();
 	}
 
 	~ServerNet()
@@ -140,17 +139,17 @@ public:
 		return true;
 	}
 
-	void AddReceiveCallBack(const int msgID, std::function<void(std::shared_ptr<ClientDescriptor>&)> call_func)
-	{
-		// test code
-		m_ptr_callback_map->emplace(msgID, call_func);
-	}
-
-	std::shared_ptr<ClientNet> GetClientPtrByIndex(int index)
+	std::shared_ptr<ClientDescriptor>& GetClientPtrByFD(int index)
 	{
 		return m_map_clients[index];
 	}
 
+	void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*)> call_func)
+	{
+		// test code
+		m_ptr_callback_map->emplace(msgID, call_func);
+	}
+	
 	void EventLoop()
 	{
 		while (true)
@@ -247,7 +246,10 @@ private:
 	{
 		//retrieve client descriptor address from the data parameter
 		// ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
-		int map_index = reinterpret_cast<int>(ev.data.ptr);
+		// int map_index = reinterpret_cast<int>(ev.data.ptr);
+		int map_index = 0;
+		std::memcpy(&map_index, &(ev.data.ptr), sizeof(int));
+
 		auto client = m_map_clients[map_index];
 
 		//we got some data from the client
@@ -288,9 +290,9 @@ private:
 		return true;
 	}
 
-	void RemoveClient(std::shared_ptr<ClientNet>& ptr_client)
+	void RemoveClient(std::shared_ptr<ClientDescriptor>& ptr_client)
 	{
-		std::map<int, std::shared_ptr<ClientNet>>::iterator it = m_map_clients.find(ptr_client->GetSid());
+		std::map<int, std::shared_ptr<ClientDescriptor>>::iterator it = m_map_clients.find(ptr_client->GetSid());
 		m_map_clients.erase(it);
 	}
 };

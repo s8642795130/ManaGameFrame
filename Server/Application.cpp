@@ -1,7 +1,6 @@
 #include "Application.h"
 
 #include "ThreadRouter.h"
-#include "MasterObj.h"
 
 Application::Application() : 
 	m_thread_pool(std::make_unique<ThreadPool>()),
@@ -10,7 +9,12 @@ Application::Application() :
 {
 }
 
-void Application::AddReceiveCallBack(const int msg_id, std::function<void(std::shared_ptr<ClientDescriptor>&)> call_func)
+std::shared_ptr<ClientDescriptor>& Application::GetClientPtrByFD(int fd)
+{
+	return m_server_net->GetClientPtrByFD(fd);
+}
+
+void Application::AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func)
 {
 	return m_server_net->AddReceiveCallBack(msg_id, call_func);
 }
@@ -106,12 +110,4 @@ void Application::StartNetwork(int test_code)
 void Application::StartNetEventLoop()
 {
 	m_server_net->EventLoop();
-}
-
-void Application::ConnectMaster()
-{
-	// Connect Master
-	MasterObj* ptr_master_obj = new MasterObj();
-	ptr_master_obj->ConnectMaster();
-	//m_server_net->AddFD(ptr_master_obj);
 }

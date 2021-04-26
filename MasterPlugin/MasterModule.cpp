@@ -14,7 +14,7 @@ void MasterModule::AfterInit()
 {
 	//
 	int e = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::SERVER_ONLINE);
-	std::function<void(std::shared_ptr<ClientDescriptor>&)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1);
+	std::function<void(ClientDescriptor*)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1);
 	//
 	m_plugin->GetAppPtr()->AddReceiveCallBack(e, call_func);
 }
