@@ -29,6 +29,7 @@ namespace NetMessage
 	enum class ServerMsg : int
 	{
 		SERVER_ONLINE,
-		SERVER_OFFLINE
+		SERVER_OFFLINE,
+		FRONTEND_MSG
 	};
 }

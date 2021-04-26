@@ -23,11 +23,11 @@ protected:
 	const int m_timeout = 30;
 	std::string m_uid;
 	//
-	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_receive_callBack;
+	std::shared_ptr<std::map<int, std::function<void(std::shared_ptr<ClientDescriptor>&)>>> m_receive_callBack;
 	std::unique_ptr<ByteBuffer> m_buffer;
 public:
 	ClientDescriptor() : 
-		m_receive_callBack(std::make_shared<std::map<int, std::function<void(ClientDescriptor*)>>>()),
+		m_receive_callBack(std::make_shared<std::map<int, std::function<void(std::shared_ptr<ClientDescriptor>&)>>>()),
 		m_buffer(std::make_unique<ByteBuffer>())
 	{
 	}
@@ -65,7 +65,7 @@ public:
 		return m_uid;
 	}
 
-	virtual void SetReceiveCallBackMapPtr(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> receive_callBack)
+	virtual void SetReceiveCallBackMapPtr(std::shared_ptr<std::map<int, std::function<void(std::shared_ptr<ClientDescriptor>&)>>> receive_callBack)
 	{
 		m_receive_callBack = receive_callBack;
 	}
@@ -82,7 +82,7 @@ public:
 		auto it = m_receive_callBack->find(major_id);
 		if (it != std::cend(*m_receive_callBack)) // ->end()
 		{
-			std::function<void(ClientDescriptor*)> callback = it->second; // m_receive_callBack->at(major_id);
+			std::function<void(std::shared_ptr<ClientDescriptor>&)> callback = it->second; // m_receive_callBack->at(major_id);
 			callback(this);
 		}
 	}
