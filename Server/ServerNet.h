@@ -246,9 +246,9 @@ private:
 	{
 		//retrieve client descriptor address from the data parameter
 		// ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
-		// int map_index = reinterpret_cast<int>(ev.data.ptr);
-		int map_index = 0;
-		std::memcpy(&map_index, &(ev.data.ptr), sizeof(int));
+		int map_index = reinterpret_cast<int>(ev.data.ptr);
+		//int map_index = 0;
+		//std::memcpy(&map_index, &(ev.data.ptr), sizeof(int));
 
 		auto client = m_map_clients[map_index];
 
