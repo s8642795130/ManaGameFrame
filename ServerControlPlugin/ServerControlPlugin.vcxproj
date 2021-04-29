@@ -82,11 +82,13 @@
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\..\..\..\..\out\</OutDir>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="ClientNetControlActor.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ServerControlModule.cpp" />
     <ClCompile Include="ServerControlPlugin.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientNetControlActor.h" />
     <ClInclude Include="ServerControlModule.h" />
     <ClInclude Include="ServerControlPlugin.h" />
   </ItemGroup>

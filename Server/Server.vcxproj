@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="BackendClient.cpp" />
+    <ClCompile Include="ClientNetControlActor.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="DynLib.cpp" />
     <ClCompile Include="FrontendClient.cpp" />
@@ -99,6 +100,7 @@
     <ClInclude Include="ByteBuffer.h" />
     <ClInclude Include="ClientNet.h" />
     <ClInclude Include="ClientDescriptor.h" />
+    <ClInclude Include="ClientNetControlActor.h" />
     <ClInclude Include="ConfigFile.h" />
     <ClInclude Include="DefineHeader.h" />
     <ClInclude Include="DynLib.h" />

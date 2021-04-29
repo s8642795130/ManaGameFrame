@@ -96,8 +96,12 @@ class ThreadPool
 private:
 	unsigned int m_thread_count = 0;
 	std::vector<std::shared_ptr<ThreadCell>> m_thread_pool;
+	std::vector<std::string> m_arr_thread_proc_actor_uuid;
+protected:
+	void AddClientProcActorToThread();
 public:
 	void StartThreadPool();
+	const std::string& GetThreadActorUUID(int index);
 	void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
 	void AddActorMsgToThreadCell(std::unique_ptr<IActorMsg>& ptr_actor_msg);
 };

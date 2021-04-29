@@ -35,4 +35,5 @@ public:
 	virtual void BroadcastMsg() = 0;
 	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor) = 0;
 	virtual void RemoveActorToThreadCell(const std::string& uuid) = 0;
+	virtual const std::string& GetThreadActorUUID(int index) = 0;
 };

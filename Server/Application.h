@@ -28,6 +28,7 @@ public:
 	virtual void BroadcastMsg();
 	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
 	virtual void RemoveActorToThreadCell(const std::string& uuid);
+	virtual const std::string& GetThreadActorUUID(int index);
 	//
 	void LoadConfig();
 	void StartLoadAllLibrary(int test_code);

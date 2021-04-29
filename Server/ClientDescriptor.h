@@ -11,6 +11,10 @@
 #include "DefineHeader.h"
 #include "Actor.h"
 #include "ByteBuffer.h"
+#include "ThreadRouter.h"
+#include "ActorMsg.h"
+#include "MessageDefine.h"
+#include "ClientNetControlActor.h"
 
 /*
 	This is a base client descriptor and virtual methods should be implemented by a derived class.
@@ -20,6 +24,9 @@
 class ClientDescriptor : public Actor
 {
 protected:
+	// Client Type
+	NetMessage::ClientType m_client_type;
+	//
 	const int m_timeout = 30;
 	std::string m_uid;
 	//
@@ -70,11 +77,39 @@ public:
 		m_receive_callBack = receive_callBack;
 	}
 
+	//
+	void ProcessFrontendIO()
+	{
+		auto thread_index = ThreadRouter::GetThreadActorIndexBySocket(m_client_fd);
+		std::string actor_uuid = m_app->GetThreadActorUUID(thread_index);
+		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNetControlActor, int, int>>("", actor_uuid, &ClientNetControlActor::ProcClientMessage, 10, 20);
+		m_app->SendMsgToActor(ptr);
+	}
+
+	void ProcessBackendIO()
+	{
+
+	}
+
 	/// <summary>
 	/// ProccessIO
 	/// </summary>
 	void ProccessIO()
 	{
+		switch (m_client_type)
+		{
+		case NetMessage::ClientType::CLIENT:
+			// frontend server
+			ProcessFrontendIO();
+			break;
+		case NetMessage::ClientType::SERVER:
+			// backend server
+			ProcessBackendIO();
+			break;
+		default:
+			break;
+		}
+
 		// get major id
 		int major_id = m_buffer->GetMajorId();
 		
@@ -115,8 +150,10 @@ public:
 
 				if (m_buffer->GetRemainLen() == 0)
 				{
-					// io
+					// io actor
 					ProccessIO();
+
+					// reset msg data
 					m_buffer->ResetData();
 					if (buf_remain_len != 0)
 					{

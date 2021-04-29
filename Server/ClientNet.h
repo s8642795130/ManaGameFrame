@@ -6,15 +6,11 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include "MessageDefine.h"
 #include "ClientDescriptor.h"
 
 class ClientNet : public ClientDescriptor
 {
 protected:
-	// Client Type
-	NetMessage::ClientType m_client_type;
-
 	time_t m_last_active;
 public:
 	ClientNet()

@@ -54,6 +54,11 @@ void Application::RemoveActorToThreadCell(const std::string& uuid)
 
 }
 
+const std::string& Application::GetThreadActorUUID(int index)
+{
+	return m_thread_pool->GetThreadActorUUID(index);
+}
+
 void Application::LoadConfig()
 {
 	// load config
