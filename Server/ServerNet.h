@@ -25,7 +25,7 @@ private:
 	int m_listen_fd = -1;
 	int m_epoll_fd = -1;
 	std::array<epoll_event, WORKER_MAX_EVENTS> m_arr_events;
-	std::map<int, std::shared_ptr<ClientDescriptor>> m_map_clients;
+	std::map<int, ClientDescriptor*> m_map_clients;
 	uint32_t timeout_secs_;
 	time_t last_socket_check_;
 
@@ -110,7 +110,7 @@ public:
 		}
 	}
 
-	bool AddFD(std::shared_ptr<ClientNet>& ptr_client)
+	bool AddFD(ClientNet* ptr_client)
 	{
 		if (!SetNonblocking(ptr_client->m_client_fd))
 		{
@@ -139,10 +139,12 @@ public:
 		return true;
 	}
 
+	/*
 	std::shared_ptr<ClientDescriptor>& GetClientPtrByFD(int index)
 	{
 		return m_map_clients[index];
 	}
+	*/
 
 	void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*)> call_func)
 	{
@@ -222,7 +224,7 @@ private:
 	bool HandleAccept()
 	{
 		// allocate and initialize a new descriptor for the client
-		std::shared_ptr<ClientNet> ptr_client = std::make_shared<ClientNet>();
+		ClientNet* ptr_client = new ClientNet();
 
 		// get sin struct size
 		socklen_t sin_size = sizeof(ptr_client->m_client_sin);
@@ -245,12 +247,7 @@ private:
 	bool HandleClient(epoll_event ev)
 	{
 		//retrieve client descriptor address from the data parameter
-		// ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
-		int map_index = reinterpret_cast<int>(ev.data.ptr);
-		//int map_index = 0;
-		//std::memcpy(&map_index, &(ev.data.ptr), sizeof(int));
-
-		auto client = m_map_clients[map_index];
+		ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
 
 		//we got some data from the client
 		if (ev.events & EPOLLIN)
@@ -290,9 +287,9 @@ private:
 		return true;
 	}
 
-	void RemoveClient(std::shared_ptr<ClientDescriptor>& ptr_client)
+	void RemoveClient(ClientDescriptor* ptr_client)
 	{
-		std::map<int, std::shared_ptr<ClientDescriptor>>::iterator it = m_map_clients.find(ptr_client->GetSid());
+		std::map<int, ClientDescriptor*>::iterator it = m_map_clients.find(ptr_client->GetSid());
 		m_map_clients.erase(it);
 	}
 };

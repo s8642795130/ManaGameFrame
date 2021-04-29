@@ -60,4 +60,20 @@ void ServerControlModule::OnServerConnectCallback(ClientDescriptor* ptr_client)
 void ServerControlModule::OnFrontendMsgCallback(ClientDescriptor* ptr_client)
 {
 	// the frontend server received some message from the client
+
+	// first of all,check login status
+
+	// get major id
+	/*
+	int major_id = ptr_client->m_buffer->GetMajorId();
+
+	// process io callback
+	auto it = m_receive_callBack->find(major_id);
+	if (it != std::cend(*m_receive_callBack)) // ->end()
+	{
+		std::function<void(ClientDescriptor*)> callback = it->second; // m_receive_callBack->at(major_id);
+		callback(this);
+	}
+	*/
+	// pass msg backendServer
 }

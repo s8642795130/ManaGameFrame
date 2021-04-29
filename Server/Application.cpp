@@ -2,6 +2,8 @@
 
 #include "ThreadRouter.h"
 
+std::shared_ptr<IApplication> IApplication::m_app;
+
 Application::Application() : 
 	m_thread_pool(std::make_unique<ThreadPool>()),
 	m_server_net(std::make_unique<ServerNet>()),
@@ -9,10 +11,12 @@ Application::Application() :
 {
 }
 
+/*
 std::shared_ptr<ClientDescriptor>& Application::GetClientPtrByFD(int fd)
 {
 	return m_server_net->GetClientPtrByFD(fd);
 }
+*/
 
 void Application::AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func)
 {

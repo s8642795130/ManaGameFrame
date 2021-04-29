@@ -8,8 +8,6 @@
 #include "ConfigFile.h"
 #include "Application.h"
 
-std::shared_ptr<IApplication> IApplication::m_app;
-
 int main(int argc, char* argv[])
 {
 	// dladdr, dlclose, dlerror, dlopen, dlsym, dlvsym

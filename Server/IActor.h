@@ -1,7 +1,7 @@
 #pragma once
 #include "UUID.h"
 
-class IActor : public std::enable_shared_from_this<IActor>
+class IActor
 {
 protected:
 	std::string m_uuid;

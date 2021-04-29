@@ -2,6 +2,8 @@
 #include "ThreadRouter.h"
 #include "ClientNetControlActor.h"
 
+unsigned int ThreadRouter::m_thread_count;
+
 void ThreadPool::StartThreadPool()
 {
 	m_thread_count = std::thread::hardware_concurrency();

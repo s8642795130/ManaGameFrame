@@ -14,7 +14,6 @@
 #include "ThreadRouter.h"
 #include "ActorMsg.h"
 #include "MessageDefine.h"
-#include "ClientNetControlActor.h"
 
 /*
 	This is a base client descriptor and virtual methods should be implemented by a derived class.
@@ -80,15 +79,20 @@ public:
 	//
 	void ProcessFrontendIO()
 	{
-		auto thread_index = ThreadRouter::GetThreadActorIndexBySocket(m_client_fd);
-		std::string actor_uuid = m_app->GetThreadActorUUID(thread_index);
-		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNetControlActor, int, int>>("", actor_uuid, &ClientNetControlActor::ProcClientMessage, 10, 20);
-		m_app->SendMsgToActor(ptr);
+		const int frontend_msg = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::FRONTEND_MSG);
+		std::function<void(ClientDescriptor*)> callback = (*m_receive_callBack)[frontend_msg];
+		callback(this);
 	}
 
 	void ProcessBackendIO()
 	{
-
+		// (rpc) (msg) (rcp callback)
+		/*
+		auto thread_index = ThreadRouter::GetThreadActorIndexBySocket(m_client_fd);
+		std::string actor_uuid = m_app->GetThreadActorUUID(thread_index);
+		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNetControlActor, int, int>>("", actor_uuid, &ClientNetControlActor::ProcClientMessage, 10, 20);
+		m_app->SendMsgToActor(ptr);
+		*/
 	}
 
 	/// <summary>
@@ -102,23 +106,15 @@ public:
 			// frontend server
 			ProcessFrontendIO();
 			break;
-		case NetMessage::ClientType::SERVER:
-			// backend server
+		case NetMessage::ClientType::FRONTEND_SERVER:
 			ProcessBackendIO();
+			break;
+		case NetMessage::ClientType::BACKEND_SERVER:
+			// backend server
+			
 			break;
 		default:
 			break;
-		}
-
-		// get major id
-		int major_id = m_buffer->GetMajorId();
-		
-		// process io callback
-		auto it = m_receive_callBack->find(major_id);
-		if (it != std::cend(*m_receive_callBack)) // ->end()
-		{
-			std::function<void(ClientDescriptor*)> callback = it->second; // m_receive_callBack->at(major_id);
-			callback(this);
 		}
 	}
 
@@ -179,6 +175,8 @@ public:
 		{
 			// io
 			ProccessIO();
+
+			// reset msg data
 			m_buffer->ResetData();
 			if (buf_remain_len != 0)
 			{

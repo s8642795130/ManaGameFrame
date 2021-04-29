@@ -21,7 +21,8 @@ namespace NetMessage
 	enum class ClientType : int
 	{
 		CLIENT,
-		SERVER,
+		FRONTEND_SERVER,
+		BACKEND_SERVER,
 		FAKE,
 		MASTER
 	};

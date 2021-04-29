@@ -19,7 +19,7 @@ private:
 	std::unique_ptr<PluginManager> m_plugin_manager;
 public:
 	Application();
-	virtual std::shared_ptr<ClientDescriptor>& GetClientPtrByFD(int fd);
+	//virtual std::shared_ptr<ClientDescriptor>& GetClientPtrByFD(int fd);
 	virtual void AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func);
 	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg);
 	virtual void RpcCall();
