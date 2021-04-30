@@ -11,14 +11,18 @@ void ServerControlModule::Init()
 
 void ServerControlModule::AfterInit()
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	int e = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::SERVER_ONLINE);
 	std::function<void(ClientDescriptor*)> call_func = std::bind(&ServerControlModule::OnServerOnlineCallback, this, std::placeholders::_1);
-	
 	m_plugin->GetAppPtr()->AddReceiveCallBack(e, call_func);
 
+	/// <summary>
+	/// 
+	/// </summary>
 	int frontend_msg = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::FRONTEND_MSG);
 	std::function<void(ClientDescriptor*)> frontend_msg_call_func = std::bind(&ServerControlModule::OnFrontendMsgCallback, this, std::placeholders::_1);
-
 	m_plugin->GetAppPtr()->AddReceiveCallBack(frontend_msg, frontend_msg_call_func);
 }
 
@@ -32,9 +36,9 @@ void ServerControlModule::Execute()
 void ServerControlModule::ConnectMaster()
 {
 	//
-	std::shared_ptr<ServerObj> server_obj = std::make_shared<ServerObj>();
-	server_obj->ConnectServer("127.0.0.1", 3010);
-	m_plugin->GetAppPtr()->AddActorToThreadCell(server_obj);
+	ServerObj* ptr_server_obj = new ServerObj();
+	ptr_server_obj->ConnectServer("127.0.0.1", 3010);
+	m_plugin->GetAppPtr()->AddActorToThreadCell(ptr_server_obj);
 
 	//
 	const int server_online = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::SERVER_ONLINE);
@@ -55,6 +59,7 @@ void ServerControlModule::OnServerOnlineCallback(ClientDescriptor* ptr_client)
 void ServerControlModule::OnServerConnectCallback(ClientDescriptor* ptr_client)
 {
 	// other server is already connect this server, record that
+	ptr_client->GetUUID();
 }
 
 void ServerControlModule::OnFrontendMsgCallback(ClientDescriptor* ptr_client)

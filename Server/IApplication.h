@@ -9,6 +9,7 @@
 
 class IActor;
 class ClientDescriptor;
+class ClientNet;
 class IActorMsg;
 
 class IApplication
@@ -27,6 +28,7 @@ public:
 	}
 
 	//virtual std::shared_ptr<ClientDescriptor>& GetClientPtrByFD(int fd) = 0;
+	virtual void AddFDToServerNet(ClientNet* ptr_client) = 0;
 	virtual void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*)> call_func) = 0;
 	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg) = 0;
 	virtual void RpcCall() = 0;

@@ -18,6 +18,11 @@ std::shared_ptr<ClientDescriptor>& Application::GetClientPtrByFD(int fd)
 }
 */
 
+void Application::AddFDToServerNet(ClientNet* ptr_client)
+{
+	m_server_net->AddFD(ptr_client);
+}
+
 void Application::AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func)
 {
 	return m_server_net->AddReceiveCallBack(msg_id, call_func);
