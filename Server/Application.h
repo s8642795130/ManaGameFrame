@@ -17,6 +17,7 @@ private:
 	std::unique_ptr<ServerNet> m_server_net;
 	// std::unique_ptr<ServerNetTest> m_server_net;
 	std::unique_ptr<PluginManager> m_plugin_manager;
+	std::map<std::string, std::string> m_server_obj_uuid;
 public:
 	Application();
 	//virtual std::shared_ptr<ClientDescriptor>& GetClientPtrByFD(int fd);
