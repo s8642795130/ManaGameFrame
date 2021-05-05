@@ -16,6 +16,7 @@
 #include <iostream>
 
 #include "DefineHeader.h"
+#include "IThreadPool.h"
 #include "ClientNet.h"
 
 class ServerNet
@@ -25,18 +26,19 @@ private:
 	int m_listen_fd = -1;
 	int m_epoll_fd = -1;
 	std::array<epoll_event, WORKER_MAX_EVENTS> m_arr_events;
-	std::map<int, ClientDescriptor*> m_map_clients;
+	std::map<int, std::shared_ptr<ClientNet>> m_map_clients;
 	//uint32_t timeout_secs_;
 	//time_t last_socket_check_;
-
+	std::shared_ptr<IThreadPool> m_ptr_thread_pool;
 	//
 	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_ptr_callback_map;
 
 public:
-	ServerNet() :
+	ServerNet(std::shared_ptr<IThreadPool> ptr_thread_pool) :
 		m_listen_fd(-1),
-		m_epoll_fd(-1)
+		m_epoll_fd(-1),
 		//last_socket_check_(0)
+		m_ptr_thread_pool(ptr_thread_pool)
 	{
 		// test code
 		m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(ClientDescriptor*)>>>();
@@ -110,7 +112,7 @@ public:
 		}
 	}
 
-	bool AddFD(ClientNet* ptr_client)
+	bool AddFD(std::shared_ptr<ClientNet> ptr_client)
 	{
 		if (!SetNonblocking(ptr_client->m_client_fd))
 		{
@@ -121,7 +123,7 @@ public:
 		epoll_event ev;
 		// ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	// client events will be handled in edge-triggered mode
 		ev.events = EPOLLIN | EPOLLET;
-		ev.data.ptr = reinterpret_cast<void*>(ptr_client->m_client_fd); // we will pass client descriptor with every event
+		// ev.data.ptr = reinterpret_cast<void*>(ptr_client->m_client_fd); // we will pass client descriptor with every event
 
 		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->m_client_fd, &ev) == 1)
 		{
@@ -132,6 +134,7 @@ public:
 
 		// store new client descriptor into the map of clients
 		m_map_clients[ptr_client->m_client_fd] = ptr_client;
+		m_ptr_thread_pool->AddActorToThreadCell(ptr_client);
 
 		// set callback map ptr
 		ptr_client->SetReceiveCallBackMapPtr(m_ptr_callback_map);
@@ -139,16 +142,8 @@ public:
 		return true;
 	}
 
-	/*
-	std::shared_ptr<ClientDescriptor>& GetClientPtrByFD(int index)
-	{
-		return m_map_clients[index];
-	}
-	*/
-
 	void AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*)> call_func)
 	{
-		// test code
 		m_ptr_callback_map->emplace(msgID, call_func);
 	}
 	
@@ -224,7 +219,7 @@ private:
 	bool HandleAccept()
 	{
 		// allocate and initialize a new descriptor for the client
-		ClientNet* ptr_client = new ClientNet();
+		std::shared_ptr<ClientNet> ptr_client = std::make_shared<ClientNet>();
 
 		// get sin struct size
 		socklen_t sin_size = sizeof(ptr_client->m_client_sin);
@@ -247,15 +242,16 @@ private:
 	bool HandleClient(epoll_event ev)
 	{
 		//retrieve client descriptor address from the data parameter
-		ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
+		// ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
+		std::shared_ptr<ClientNet> ptr_client = m_map_clients[ev.data.fd];
 
 		//we got some data from the client
 		if (ev.events & EPOLLIN)
 		{
-			if (!client->ReadReady())
+			if (!ptr_client->ReadReady())
 			{
-				client->ServerClose();
-				RemoveClient(client);
+				ptr_client->ServerClose();
+				RemoveClient(ptr_client);
 				// delete client;
 
 				return false;
@@ -265,8 +261,8 @@ private:
 		//the client closed the connection (should be after EPOLLIN as client can send data then close)
 		if (ev.events & EPOLLRDHUP)
 		{
-			client->ServerClose();
-			RemoveClient(client);
+			ptr_client->ServerClose();
+			RemoveClient(ptr_client);
 			// delete client;
 
 			return false;
@@ -275,10 +271,10 @@ private:
 		//fd is ready to be written
 		if (ev.events & EPOLLOUT)
 		{
-			if (!client->WriteReady())
+			if (!ptr_client->WriteReady())
 			{
-				client->ServerClose();
-				RemoveClient(client);
+				ptr_client->ServerClose();
+				RemoveClient(ptr_client);
 				// delete client;
 				return false;
 			}
@@ -287,9 +283,12 @@ private:
 		return true;
 	}
 
-	void RemoveClient(ClientDescriptor* ptr_client)
+	void RemoveClient(std::shared_ptr<ClientNet> ptr_client)
 	{
-		std::map<int, ClientDescriptor*>::iterator it = m_map_clients.find(ptr_client->GetSid());
+		std::map<int, std::shared_ptr<ClientNet>>::iterator it = m_map_clients.find(ptr_client->GetSid());
 		m_map_clients.erase(it);
+
+		//
+		this->m_ptr_thread_pool->RemoveActorFromThreadCell(ptr_client->GetUUID());
 	}
 };

@@ -25,7 +25,7 @@ public:
 		return m_data_map[value];
 	}
 
-	void Erase(T& value)
+	void Erase(const T& value)
 	{
 		std::lock_guard<std::mutex> lk(m_mut);
 		m_data_map.erase(value);

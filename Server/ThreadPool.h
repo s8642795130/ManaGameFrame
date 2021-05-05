@@ -5,6 +5,7 @@
 #include <map>
 #include <functional>
 
+#include "IThreadPool.h"
 #include "ThreadSafeQueue.h"
 #include "ThreadSafeMap.h"
 #include "IActor.h"
@@ -68,7 +69,7 @@ public:
 		m_map_actor.Emplace(ptr_actor->GetUUID(), ptr_actor);
 	}
 
-	void DelActorFromMap(std::string& str_key)
+	void RemoveActorFromMap(const std::string& str_key)
 	{
 		m_map_actor.Erase(str_key);
 	}
@@ -91,18 +92,16 @@ public:
 /// <summary>
 /// ThreadPool
 /// </summary>
-class ThreadPool
+class ThreadPool : public IThreadPool
 {
 private:
 	unsigned int m_thread_count = 0;
 	std::vector<std::shared_ptr<ThreadCell>> m_thread_pool;
 	std::vector<std::string> m_arr_thread_proc_actor_uuid;
-protected:
-	void AddClientProcActorToThread();
 public:
 	void StartThreadPool();
-	const std::string& GetThreadActorUUID(int index);
-	void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
-	void AddActorMsgToThreadCell(std::unique_ptr<IActorMsg>& ptr_actor_msg);
+	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
+	virtual void AddActorMsgToThreadCell(std::unique_ptr<IActorMsg>& ptr_actor_msg);
+	virtual void RemoveActorFromThreadCell(const std::string& uuid);
 };
 

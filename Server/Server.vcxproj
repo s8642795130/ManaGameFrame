@@ -90,6 +90,7 @@
     <ClCompile Include="MasterObj.cpp" />
     <ClCompile Include="PluginManager.cpp" />
     <ClCompile Include="PollNet.cpp" />
+    <ClCompile Include="ServerController.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -108,13 +109,16 @@
     <ClInclude Include="IActor.h" />
     <ClInclude Include="IActorMsg.h" />
     <ClInclude Include="IApplication.h" />
+    <ClInclude Include="IConfigFile.h" />
     <ClInclude Include="IModule.h" />
     <ClInclude Include="IPlugin.h" />
+    <ClInclude Include="IThreadPool.h" />
     <ClInclude Include="MasterObj.h" />
     <ClInclude Include="MessageDefine.h" />
     <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="PollNet.h" />
+    <ClInclude Include="ServerController.h" />
     <ClInclude Include="ServerNet.h" />
     <ClInclude Include="ServerNetTest.h" />
     <ClInclude Include="ServerObj.h" />

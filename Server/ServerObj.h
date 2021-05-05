@@ -7,7 +7,7 @@ public:
 	ServerObj() = default;
 	virtual ~ServerObj() = default;
 
-	void ConnectServer(const std::string& ip, const short unsigned int port)
+	bool ConnectServer(const std::string& ip, const short unsigned int port)
 	{
         m_client_fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -26,5 +26,7 @@ public:
         {
             std::cout << "connect" << std::endl;
         }
+
+        return true;
 	}
 };

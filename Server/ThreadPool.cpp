@@ -15,35 +15,22 @@ void ThreadPool::StartThreadPool()
 
 	// set threadRouter thread count
 	ThreadRouter::SetThreadCountNum(m_thread_count);
-
-	//
-	AddClientProcActorToThread();
-}
-
-void ThreadPool::AddClientProcActorToThread()
-{
-	// add clientNet message proc actor to thread array
-	for (unsigned int i = 0; i < m_thread_count; ++i)
-	{
-		std::shared_ptr<ClientNetControlActor> ptr_actor{ std::make_shared<ClientNetControlActor>() };
-		m_arr_thread_proc_actor_uuid.push_back(ptr_actor->GetUUID());
-		m_thread_pool[i]->AddActorToMap(ptr_actor);
-	}
-}
-
-const std::string& ThreadPool::GetThreadActorUUID(int index)
-{
-	return m_arr_thread_proc_actor_uuid[index];
 }
 
 void ThreadPool::AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor)
 {
-	unsigned long thread_index{ ThreadRouter::GetThreadIndexByUUID(ptr_actor->GetUUID()) };
+	auto thread_index{ ThreadRouter::GetThreadIndexByUUID(ptr_actor->GetUUID()) };
 	m_thread_pool[thread_index]->AddActorToMap(ptr_actor);
 }
 
 void ThreadPool::AddActorMsgToThreadCell(std::unique_ptr<IActorMsg>& ptr_actor_msg)
 {
-	unsigned long thread_index{ ThreadRouter::GetThreadIndexByUUID(ptr_actor_msg->GetReceiverActorUUID()) };
+	auto thread_index{ ThreadRouter::GetThreadIndexByUUID(ptr_actor_msg->GetReceiverActorUUID()) };
 	m_thread_pool[thread_index]->AddActorMsgToMap(ptr_actor_msg);
+}
+
+void ThreadPool::RemoveActorFromThreadCell(const std::string& uuid)
+{
+	auto thread_index{ ThreadRouter::GetThreadIndexByUUID(uuid) };
+	m_thread_pool[thread_index]->RemoveActorFromMap(uuid);
 }

@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "IApplication.h"
+#include "ConfigFile.h"
+#include "ServerController.h"
 #include "ThreadPool.h"
 #include "ServerNet.h"
 #include "ClientNet.h"
@@ -13,31 +15,29 @@
 class Application : public IApplication
 {
 private:
-	std::unique_ptr<ThreadPool> m_thread_pool;
+	std::shared_ptr<ConfigFile> m_config_file;
+	std::shared_ptr<ServerController> m_server_controller;
+	std::shared_ptr<ThreadPool> m_thread_pool;
 	std::unique_ptr<ServerNet> m_server_net;
-	// std::unique_ptr<ServerNetTest> m_server_net;
 	std::unique_ptr<PluginManager> m_plugin_manager;
-	std::map<std::string, std::string> m_server_obj_uuid;
 public:
 	Application();
-	//virtual std::shared_ptr<ClientDescriptor>& GetClientPtrByFD(int fd);
-	virtual void AddFDToServerNet(ClientNet* ptr_client);
+	//
 	virtual void AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func);
 	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg);
-	virtual void RpcCall();
+	virtual void RPCMsg();
 	virtual void ResponseMsg();
 	virtual void PushMsg();
 	virtual void BroadcastMsg();
 	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
-	virtual void RemoveActorToThreadCell(const std::string& uuid);
-	virtual const std::string& GetThreadActorUUID(int index);
+	virtual void RemoveActorFromThreadCell(const std::string& uuid);
 	//
 	void LoadConfig();
 	void StartLoadAllLibrary(int test_code);
 	//
+	void StartConnectServer();
+	//
 	void LibInit();
-	void LibAfterInit();
-	void LibReadyExecute();
 	void LibExecute();
 	//
 	void StartThreadPool();

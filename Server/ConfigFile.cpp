@@ -94,14 +94,17 @@ void ConfigFile::AnalyseConfigStr(const std::vector<std::string>& config_str)
 /// </summary>
 /// <param name="plugin_name"></param>
 /// <returns></returns>
-std::vector<int> ConfigFile::GetServersByPluginName(const std::string& plugin_name)
+const std::shared_ptr<ServerData>& ConfigFile::GetServerDataByName(const std::string& server_name)
 {
-	std::vector<int> vec;
-	return vec;
+	return m_server_config[server_name];
 }
 
-std::vector<int> ConfigFile::GetPluginsByPluginName(const std::string& plugin_name)
+const std::vector<std::string>& ConfigFile::GetServersByPluginName(const std::string& plugin_name)
 {
-	std::vector<int> vec;
-	return vec;
+	return m_plugin_config[plugin_name];
+}
+
+const std::vector<std::string>& ConfigFile::GetServersByType(const std::string& server_type)
+{
+	return m_type_config[server_type];
 }
