@@ -114,6 +114,7 @@
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IThreadPool.h" />
     <ClInclude Include="MasterObj.h" />
+    <ClInclude Include="MessageData.h" />
     <ClInclude Include="MessageDefine.h" />
     <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginManager.h" />

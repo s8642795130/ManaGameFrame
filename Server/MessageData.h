@@ -1,0 +1,105 @@
+#pragma once
+
+#include <tuple>
+#include <type_traits>
+
+#include "ByteBuffer.h"
+
+enum class MSG_TYPE : int
+{
+    INT,
+    BOOL,
+    CHAR,
+    STRING
+};
+
+namespace detail
+{
+    template <typename Fn, typename Tuple, std::size_t... I>
+    inline constexpr void ForEachTuple(Tuple&& tuple,
+        Fn&& fn,
+        std::index_sequence<I...>)
+    {
+        using Expander = int[];
+        (void)Expander
+        {
+            0, ((void)fn(std::get<I>(std::forward<Tuple>(tuple))), 0)...
+        };
+    }
+
+    template <typename Fn, typename Tuple>
+    inline constexpr void ForEachTuple(Tuple&& tuple, Fn&& fn)
+    {
+        ForEachTuple(
+            std::forward<Tuple>(tuple), std::forward<Fn>(fn),
+            std::make_index_sequence<std::tuple_size<std::decay_t<Tuple>>::value>{});
+    }
+
+    template <typename T>
+    struct is_field_pointer : std::false_type {};
+
+    template <typename C, typename T>
+    struct is_field_pointer<T C::*> : std::true_type {};
+
+    template <typename T>
+    constexpr auto is_field_pointer_v = is_field_pointer<T>::value;
+
+}  // namespace detail
+
+template <typename T>
+inline constexpr auto StructSchema() {
+    return std::make_tuple();
+}
+
+#define DEFINE_STRUCT_SCHEMA(Struct, ...)        \
+  template <>                                    \
+  inline constexpr auto StructSchema<Struct>() { \
+    using _Struct = Struct;                      \
+    return std::make_tuple(__VA_ARGS__);         \
+  }
+
+#define DEFINE_STRUCT_FIELD(StructField, FieldName) \
+  std::make_tuple(&_Struct::StructField, FieldName)
+
+template <typename T>
+inline constexpr void ForEachField(T& value, ByteBuffer& byte_buffer)
+{
+    // get a tuple
+    constexpr auto struct_schema = StructSchema<std::decay_t<T>>();
+
+    // const std::tuple<bool SimpleStruct::* ,const char *>
+    static_assert(std::tuple_size<decltype(struct_schema)>::value != 0,
+        "StructSchema<T>() for type T should be specialized to return "
+        "FieldSchema tuples, like ((&T::field, field_name), ...)");
+
+    // each tuple ()
+    detail::ForEachTuple(struct_schema, [&value, &byte_buffer](auto&& field_schema)
+        {
+            using FieldSchema = std::decay_t<decltype(field_schema)>;
+            static_assert(std::tuple_size<FieldSchema>::value >= 2 && detail::is_field_pointer_v<std::tuple_element_t<0, FieldSchema>>, "FieldSchema tuple should be (&T::field, field_name)");
+
+            //
+            MSG_TYPE msg_type = std::get<1>(std::forward<decltype(field_schema)>(field_schema));
+            switch (msg_type)
+            {
+            case MSG_TYPE::INT:
+                value.*(std::get<0>(std::forward<decltype(field_schema)>(field_schema))) = byte_buffer.GetInt();
+                break;
+            case MSG_TYPE::BOOL:
+                value.*(std::get<0>(std::forward<decltype(field_schema)>(field_schema))) = byte_buffer.GetBool();
+                break;
+            case MSG_TYPE::CHAR:
+                value.*(std::get<0>(std::forward<decltype(field_schema)>(field_schema))) = byte_buffer.GetChar();
+                break;
+            case MSG_TYPE::STRING:
+                // value.*(std::get<0>(std::forward<decltype(field_schema)>(field_schema))) = byte_buffer.GetInt();
+                break;
+            default:
+                break;
+            }
+
+            // std::cout << value.*(std::get<0>(std::forward<decltype(field_schema)>(field_schema))) << std::endl;
+            // std::cout << static_cast<int>(std::get<1>(std::forward<decltype(field_schema)>(field_schema))) << std::endl;
+        }
+    );
+}

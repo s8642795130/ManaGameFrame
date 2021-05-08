@@ -9,6 +9,8 @@ public:
 
 	bool ConnectServer(const std::string& ip, const short unsigned int port)
 	{
+        bool ret = true;
+
         m_client_fd = socket(AF_INET, SOCK_STREAM, 0);
 
         // test code
@@ -24,9 +26,14 @@ public:
         //
         if (connect(m_client_fd, (struct sockaddr*)&m_client_sin, sizeof(m_client_sin)) < 0)
         {
-            std::cout << "connect" << std::endl;
+            ret = false;
         }
 
-        return true;
+        return ret;
 	}
+
+    bool RecvData()
+    {
+        return true;
+    }
 };

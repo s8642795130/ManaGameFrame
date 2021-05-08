@@ -33,8 +33,8 @@ int main(int argc, char* argv[])
 	//
 	app->LoadConfig();
 	app->StartLoadAllLibrary(type);
-	app->StartConnectServer();
 	app->StartThreadPool();
+	app->StartConnectServer();
 	app->StartNetwork(type);
 	app->LibInit();
 	app->LibExecute();
