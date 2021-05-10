@@ -2,6 +2,7 @@
 
 #include "ServerController.h"
 #include "ConfigFile.h"
+#include "IThreadPool.h"
 #include "ServerObj.h"
 
 struct OnlineServerData
@@ -24,9 +25,14 @@ void ServerController::ConnectMaster()
 	auto vec_server_name = m_ptr_config_file->GetServersByType("master");
 	auto server_data = m_ptr_config_file->GetServerDataByName(vec_server_name[0]);
 
+	// create a server obj
 	std::shared_ptr<ServerObj> server_obj{ std::make_shared<ServerObj>() };
-	SaveServerUUID(vec_server_name[0], server_obj->GetUUID());
 
+	// save this server obj
+	SaveServerUUID(vec_server_name[0], server_obj->GetUUID());
+	m_ptr_thread_pool->AddActorToThreadCell(server_obj);
+
+	// connect server and send SERVER_ONLINE
 	while (true)
 	{
 		// connect master
@@ -40,8 +46,10 @@ void ServerController::ConnectMaster()
 
 		// recv already online server list
 		server_obj->RecvData();
+
+		// exit while
+		break;
 	}
-	
 }
 
 void ServerController::ConnectServer()

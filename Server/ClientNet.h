@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <queue>
 #include <netinet/in.h>
 #include <netinet/ip.h> 
 #include <arpa/inet.h>
@@ -12,6 +13,9 @@ class ClientNet : public ClientDescriptor
 {
 protected:
 	time_t m_last_active;
+	//
+	bool m_is_login = false;
+	std::queue<std::unique_ptr<ByteBuffer>> m_queue_msg;
 public:
 	ClientNet()
 	{
@@ -100,12 +104,16 @@ public:
 		m_receive_callBack = receive_callBack;
 	}
 
-	//
+	// Client 向前端服务器发来的消息 (根据路由找到对应的后端发送)
 	void ProcessFrontendIO()
 	{
-		const int frontend_msg = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::FRONTEND_MSG);
-		std::function<void(ClientDescriptor*)> callback = (*m_receive_callBack)[frontend_msg];
-		callback(this);
+		// send to backend
+		if (!m_is_login)
+		{
+			return;
+		}
+
+
 	}
 
 	void ProcessBackendIO()
@@ -116,6 +124,10 @@ public:
 		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNetControlActor, int, int>>("", actor_uuid, &ClientNetControlActor::ProcClientMessage, 10, 20);
 		m_app->SendMsgToActor(ptr);
 		*/
+
+		const int frontend_msg = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::FRONTEND_MSG);
+		std::function<void(ClientDescriptor*)> callback = (*m_receive_callBack)[frontend_msg];
+		callback(this);
 	}
 
 	/// <summary>
@@ -123,19 +135,54 @@ public:
 	/// </summary>
 	void ProccessIO()
 	{
-		switch (m_client_type)
+		switch (m_server_type)
 		{
-		case NetMessage::ClientType::CLIENT:
-			// frontend server
-			ProcessFrontendIO();
+		case NetMessage::ServerType::FRONTEND: // 主机是前端服务器
+		{
+			switch (m_client_type)
+			{
+			case NetMessage::ClientType::CLIENT: // 玩家发送的信息 直接处理
+				// frontend server
+				ProcessFrontendIO();
+				break;
+			case NetMessage::ClientType::BACKEND: // 后端发来的数据 直接找到客户端 返回客户端
+				// backend server
+				ProcessBackendIO();
+				break;
+			case NetMessage::ClientType::MASTER:
+				break;
+			default:
+				// 未知消息 (login server_online)
+				break;
+			}
+			
+			// exit
 			break;
-		case NetMessage::ClientType::FRONTEND_SERVER:
-			ProcessBackendIO();
+		}
+		case NetMessage::ServerType::BACKEND: // 主机是后端服务器
+		{
+			switch (m_client_type)
+			{
+			case NetMessage::ClientType::FRONTEND:
+				ProcessServerBackendIO();
+				break;
+			case NetMessage::ClientType::BACKEND:
+				// backend server
+				ProcessRPCIO();
+				break;
+			case NetMessage::ClientType::MASTER:
+				break;
+			default:
+				// 未知消息 (server_online)
+				break;
+			}
 			break;
-		case NetMessage::ClientType::BACKEND_SERVER:
-			// backend server
-
+		}
+		case NetMessage::ServerType::MASTER:
+		{
+			ProcessServerBackendIO();
 			break;
+		}
 		default:
 			break;
 		}

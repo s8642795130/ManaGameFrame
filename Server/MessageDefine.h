@@ -4,6 +4,7 @@ namespace NetMessage
 {
 	enum class EventCode : int
 	{
+		NONE,
 		SUCCESS,
 		FAIL,
 		ACCOUNT_EXIST,
@@ -14,23 +15,38 @@ namespace NetMessage
 
 	enum class ServerType : int
 	{
+		NONE,
 		FRONTEND,
-		BACKEND
+		BACKEND,
+		MASTER
 	};
 
 	enum class ClientType : int
 	{
+		NONE,
 		CLIENT,
-		FRONTEND_SERVER,
-		BACKEND_SERVER,
-		FAKE,
-		MASTER
+		FRONTEND,
+		BACKEND,
+		MASTER,
+		FAKE
 	};
 
 	enum class ServerMsg : int
 	{
+		NONE,
 		SERVER_ONLINE,
 		SERVER_OFFLINE,
 		FRONTEND_MSG
 	};
 }
+
+class NetMsgDefine
+{
+private:
+	static std::multimap<std::string, int> m_map_msg;
+public:
+	static const std::multimap<std::string, int> GetNetMsg()
+	{
+		return m_map_msg;
+	}
+};

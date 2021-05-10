@@ -31,6 +31,8 @@ protected:
 	//
 	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_receive_callBack;
 	std::unique_ptr<ByteBuffer> m_buffer;
+	//
+	static NetMessage::ServerType m_server_type;
 public:
 	ClientDescriptor() : 
 		m_receive_callBack(std::make_shared<std::map<int, std::function<void(ClientDescriptor*)>>>()),
