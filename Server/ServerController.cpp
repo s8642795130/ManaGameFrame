@@ -33,6 +33,7 @@ void ServerController::ConnectMaster()
 	m_ptr_thread_pool->AddActorToThreadCell(server_obj);
 
 	// connect server and send SERVER_ONLINE
+	std::shared_ptr<ByteBuffer> buffer;
 	while (true)
 	{
 		// connect master
@@ -45,7 +46,7 @@ void ServerController::ConnectMaster()
 		server_obj->SendData(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), 0, "", 0);
 
 		// recv already online server list
-		server_obj->RecvData();
+		buffer = server_obj->RecvData();
 
 		// exit while
 		break;
