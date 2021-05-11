@@ -106,6 +106,7 @@
     <ClInclude Include="DefineHeader.h" />
     <ClInclude Include="DynLib.h" />
     <ClInclude Include="FrontendClient.h" />
+    <ClInclude Include="GameMessage.h" />
     <ClInclude Include="IActor.h" />
     <ClInclude Include="IActorMsg.h" />
     <ClInclude Include="IApplication.h" />
@@ -116,6 +117,7 @@
     <ClInclude Include="MasterObj.h" />
     <ClInclude Include="MessageData.h" />
     <ClInclude Include="MessageDefine.h" />
+    <ClInclude Include="MsgRouter.h" />
     <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="PollNet.h" />

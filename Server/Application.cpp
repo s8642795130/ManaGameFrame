@@ -51,6 +51,13 @@ void Application::RemoveActorFromThreadCell(const std::string& uuid)
 	m_thread_pool->RemoveActorFromThreadCell(uuid);
 }
 
+std::shared_ptr<IConfigFile> Application::GetConfigPtr()
+{
+	return m_config_file;
+}
+
+//
+
 void Application::LoadConfig()
 {
 	// load config

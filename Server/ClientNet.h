@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "ClientDescriptor.h"
+#include "GameMessage.h"
 
 class ClientNet : public ClientDescriptor
 {
@@ -113,7 +114,12 @@ public:
 			return;
 		}
 
-
+		// router
+		int majorId = m_buffer->GetMajorId();
+		auto map_msg = NetMsgDefine::GetNetMsg();
+		auto plugin_name = map_msg[majorId];
+		auto config_file = this->m_app->GetConfigPtr();
+		auto server_list = config_file->GetServersByPluginName(plugin_name);
 	}
 
 	void ProcessBackendIO()
@@ -128,6 +134,21 @@ public:
 		const int frontend_msg = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::FRONTEND_MSG);
 		std::function<void(ClientDescriptor*)> callback = (*m_receive_callBack)[frontend_msg];
 		callback(this);
+	}
+
+	void ProcessFrontendUnknowMsg()
+	{
+
+	}
+
+	void ProcessServerBackendIO()
+	{
+
+	}
+
+	void ProcessRPCIO()
+	{
+
 	}
 
 	/// <summary>
@@ -153,6 +174,7 @@ public:
 				break;
 			default:
 				// Î´ÖªÏûÏ¢ (login server_online)
+				ProcessFrontendUnknowMsg();
 				break;
 			}
 			

@@ -39,14 +39,3 @@ namespace NetMessage
 		FRONTEND_MSG
 	};
 }
-
-class NetMsgDefine
-{
-private:
-	static std::multimap<std::string, int> m_map_msg;
-public:
-	static const std::multimap<std::string, int> GetNetMsg()
-	{
-		return m_map_msg;
-	}
-};

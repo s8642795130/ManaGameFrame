@@ -31,6 +31,7 @@ public:
 	virtual void BroadcastMsg();
 	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
 	virtual void RemoveActorFromThreadCell(const std::string& uuid);
+	virtual std::shared_ptr<IConfigFile> GetConfigPtr();
 	//
 	void LoadConfig();
 	void StartLoadAllLibrary(int test_code);

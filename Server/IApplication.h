@@ -11,6 +11,7 @@ class IActor;
 class ClientDescriptor;
 class ClientNet;
 class IActorMsg;
+class IConfigFile;
 
 class IApplication
 {
@@ -35,4 +36,5 @@ public:
 	virtual void BroadcastMsg() = 0;
 	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor) = 0;
 	virtual void RemoveActorFromThreadCell(const std::string& uuid) = 0;
+	virtual std::shared_ptr<IConfigFile> GetConfigPtr() = 0;
 };
