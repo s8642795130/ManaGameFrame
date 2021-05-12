@@ -30,7 +30,17 @@ public:
 
 	static int GetMsgRouterByClient(const std::string plugin_name, const int server_count, const ClientNet& client)
 	{
-		m_router_func.find(plugin_name);
-		return m_router_func[];
+		int ret = 0;
+
+		auto it = m_router_func.find(plugin_name);
+		if (it != std::cend(m_router_func))
+		{
+			ret = m_router_func[plugin_name](server_count, client);
+		}
+		else
+		{
+			ret = DefaultRouter(server_count, client);
+		}
+		return ret;
 	}
 };

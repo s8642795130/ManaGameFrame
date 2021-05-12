@@ -12,11 +12,9 @@ void MasterModule::Init()
 
 void MasterModule::AfterInit()
 {
-	//
-	int e = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::SERVER_ONLINE);
 	std::function<void(ClientDescriptor*)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1);
-	//
-	m_plugin->GetAppPtr()->AddReceiveCallBack(e, call_func);
+	// auto call_func = std::bind(&MasterModule::OnServerOnlineCallback);
+	m_plugin->GetAppPtr()->AddReceiveCallBack(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), call_func);
 }
 
 //
