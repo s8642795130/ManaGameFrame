@@ -7,6 +7,11 @@
 
 #include "ConfigFile.h"
 #include "Application.h"
+#include "GameMessage.h"
+#include "ClientDescriptor.h"
+
+std::map<int, std::string> NetMsgDefine::m_map_msg;
+NetMessage::ServerType ClientDescriptor::m_server_type;
 
 int main(int argc, char* argv[])
 {

@@ -4,6 +4,8 @@
 #include "ConfigFile.h"
 #include "IThreadPool.h"
 #include "ServerObj.h"
+#include "MessageData.h"
+#include "GameMessageData.h"
 
 struct OnlineServerData
 {
@@ -47,6 +49,10 @@ void ServerController::ConnectMaster()
 
 		// recv already online server list
 		buffer = server_obj->RecvData();
+
+		ServerOnlineInfo server_online_info;
+		// ServerTest server_online_info;
+		ForEachField(server_online_info, buffer);
 
 		// exit while
 		break;

@@ -13,7 +13,6 @@ void MasterModule::Init()
 void MasterModule::AfterInit()
 {
 	std::function<void(ClientDescriptor*)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1);
-	// auto call_func = std::bind(&MasterModule::OnServerOnlineCallback);
 	m_plugin->GetAppPtr()->AddReceiveCallBack(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), call_func);
 }
 

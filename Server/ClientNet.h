@@ -9,6 +9,7 @@
 
 #include "ClientDescriptor.h"
 #include "GameMessage.h"
+#include "IConfigFile.h"
 
 class ClientNet : public ClientDescriptor
 {
@@ -119,7 +120,7 @@ public:
 		auto map_msg = NetMsgDefine::GetNetMsg();
 		auto plugin_name = map_msg[majorId];
 		auto config_file = this->m_app->GetConfigPtr();
-		auto server_list = config_file->GetServersByPluginName(plugin_name);
+		const auto server_list = config_file->GetServersByPluginName(plugin_name);
 	}
 
 	void ProcessBackendIO()

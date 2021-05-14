@@ -107,6 +107,7 @@
     <ClInclude Include="DynLib.h" />
     <ClInclude Include="FrontendClient.h" />
     <ClInclude Include="GameMessage.h" />
+    <ClInclude Include="GameMessageData.h" />
     <ClInclude Include="IActor.h" />
     <ClInclude Include="IActorMsg.h" />
     <ClInclude Include="IApplication.h" />
