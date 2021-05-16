@@ -123,6 +123,9 @@ public:
 
 	bool GetBool()
 	{
+		bool value = false;
+		std::memcpy(&value, m_buf_ptr + m_cur_pos, 1);
+		m_cur_pos += 1;
 		return false;
 	}
 
@@ -136,6 +139,16 @@ public:
 
 	std::string GetString(int length)
 	{
-		return "";
+		// copy buffer
+		char* value = new char[length + 1];
+		std::strncpy(value, m_buf_ptr + m_cur_pos, length);
+		value[length] = '\0';
+		
+		//
+		m_cur_pos += length;
+
+		// return value
+		std::string str(value);
+		return value;
 	}
 };
