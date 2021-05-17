@@ -1,5 +1,5 @@
 #pragma once
-#include "MessageData.h"
+#include "StructSchema.h"
 
 struct ServerOnlineData
 {
@@ -14,9 +14,9 @@ struct ServerOnlineInfo
 	std::vector<ServerOnlineData> m_vec_server;
 };
 
-struct ServerTest
+struct ConnectServerOnline
 {
-	std::vector<int> m_vec_server;
+	std::string m_server_name;
 };
 
 DEFINE_STRUCT_SCHEMA(ServerOnlineData,
@@ -30,6 +30,6 @@ DEFINE_STRUCT_SCHEMA(ServerOnlineInfo,
 	DEFINE_STRUCT_FIELD(m_vec_server, MSG_TYPE::ARRAY_STRUCT)
 );
 
-DEFINE_STRUCT_SCHEMA(ServerTest,
-	DEFINE_STRUCT_FIELD(m_vec_server, MSG_TYPE::ARRAY_INT)
+DEFINE_STRUCT_SCHEMA(ConnectServerOnline,
+	DEFINE_STRUCT_FIELD(m_server_name, MSG_TYPE::STRING)
 );

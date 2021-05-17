@@ -4,17 +4,9 @@
 #include <type_traits>
 #include <vector>
 
+#include "StructSchema.h"
 #include "ByteBuffer.h"
-
-enum class MSG_TYPE : int
-{
-    INT,
-    BOOL,
-    CHAR,
-    STRING,
-    ARRAY_STRUCT,
-    ARRAY_INT
-};
+#include "MsgType.h"
 
 namespace detail
 {
@@ -99,21 +91,6 @@ namespace data_fn
         }
     }
 }
-
-template <typename T>
-inline constexpr auto StructSchema() {
-    return std::make_tuple();
-}
-
-#define DEFINE_STRUCT_SCHEMA(Struct, ...)        \
-  template <>                                    \
-  inline constexpr auto StructSchema<Struct>() { \
-    using _Struct = Struct;                      \
-    return std::make_tuple(__VA_ARGS__);         \
-  }
-
-#define DEFINE_STRUCT_FIELD(StructField, FieldName) \
-  std::make_tuple(&_Struct::StructField, FieldName)
 
 template <typename T>
 inline constexpr void ForEachField(T& value, std::shared_ptr<ByteBuffer>& byte_buffer)

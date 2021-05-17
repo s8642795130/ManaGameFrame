@@ -5,16 +5,8 @@
 #include "IThreadPool.h"
 #include "ServerObj.h"
 #include "MessageData.h"
+#include "PackageNetMsg.h"
 #include "GameMessageData.h"
-
-struct OnlineServerData
-{
-public:
-	std::string m_server_type;
-	std::string m_server_name;
-	std::string m_server_ip;
-	int m_port;
-};
 
 void ServerController::SaveServerUUID(const std::string& server_name, const std::string& uuid)
 {
@@ -35,6 +27,7 @@ void ServerController::ConnectMaster()
 	m_ptr_thread_pool->AddActorToThreadCell(server_obj);
 
 	// connect server and send SERVER_ONLINE
+	ServerOnlineInfo server_online_info;
 	std::shared_ptr<ByteBuffer> buffer;
 	while (true)
 	{
@@ -49,33 +42,33 @@ void ServerController::ConnectMaster()
 
 		// recv already online server list
 		buffer = server_obj->RecvData();
-
-		ServerOnlineInfo server_online_info;
+		
 		// ServerTest server_online_info;
 		ForEachField(server_online_info, buffer);
 
 		// exit while
 		break;
 	}
+
+	std::for_each(std::cbegin(server_online_info.m_vec_server), std::cend(server_online_info.m_vec_server), [this](const ServerOnlineData& item) -> void
+		{
+			std::shared_ptr<ServerObj> server_obj{ std::make_shared<ServerObj>() };
+			SaveServerUUID(item.m_server_name, server_obj->GetUUID());
+
+			//
+			server_obj->ConnectServer(item.m_ip, item.m_port);
+
+			//
+			ConnectServerOnline connect_server_online = { 0 };
+			std::vector<char> buffer;
+			PackageStructForEachField(connect_server_online, buffer);
+			server_obj->SendData(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), 0, buffer.data(), static_cast<int>(buffer.size()));
+		}
+	);
 }
 
 void ServerController::ConnectServer()
 {
 	// first connect master server
 	ConnectMaster();
-
-	std::vector<OnlineServerData> vec_online_server;
-
-	std::for_each(std::cbegin(vec_online_server), std::cend(vec_online_server), [this](const OnlineServerData& item) -> void
-		{
-			std::shared_ptr<ServerObj> server_obj{ std::make_shared<ServerObj>() };
-			SaveServerUUID(item.m_server_name, server_obj->GetUUID());
-
-			//
-			server_obj->ConnectServer(item.m_server_ip, item.m_port);
-
-			//
-			server_obj->SendData(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), 0, "", 0);
-		}
-	);
 }
