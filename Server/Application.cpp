@@ -58,9 +58,11 @@ std::shared_ptr<IConfigFile> Application::GetConfigPtr()
 
 //
 
-void Application::LoadConfig()
+void Application::LoadConfig(const std::string& server_name)
 {
 	// load config
+	m_config_file->SetServerName(server_name);
+	m_config_file->ReadServerConfigFile();
 }
 
 void Application::StartLoadAllLibrary(int test_code)

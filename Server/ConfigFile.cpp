@@ -21,6 +21,11 @@ std::vector<std::string> ConfigFile::StrSplitBySpace(const std::string& s)
 	return v;
 }
 
+void ConfigFile::SetServerName(const std::string& server_name)
+{
+	m_server_name = server_name;
+}
+
 /// <summary>
 /// 读取服务器配置文件
 /// </summary>
@@ -111,5 +116,5 @@ const std::vector<std::string>& ConfigFile::GetServersByType(const std::string& 
 
 const std::string& ConfigFile::GetMyServerName()
 {
-
+	return m_server_name;
 }

@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 	std::shared_ptr<Application> app{ std::make_shared<Application>() };
 	IApplication::SetPtr(app);
 	//
-	app->LoadConfig();
+	app->LoadConfig(argv[1]);
 	app->StartLoadAllLibrary(type);
 	app->StartThreadPool();
 	app->StartConnectServer();

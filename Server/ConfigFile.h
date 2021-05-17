@@ -30,6 +30,7 @@ protected:
 	void AnalyseConfigStr(const std::vector<std::string>& config_str);
 public:
 	bool ReadServerConfigFile();
+	void SetServerName(const std::string& server_name);
 	virtual const std::shared_ptr<ServerData>& GetServerDataByName(const std::string& server_name);
 	virtual const std::vector<std::string>& GetServersByPluginName(const std::string& plugin_name);
 	virtual const std::vector<std::string>& GetServersByType(const std::string& server_name);

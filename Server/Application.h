@@ -33,7 +33,7 @@ public:
 	virtual void RemoveActorFromThreadCell(const std::string& uuid);
 	virtual std::shared_ptr<IConfigFile> GetConfigPtr();
 	//
-	void LoadConfig();
+	void LoadConfig(const std::string& server_name);
 	void StartLoadAllLibrary(int test_code);
 	//
 	void StartConnectServer();
