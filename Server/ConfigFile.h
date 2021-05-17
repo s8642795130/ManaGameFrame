@@ -24,6 +24,8 @@ private:
 
 	const std::string m_config_file_name{ "config.cfg" };
 	std::vector<std::string> StrSplitBySpace(const std::string& s);
+
+	std::string m_server_name;
 protected:
 	void AnalyseConfigStr(const std::vector<std::string>& config_str);
 public:
@@ -31,5 +33,6 @@ public:
 	virtual const std::shared_ptr<ServerData>& GetServerDataByName(const std::string& server_name);
 	virtual const std::vector<std::string>& GetServersByPluginName(const std::string& plugin_name);
 	virtual const std::vector<std::string>& GetServersByType(const std::string& server_name);
+	virtual const std::string& GetMyServerName();
 };
 

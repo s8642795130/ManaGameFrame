@@ -108,3 +108,8 @@ const std::vector<std::string>& ConfigFile::GetServersByType(const std::string& 
 {
 	return m_type_config[server_type];
 }
+
+const std::string& ConfigFile::GetMyServerName()
+{
+
+}

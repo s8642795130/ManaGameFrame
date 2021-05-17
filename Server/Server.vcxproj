@@ -126,7 +126,6 @@
     <ClInclude Include="PollNet.h" />
     <ClInclude Include="ServerController.h" />
     <ClInclude Include="ServerNet.h" />
-    <ClInclude Include="ServerNetTest.h" />
     <ClInclude Include="ServerObj.h" />
     <ClInclude Include="StructSchema.h" />
     <ClInclude Include="ThreadPool.h" />

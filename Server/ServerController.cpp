@@ -38,7 +38,11 @@ void ServerController::ConnectMaster()
 		}
 
 		// send this server is online
-		server_obj->SendData(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), 0, "", 0);
+		ConnectServerOnline connect_server_online = { 0 };
+		connect_server_online.m_server_name = m_ptr_config_file->GetMyServerName();
+		std::vector<char> msg_buffer;
+		PackageStructForEachField(connect_server_online, msg_buffer);
+		server_obj->SendData(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), 0, msg_buffer.data(), static_cast<int>(msg_buffer.size()));
 
 		// recv already online server list
 		buffer = server_obj->RecvData();
