@@ -60,13 +60,6 @@ bool ConfigFile::ReadServerConfigFile()
 
 	// 处理配置信息
 	AnalyseConfigStr(config_str);
-	/*
-	std::for_each(std::begin(config_str), std::end(config_str), [](auto& value) -> void
-		{
-			std::cout << value << std::endl;
-		}
-	);
-	*/
 
 	return true;
 }
@@ -85,10 +78,23 @@ void ConfigFile::AnalyseConfigStr(const std::vector<std::string>& config_str)
 		if (param.size() == 4)
 		{
 			// 这是一个服务器进程配置信息
+			std::shared_ptr<ServerData> server_data = std::make_shared<ServerData>();
+
+			//
+			m_server_config[server_data->m_server_name] = server_data;
+
+			//
+			std::vector<std::shared_ptr<PluginData>> vec_plugin_data;
+			m_plugin_list[server_data->m_server_name] = vec_plugin_data;
+
+			//
+			std::vector<std::shared_ptr<ServerData>> vec_server_list;
+			vec_server_list.push_back(server_data);
+			m_type_config[param[0]] = vec_server_list;
 		}
 		else
 		{
-
+			// m_plugin_list[param[1]].push_back();
 		}
 		++c_iter;
 	}
@@ -99,22 +105,27 @@ void ConfigFile::AnalyseConfigStr(const std::vector<std::string>& config_str)
 /// </summary>
 /// <param name="plugin_name"></param>
 /// <returns></returns>
-const std::shared_ptr<ServerData>& ConfigFile::GetServerDataByName(const std::string& server_name)
+const std::shared_ptr <ServerData>& ConfigFile::GetServerDataByName(const std::string& server_name)
 {
 	return m_server_config[server_name];
 }
 
-const std::vector<std::string>& ConfigFile::GetServersByPluginName(const std::string& plugin_name)
+const std::vector<std::shared_ptr<ServerData>>& ConfigFile::GetServersByPluginName(const std::string& plugin_name)
 {
 	return m_plugin_config[plugin_name];
 }
 
-const std::vector<std::string>& ConfigFile::GetServersByType(const std::string& server_type)
+const std::vector<std::shared_ptr<ServerData>>& ConfigFile::GetServersByType(const std::string& server_type)
 {
 	return m_type_config[server_type];
 }
 
-const std::string& ConfigFile::GetMyServerName()
+const std::shared_ptr<ServerData>& ConfigFile::GetMyServerInfo()
 {
-	return m_server_name;
+	return m_server_config[m_server_name];
+}
+
+const std::vector<std::shared_ptr<PluginData>>& ConfigFile::GetPluginsByServerName(const std::string& server_name)
+{
+	return m_plugin_list[server_name];
 }

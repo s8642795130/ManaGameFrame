@@ -65,9 +65,9 @@ void Application::LoadConfig(const std::string& server_name)
 	m_config_file->ReadServerConfigFile();
 }
 
-void Application::StartLoadAllLibrary(int test_code)
+void Application::StartLoadAllLibrary()
 {
-	m_plugin_manager->LoadAllPluginLibrary(test_code);
+	m_plugin_manager->LoadAllPluginLibrary();
 }
 
 void Application::StartConnectServer()
@@ -94,18 +94,10 @@ void Application::StartThreadPool()
 	m_thread_pool->StartThreadPool();
 }
 
-void Application::StartNetwork(int test_code)
+void Application::StartNetwork()
 {
-	if (test_code == 1)
-	{
-		// m_server_net->StartNetwork(3010);
-		m_server_net->StartNetwork(3010, 30);
-	}
-	else
-	{
-		m_server_net->StartNetwork(3020, 30);
-	}
-	
+	auto server_info = m_config_file->GetMyServerInfo();
+	m_server_net->StartNetwork(server_info->m_port, 30);
 }
 
 void Application::StartNetEventLoop()

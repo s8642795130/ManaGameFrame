@@ -25,11 +25,13 @@ int main(int argc, char* argv[])
 	std::cout << path_buf.data() << std::endl;
 
 	std::cout << "param count: " << argc << std::endl;
-	int type = 0;
 	if (argc > 1)
 	{
-		type = std::stoi(argv[1]);
-		std::cout << "param is: " << type << std::endl;
+		std::cout << "param is: " << argv[1] << std::endl;
+	}
+	else
+	{
+		return 0;
 	}
 
 	// Application
@@ -37,10 +39,10 @@ int main(int argc, char* argv[])
 	IApplication::SetPtr(app);
 	//
 	app->LoadConfig(argv[1]);
-	app->StartLoadAllLibrary(type);
+	app->StartLoadAllLibrary();
 	app->StartThreadPool();
 	app->StartConnectServer();
-	app->StartNetwork(type);
+	app->StartNetwork();
 	app->LibInit();
 	app->LibExecute();
 	app->StartNetEventLoop();

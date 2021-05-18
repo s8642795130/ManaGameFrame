@@ -113,6 +113,11 @@ public:
 
 	// data
 
+	void SetPosToDataBegin()
+	{
+		m_cur_pos = HEADER_LENGTH;
+	}
+
 	int GetInt()
 	{
 		int value = 0;

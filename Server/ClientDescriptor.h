@@ -30,13 +30,12 @@ protected:
 	std::string m_uid;
 	//
 	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_receive_callBack;
-	std::unique_ptr<ByteBuffer> m_buffer;
 	//
 	static NetMessage::ServerType m_server_type;
 public:
 	ClientDescriptor() : 
 		m_receive_callBack(std::make_shared<std::map<int, std::function<void(ClientDescriptor*)>>>()),
-		m_buffer(std::make_unique<ByteBuffer>())
+		m_buffer(std::make_shared<ByteBuffer>())
 	{
 	}
 
@@ -46,6 +45,7 @@ public:
 	}
 
 	// member
+	std::shared_ptr<ByteBuffer> m_buffer;
 	int m_client_fd = 0;
 	sockaddr_in m_client_sin = {0};
 

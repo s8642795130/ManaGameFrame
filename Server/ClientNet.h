@@ -24,6 +24,11 @@ public:
 
 	}
 
+	void SetClientType(NetMessage::ClientType client_type)
+	{
+		m_client_type = client_type;
+	}
+
 	virtual bool ReadReady()
 	{
 		bool ret = true;
@@ -48,9 +53,7 @@ public:
 				break;
 			}
 
-			std::unique_ptr<IActorMsg> actor_msg = std::make_unique<ActorMsg<void, ClientNet, std::array<char, DEFAULT_BUFLEN>&, ssize_t>>("", GetUUID(), &ClientNet::Parsing, buffer, bytes_read);
-			m_app->SendMsgToActor(actor_msg);
-			// Parsing(buffer, bytes_read);
+			Parsing(buffer, bytes_read);
 			// data_buffer.append(buffer, bytes_read);
 		}
 
@@ -152,6 +155,13 @@ public:
 
 	}
 
+	void ProcessMasterIO()
+	{
+		const int frontend_msg = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::FRONTEND_MSG);
+		std::function<void(ClientDescriptor*)> callback = (*m_receive_callBack)[frontend_msg];
+		callback(this);
+	}
+
 	/// <summary>
 	/// ProccessIO
 	/// </summary>
@@ -203,7 +213,7 @@ public:
 		}
 		case NetMessage::ServerType::MASTER:
 		{
-			ProcessServerBackendIO();
+			ProcessMasterIO();
 			break;
 		}
 		default:

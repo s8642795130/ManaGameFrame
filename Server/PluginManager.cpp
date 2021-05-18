@@ -3,42 +3,18 @@
 
 #include "PluginManager.h"
 
-// test code
-void PluginManager::LoadAllPluginLibrary(int test_code)
+void PluginManager::LoadAllPluginLibrary()
 {
-	// for (const auto& item : m_map_lib)
-	// {
-		// std::function<void(void)> ptr_func{ reinterpret_cast<void*>(item.second->GetSymbol("DllStartPlugin")) };
-		// ptr_func(this);
-	// }
-
-	// test code
-	using MyTestFunc = std::shared_ptr<IPlugin>(*)(std::shared_ptr<IApplication>);
-
-	std::string lib_name;
-	if (test_code == 1)
+	for (const auto& item : m_map_lib)
 	{
-		lib_name = "MasterPlugin";
-	}
-	else
-	{
-		lib_name = "ServerControlPlugin";
-	}
-
-	std::shared_ptr<DynLib> ptr_dll{ std::make_shared<DynLib>("lib" + lib_name) };
-	ptr_dll->LoadLib();
-	
-	MyTestFunc func = (MyTestFunc)ptr_dll->GetSymbol("DllStartPlugin");
-	if (func != nullptr)
-	{
-		m_map_lib.emplace(lib_name, ptr_dll);
-		m_map_plugin.emplace(lib_name, func(IApplication::GetPtr()));
+		std::function<void(void)> ptr_func{ reinterpret_cast<void*>(item.second->GetSymbol("DllStartPlugin")) };
+		ptr_func(this);
 	}
 
 	RegisterAll();
 }
 
-bool PluginManager::LoadPluginLibrary(const std::string& pluginDLLName)
+bool PluginManager::LoadPluginLibrary(const std::string& plugin_dll_name)
 {
 	// void(* DLL_START_PLUGIN_FUNC)(NFIPluginManager* pm)
 	// for map
@@ -54,6 +30,21 @@ bool PluginManager::LoadPluginLibrary(const std::string& pluginDLLName)
 	// Load();
 	// DLL_START_PLUGIN_FUNC pFunc = (DLL_START_PLUGIN_FUNC)pLib->GetSymbol("DllStartPlugin");
 	// pFunc(this);
+
+	using MyFunc = std::shared_ptr<IPlugin>(*)(std::shared_ptr<IApplication>);
+
+	// lib_name = "MasterPlugin";
+
+	std::shared_ptr<DynLib> ptr_dll{ std::make_shared<DynLib>("lib" + plugin_dll_name) };
+	ptr_dll->LoadLib();
+
+	MyFunc func = (MyFunc)ptr_dll->GetSymbol("DllStartPlugin");
+	if (func != nullptr)
+	{
+		m_map_lib.emplace(plugin_dll_name, ptr_dll);
+		m_map_plugin.emplace(plugin_dll_name, func(IApplication::GetPtr()));
+	}
+
 	return true;
 }
 

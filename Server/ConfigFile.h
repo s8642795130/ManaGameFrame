@@ -8,32 +8,44 @@
 
 struct ServerData
 {
-public:
 	std::string m_server_type;
 	std::string m_server_name;
 	std::string m_server_ip;
 	int m_port;
 };
 
+struct PluginData
+{
+	std::string m_plugin;
+	std::string m_plugin_name;
+};
+
 class ConfigFile : public IConfigFile
 {
 private:
-	std::map<std::string, std::vector<std::string>> m_plugin_config; // key: plugin name, value: server name
+
+	std::vector<std::shared_ptr<ServerData>> m_vec_server;
+	std::vector<std::shared_ptr<PluginData>> m_vec_server;
+
+	std::map<std::string, std::vector<std::shared_ptr<ServerData>>> m_plugin_config; // key: plugin name, value: server data list
 	std::map<std::string, std::shared_ptr<ServerData>> m_server_config; // key: server name, value: server data
-	std::map<std::string, std::vector<std::string>> m_type_config; // key: server type, value: server name
+	std::map<std::string, std::vector<std::shared_ptr<ServerData>>> m_type_config; // key: server type, value: server data
+	std::map<std::string, std::vector<std::shared_ptr<PluginData>>> m_plugin_list; // key: server name, value: plugin data
 
 	const std::string m_config_file_name{ "config.cfg" };
 	std::vector<std::string> StrSplitBySpace(const std::string& s);
 
+	// my server name
 	std::string m_server_name;
 protected:
 	void AnalyseConfigStr(const std::vector<std::string>& config_str);
 public:
 	bool ReadServerConfigFile();
 	void SetServerName(const std::string& server_name);
-	virtual const std::shared_ptr<ServerData>& GetServerDataByName(const std::string& server_name);
-	virtual const std::vector<std::string>& GetServersByPluginName(const std::string& plugin_name);
-	virtual const std::vector<std::string>& GetServersByType(const std::string& server_name);
-	virtual const std::string& GetMyServerName();
+	virtual const std::shared_ptr <ServerData>& GetServerDataByName(const std::string& server_name);
+	virtual const std::vector<std::shared_ptr<ServerData>>& GetServersByPluginName(const std::string& plugin_name);
+	virtual const std::vector<std::shared_ptr<ServerData>>& GetServersByType(const std::string& server_type); // type: master, connector
+	virtual const std::shared_ptr<ServerData>& GetMyServerInfo();
+	virtual const std::vector<std::shared_ptr<PluginData>>& GetPluginsByServerName(const std::string& server_name);
 };
 

@@ -1,4 +1,5 @@
 #pragma once
+#include "MsgType.h"
 #include "StructSchema.h"
 
 struct ServerOnlineData

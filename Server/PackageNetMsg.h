@@ -85,7 +85,7 @@ namespace data_fn
     template <typename Name>
     void fn(const std::vector<int>& data, Name&& field, std::vector<char>& vec_buffer)
     {
-        int size = data.size();
+        int size = static_cast<int>(data.size());
         std::array<char, 4> arr_size;
         std::memcpy(arr_size.data(), &size, sizeof(size));
 
@@ -104,7 +104,7 @@ namespace data_fn
     template <typename T, typename Name>
     void fn(const std::vector<T>& data, Name&& field, std::vector<char>& vec_buffer)
     {
-        int size = data.size();
+        int size = static_cast<int>(data.size());
         std::array<char, 4> arr_size;
         std::memcpy(arr_size.data(), &size, sizeof(size));
 

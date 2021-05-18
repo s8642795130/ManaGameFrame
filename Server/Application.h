@@ -34,7 +34,7 @@ public:
 	virtual std::shared_ptr<IConfigFile> GetConfigPtr();
 	//
 	void LoadConfig(const std::string& server_name);
-	void StartLoadAllLibrary(int test_code);
+	void StartLoadAllLibrary();
 	//
 	void StartConnectServer();
 	//
@@ -42,7 +42,7 @@ public:
 	void LibExecute();
 	//
 	void StartThreadPool();
-	void StartNetwork(int test_code);
+	void StartNetwork();
 	void StartNetEventLoop();
 };
 
