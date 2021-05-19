@@ -2,13 +2,13 @@
 #include <iostream>
 
 #include "PluginManager.h"
+#include "CommonStruct.h"
 
-void PluginManager::LoadAllPluginLibrary()
+void PluginManager::LoadAllPluginLibrary(std::vector<std::shared_ptr<PluginData>> vec_plugin)
 {
-	for (const auto& item : m_map_lib)
+	for (const auto& item : vec_plugin)
 	{
-		std::function<void(void)> ptr_func{ reinterpret_cast<void*>(item.second->GetSymbol("DllStartPlugin")) };
-		ptr_func(this);
+		LoadPluginLibrary(item->m_plugin_name);
 	}
 
 	RegisterAll();

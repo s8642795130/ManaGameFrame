@@ -60,6 +60,7 @@ bool ConfigFile::ReadServerConfigFile()
 
 	// 处理配置信息
 	AnalyseConfigStr(config_str);
+	AnalysePluginList();
 
 	return true;
 }
@@ -71,32 +72,97 @@ bool ConfigFile::ReadServerConfigFile()
 void ConfigFile::AnalyseConfigStr(const std::vector<std::string>& config_str)
 {
 	// 由于是const 类型所以不可以获取迭代器 std::vector<std::string>::iterator iter = vec.begin();
+
+	std::string temp_server_name;
+
 	std::vector<std::string>::const_iterator c_iter = std::cbegin(config_str);
 	while (c_iter != std::cend(config_str))
 	{
 		std::vector<std::string> param{ StrSplitBySpace(*c_iter) };
 		if (param.size() == 4)
 		{
-			// 这是一个服务器进程配置信息
+			// ServerData
 			std::shared_ptr<ServerData> server_data = std::make_shared<ServerData>();
+			server_data->m_server_type = param[0];
+			server_data->m_server_name = param[1];
+			server_data->m_server_ip = param[2];
+			server_data->m_port = std::atoi(param[3].c_str());
+			m_vec_server.push_back(server_data);
 
-			//
-			m_server_config[server_data->m_server_name] = server_data;
+			// set temp server name
+			temp_server_name = server_data->m_server_name;
 
-			//
+			// server config
+			auto it = m_server_config.find(server_data->m_server_name);
+			if (it != std::cend(m_server_config))
+			{
+				m_server_config[server_data->m_server_name] = server_data;
+			}
+			else
+			{
+				std::perror("duplicate server names in the configuration file");
+				std::exit(0);
+			}
+
+			// plugin list
 			std::vector<std::shared_ptr<PluginData>> vec_plugin_data;
 			m_plugin_list[server_data->m_server_name] = vec_plugin_data;
 
-			//
-			std::vector<std::shared_ptr<ServerData>> vec_server_list;
-			vec_server_list.push_back(server_data);
-			m_type_config[param[0]] = vec_server_list;
+			// type list
+			auto type_it = m_type_config.find(server_data->m_server_name);
+			if (type_it != std::cend(m_type_config))
+			{
+				std::vector<std::shared_ptr<ServerData>> vec_server_list;
+				vec_server_list.push_back(server_data);
+				m_type_config[param[0]] = vec_server_list;
+			}
+			else
+			{
+				m_type_config[param[0]].push_back(server_data);
+			}
 		}
 		else
 		{
-			// m_plugin_list[param[1]].push_back();
+			// plugin data
+			std::shared_ptr<PluginData> plugin_data = std::make_shared<PluginData>();
+			plugin_data->m_plugin = param[0];
+			plugin_data->m_plugin_name = param[1];
+			m_vec_plugin.push_back(plugin_data);
+
+			// plugin list
+			m_plugin_list[temp_server_name].push_back(plugin_data);
 		}
 		++c_iter;
+	}
+}
+
+void ConfigFile::AnalysePluginList()
+{
+	for (auto& server_item : m_plugin_list)
+	{
+		for (auto& plugin_item : server_item.second)
+		{
+			auto server_name = server_item.first;
+
+			auto it = m_plugin_config.find(plugin_item->m_plugin);
+			if (it != std::cend(m_plugin_config))
+			{
+				std::vector<std::shared_ptr<ServerData>> vec_server_list;
+				m_plugin_config[plugin_item->m_plugin] = vec_server_list;
+			}
+
+			// check server data is in vec
+			auto vec_list = m_plugin_config[plugin_item->m_plugin];
+			auto find_it = std::find_if(std::begin(vec_list), std::end(vec_list), [server_name](const auto& item) -> bool
+				{
+					return (item->m_server_name == server_name);
+				}
+			);
+			if (find_it != std::cend(vec_list))
+			{
+				m_plugin_config[plugin_item->m_plugin].push_back(m_server_config[server_item.first]);
+			}
+		}
 	}
 }
 

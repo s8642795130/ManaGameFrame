@@ -67,7 +67,8 @@ void Application::LoadConfig(const std::string& server_name)
 
 void Application::StartLoadAllLibrary()
 {
-	m_plugin_manager->LoadAllPluginLibrary();
+	auto plugin_list = m_config_file->GetPluginsByServerName(m_config_file->GetMyServerInfo()->m_server_name);
+	m_plugin_manager->LoadAllPluginLibrary(plugin_list);
 }
 
 void Application::StartConnectServer()
@@ -97,7 +98,7 @@ void Application::StartThreadPool()
 void Application::StartNetwork()
 {
 	auto server_info = m_config_file->GetMyServerInfo();
-	m_server_net->StartNetwork(server_info->m_port, 30);
+	m_server_net->StartNetwork(static_cast<uint16_t>(server_info->m_port), 30);
 }
 
 void Application::StartNetEventLoop()

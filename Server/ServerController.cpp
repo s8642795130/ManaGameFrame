@@ -17,13 +17,13 @@ void ServerController::ConnectMaster()
 {
 	// get master server ip and port
 	auto vec_server_name = m_ptr_config_file->GetServersByType("master");
-	auto server_data = m_ptr_config_file->GetServerDataByName(vec_server_name[0]);
+	auto server_data = m_ptr_config_file->GetServerDataByName(vec_server_name[0]->m_server_name);
 
 	// create a server obj
 	std::shared_ptr<ServerObj> server_obj{ std::make_shared<ServerObj>() };
 
 	// save this server obj
-	SaveServerUUID(vec_server_name[0], server_obj->GetUUID());
+	SaveServerUUID(vec_server_name[0]->m_server_name, server_obj->GetUUID());
 	m_ptr_thread_pool->AddActorToThreadCell(server_obj);
 
 	// connect server and send SERVER_ONLINE
@@ -39,7 +39,7 @@ void ServerController::ConnectMaster()
 
 		// send this server is online
 		ConnectServerOnline connect_server_online = { 0 };
-		connect_server_online.m_server_name = m_ptr_config_file->GetMyServerName();
+		connect_server_online.m_server_name = m_ptr_config_file->GetMyServerInfo()->m_server_name;
 		std::vector<char> msg_buffer;
 		PackageStructForEachField(connect_server_online, msg_buffer);
 		server_obj->SendData(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), 0, msg_buffer.data(), static_cast<int>(msg_buffer.size()));

@@ -3,6 +3,7 @@
 #include <vector>
 
 struct ServerData;
+struct PluginData;
 
 class IConfigFile
 {
