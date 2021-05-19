@@ -11,14 +11,23 @@
 /// </summary>
 /// <param name="s"></param>
 /// <returns></returns>
-std::vector<std::string> ConfigFile::StrSplitBySpace(const std::string& s)
+void ConfigFile::StringSplit(const std::string& str, const char split, std::vector<std::string>& res)
 {
-	std::string text = s;
-	std::regex ws_re("\\s+"); // whitespace
-	std::vector<std::string> v(std::sregex_token_iterator(text.begin(), text.end(), ws_re, -1),
-		std::sregex_token_iterator());
+	if (str == "")
+		return;
+	//在字符串末尾也加入分隔符，方便截取最后一段
+	std::string strs = str + split;
+	size_t pos = strs.find(split);
 
-	return v;
+	// 若找不到内容则字符串搜索函数返回 npos
+	while (pos != strs.npos)
+	{
+		std::string temp = strs.substr(0, pos);
+		res.push_back(temp);
+		//去掉已分割的字符串,在剩下的字符串中进行分割
+		strs = strs.substr(pos + 1, strs.size());
+		pos = strs.find(split);
+	}
 }
 
 void ConfigFile::SetServerName(const std::string& server_name)
@@ -37,9 +46,8 @@ bool ConfigFile::ReadServerConfigFile()
 
 	if (!in)
 	{
-		std::cerr << "error" << std::endl;
-		// std::exit(1);
-		return false;
+		std::cerr << "config file error" << std::endl;
+		std::exit(1);
 	}
 
 	// 定义文件流 开始与结束 迭代器
@@ -48,7 +56,6 @@ bool ConfigFile::ReadServerConfigFile()
 
 	// 确定配置文件有多少行
 	std::size_t size = std::distance(in_iter, end_iter);
-	std::cout << "config file dis: " << size << std::endl;
 
 	// distance 会修改迭代器位置 使用clear与seek将迭代器指向还原
 	in.clear();
@@ -78,7 +85,9 @@ void ConfigFile::AnalyseConfigStr(const std::vector<std::string>& config_str)
 	std::vector<std::string>::const_iterator c_iter = std::cbegin(config_str);
 	while (c_iter != std::cend(config_str))
 	{
-		std::vector<std::string> param{ StrSplitBySpace(*c_iter) };
+		std::vector<std::string> param;
+		StringSplit(*c_iter, '|', param);
+
 		if (param.size() == 4)
 		{
 			// ServerData
@@ -94,7 +103,7 @@ void ConfigFile::AnalyseConfigStr(const std::vector<std::string>& config_str)
 
 			// server config
 			auto it = m_server_config.find(server_data->m_server_name);
-			if (it != std::cend(m_server_config))
+			if (it == std::cend(m_server_config))
 			{
 				m_server_config[server_data->m_server_name] = server_data;
 			}
@@ -110,7 +119,7 @@ void ConfigFile::AnalyseConfigStr(const std::vector<std::string>& config_str)
 
 			// type list
 			auto type_it = m_type_config.find(server_data->m_server_name);
-			if (type_it != std::cend(m_type_config))
+			if (type_it == std::cend(m_type_config))
 			{
 				std::vector<std::shared_ptr<ServerData>> vec_server_list;
 				vec_server_list.push_back(server_data);

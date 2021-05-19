@@ -20,7 +20,7 @@ private:
 	std::map<std::string, std::vector<std::shared_ptr<PluginData>>> m_plugin_list; // key: server name, value: plugin data
 
 	const std::string m_config_file_name{ "config.cfg" };
-	std::vector<std::string> StrSplitBySpace(const std::string& s);
+	void StringSplit(const std::string& str, const char split, std::vector<std::string>& res);
 
 	// my server name
 	std::string m_server_name;

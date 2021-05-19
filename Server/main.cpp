@@ -33,20 +33,16 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		plugin_name = "masterPlugin";
+		plugin_name = "master-1";
 	}
 
 	// Application
 	std::shared_ptr<Application> app{ std::make_shared<Application>() };
 	IApplication::SetPtr(app);
 	//
-	std::cout << "111" << std::endl;
 	app->LoadConfig(plugin_name);
-	std::cout << "222" << std::endl;
 	app->StartLoadAllLibrary();
-	std::cout << "333" << std::endl;
 	app->StartThreadPool();
-	std::cout << "444" << std::endl;
 	if (argc > 1)
 	{
 		app->StartConnectServer();

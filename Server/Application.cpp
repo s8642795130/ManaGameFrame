@@ -4,11 +4,13 @@
 
 std::shared_ptr<IApplication> IApplication::m_app;
 
-Application::Application() : 
-	m_thread_pool(std::make_unique<ThreadPool>()),
-	m_server_net(std::make_unique<ServerNet>(m_thread_pool)),
-	m_plugin_manager(std::make_unique<PluginManager>())
+Application::Application()
 {
+	m_thread_pool = std::make_shared<ThreadPool>();
+	m_server_net = std::make_unique<ServerNet>(m_thread_pool);
+	m_plugin_manager = std::make_unique<PluginManager>();
+	m_config_file = std::make_shared<ConfigFile>();
+	m_server_controller = std::make_unique<ServerController>(m_config_file, m_thread_pool);
 }
 
 void Application::AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func)

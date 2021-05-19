@@ -24,8 +24,10 @@ public:
         m_client_sin.sin_addr.s_addr = inet_addr(ip.c_str()); //
 
         //
+		std::cout << "connect xxx" << std::endl;
         if (connect(m_client_fd, (struct sockaddr*)&m_client_sin, sizeof(m_client_sin)) < 0)
         {
+			std::cout << "connect xxxxx122" << std::endl;
             ret = false;
         }
 

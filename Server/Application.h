@@ -10,13 +10,12 @@
 #include "ServerNet.h"
 #include "ClientNet.h"
 #include "PluginManager.h"
-// #include "ServerNetTest.h"
 
 class Application : public IApplication
 {
 private:
 	std::shared_ptr<ConfigFile> m_config_file;
-	std::shared_ptr<ServerController> m_server_controller;
+	std::unique_ptr<ServerController> m_server_controller;
 	std::shared_ptr<ThreadPool> m_thread_pool;
 	std::unique_ptr<ServerNet> m_server_net;
 	std::unique_ptr<PluginManager> m_plugin_manager;
