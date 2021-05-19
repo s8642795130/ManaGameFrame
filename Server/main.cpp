@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
 	// va_list, va_start, va_arg, va_end
 	// int getopt(int argc, char * const argv[], const char * optstring);
 	std::cout << "hello world" << std::endl;
+	std::string plugin_name;
 
 	std::array<char, 260> path_buf;
 	getcwd(path_buf.data(), 260);
@@ -28,20 +29,28 @@ int main(int argc, char* argv[])
 	if (argc > 1)
 	{
 		std::cout << "param is: " << argv[1] << std::endl;
+		plugin_name = argv[1];
 	}
 	else
 	{
-		return 0;
+		plugin_name = "masterPlugin";
 	}
 
 	// Application
 	std::shared_ptr<Application> app{ std::make_shared<Application>() };
 	IApplication::SetPtr(app);
 	//
-	app->LoadConfig(argv[1]);
+	std::cout << "111" << std::endl;
+	app->LoadConfig(plugin_name);
+	std::cout << "222" << std::endl;
 	app->StartLoadAllLibrary();
+	std::cout << "333" << std::endl;
 	app->StartThreadPool();
-	app->StartConnectServer();
+	std::cout << "444" << std::endl;
+	if (argc > 1)
+	{
+		app->StartConnectServer();
+	}
 	app->StartNetwork();
 	app->LibInit();
 	app->LibExecute();
