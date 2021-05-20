@@ -65,6 +65,7 @@ void Application::LoadConfig(const std::string& server_name)
 	// load config
 	m_config_file->SetServerName(server_name);
 	m_config_file->ReadServerConfigFile();
+	m_config_file->SetServerType();
 }
 
 void Application::StartLoadAllLibrary()
@@ -83,6 +84,16 @@ void Application::StartConnectServer()
 void Application::LibInit()
 {
 	m_plugin_manager->Init();
+}
+
+void Application::LibAfterInit()
+{
+	m_plugin_manager->AfterInit();
+}
+
+void Application::LibReadyExecute()
+{
+	m_plugin_manager->ReadyExecute();
 }
 
 void Application::LibExecute()

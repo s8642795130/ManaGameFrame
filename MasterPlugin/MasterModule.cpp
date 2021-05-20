@@ -23,12 +23,9 @@ void MasterModule::AfterInit()
 void MasterModule::OnServerOnlineCallback(ClientDescriptor* ptr_client)
 {
 	// notify other servers that a server online
-	ptr_client->m_buffer->SetPosToDataBegin();
 	ConnectServerOnline connect_server_online;
 	ForEachField(connect_server_online, ptr_client->m_buffer);
 
-	std::cout << "recv server data !!!" << connect_server_online.m_server_name << std::endl;
-
-	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, MasterActor, int, int>>("", m_master_actor->GetUUID(), &MasterActor::ServerOnline, 10, 20);
+	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, MasterActor, const std::string, const std::string>>("", m_master_actor->GetUUID(), &MasterActor::ServerOnline, connect_server_online.m_server_name, ptr_client->GetUUID());
 	m_plugin->GetAppPtr()->SendMsgToActor(ptr);
 }

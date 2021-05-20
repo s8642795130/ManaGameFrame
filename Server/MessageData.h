@@ -46,8 +46,11 @@ namespace data_fn
     template <typename Name>
     void fn(std::string& data, Name&& field, std::shared_ptr<ByteBuffer>& byte_buffer)
     {
+        std::cout << "should in here" << std::endl;
         int str_len = byte_buffer->GetInt();
+        std::cout << "should in here1: " << str_len << std::endl;
         data = byte_buffer->GetString(str_len);
+        std::cout << "should in here2: " << data << std::endl;
     }
 
     template <typename Name>

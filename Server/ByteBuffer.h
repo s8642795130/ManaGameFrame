@@ -10,9 +10,8 @@ private:
 	char* m_buf_ptr = nullptr;
 	char m_msg_header[HEADER_LENGTH] = { 0 };
 	char m_length_buf[4] = { 0 };
-	ssize_t m_len_recv_num = 0;
 	int m_cur_pos = 0;
-	ssize_t m_remain_len = HEADER_LENGTH; // majorId: 4 minorId: 4 dataLength: 4
+	ssize_t m_remaining_len = HEADER_LENGTH; // majorId: 4 minorId: 4 dataLength: 4
 	bool m_is_received_header = false;
 	//
 	int m_major_id = 0;
@@ -60,11 +59,8 @@ public:
 			return false;
 		}
 
-		// set recv length
-		m_len_recv_num = m_buf_length;
-
 		// less length
-		m_remain_len = m_buf_length;
+		m_remaining_len = m_buf_length;
 
 		// alloc memory
 		if (m_buf_length != 0)
@@ -82,41 +78,30 @@ public:
 		m_buf_length = 0;
 		delete[] m_buf_ptr;
 		m_buf_ptr = nullptr;
-		m_len_recv_num = 0;
 		m_cur_pos = 0;
-		m_remain_len = HEADER_LENGTH;
+		m_remaining_len = HEADER_LENGTH;
 		m_msg_header[HEADER_LENGTH] = { 0 };
 		m_is_received_header = false;
 	}
 
-	ssize_t GetRemainLen()
+	ssize_t GetRemainingLen()
 	{
-		return m_remain_len;
+		return m_remaining_len;
 	}
 
 	void RecvHeader(char* buf, std::size_t len)
 	{
-		std::memcpy(m_msg_header + (HEADER_LENGTH - m_remain_len), buf, len);
-		m_remain_len -= len;
-	}
-
-	ssize_t GetUnreceivedLen()
-	{
-		return m_len_recv_num;
+		std::memcpy(m_msg_header + (HEADER_LENGTH - m_remaining_len), buf, len);
+		m_remaining_len -= len;
 	}
 
 	void PushData(char* buf, std::size_t len)
 	{
 		std::memcpy(m_buf_ptr, buf, len);
-		m_len_recv_num -= len;
+		m_remaining_len -= len;
 	}
 
 	// data
-
-	void SetPosToDataBegin()
-	{
-		m_cur_pos = HEADER_LENGTH;
-	}
 
 	int GetInt()
 	{
@@ -145,15 +130,15 @@ public:
 	std::string GetString(int length)
 	{
 		// copy buffer
-		char* value = new char[length + 1];
-		std::strncpy(value, m_buf_ptr + m_cur_pos, length);
+		std::vector<char> value(length + 1);
+		std::strncpy(value.data(), m_buf_ptr + m_cur_pos, length);
 		value[length] = '\0';
 		
 		//
 		m_cur_pos += length;
 
 		// return value
-		std::string str(value);
-		return value;
+		std::string str(value.data());
+		return str;
 	}
 };

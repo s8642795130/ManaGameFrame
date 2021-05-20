@@ -128,6 +128,7 @@
     <ClInclude Include="ServerController.h" />
     <ClInclude Include="ServerNet.h" />
     <ClInclude Include="ServerObj.h" />
+    <ClInclude Include="ServerType.h" />
     <ClInclude Include="StructSchema.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="ThreadRouter.h" />

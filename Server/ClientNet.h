@@ -10,6 +10,7 @@
 #include "ClientDescriptor.h"
 #include "GameMessage.h"
 #include "IConfigFile.h"
+#include "ServerType.h"
 
 class ClientNet : public ClientDescriptor
 {
@@ -104,7 +105,7 @@ public:
 		std::cout << "[-] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by server" << std::endl;
 	}
 
-	virtual void SetReceiveCallBackMapPtr(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> receive_callBack)
+	virtual void SetReceiveCallbackMapPtr(std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> receive_callBack)
 	{
 		m_receive_callBack = receive_callBack;
 	}
@@ -157,8 +158,8 @@ public:
 
 	void ProcessMasterIO()
 	{
-		const int frontend_msg = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::FRONTEND_MSG);
-		std::function<void(ClientDescriptor*)> callback = (*m_receive_callBack)[frontend_msg];
+		int majorId = m_buffer->GetMajorId();
+		std::function<void(ClientDescriptor*)> callback = (*m_receive_callBack)[majorId];
 		callback(this);
 	}
 
@@ -167,7 +168,7 @@ public:
 	/// </summary>
 	void ProccessIO()
 	{
-		switch (m_server_type)
+		switch (ServerType::GetServerType())
 		{
 		case NetMessage::ServerType::FRONTEND: // 主机是前端服务器
 		{
@@ -232,7 +233,7 @@ public:
 		if (m_buffer->GetHeaderStatus() == false)
 		{
 			// is not read length
-			auto remain_len = m_buffer->GetRemainLen();
+			auto remain_len = m_buffer->GetRemainingLen();
 			auto len_buf = remain_len < len ? remain_len : len;
 
 			//
@@ -240,14 +241,14 @@ public:
 			buf_remain_len -= len_buf;
 
 			//
-			if (m_buffer->GetRemainLen() == 0)
+			if (m_buffer->GetRemainingLen() == 0)
 			{
 				if (m_buffer->ResetHeader() == false)
 				{
 					return;
 				}
 
-				if (m_buffer->GetRemainLen() == 0)
+				if (m_buffer->GetRemainingLen() == 0)
 				{
 					// io actor
 					ProccessIO();
@@ -268,13 +269,13 @@ public:
 		if (buf_remain_len != 0)
 		{
 			//
-			auto unreceived_len = m_buffer->GetUnreceivedLen();
+			auto unreceived_len = m_buffer->GetRemainingLen();
 			auto push_data_len = unreceived_len < buf_remain_len ? unreceived_len : buf_remain_len;
 			m_buffer->PushData(buffer.data() + (len - buf_remain_len), push_data_len);
 			buf_remain_len -= push_data_len;
 		}
 
-		if (m_buffer->GetRemainLen() == 0)
+		if (m_buffer->GetRemainingLen() == 0)
 		{
 			// io
 			ProccessIO();
@@ -296,15 +297,14 @@ public:
 	/// <param name="value"></param>
 	virtual void SendData(const int major, const int minor, const char* ptr_value, const int length)
 	{
-		char* temp_data = new char[HEADER_LENGTH + length];
-		std::memcpy(temp_data, &major, sizeof(MAJOR_LENGTH)); // copy major
-		std::memcpy(temp_data + MAJOR_LENGTH, &minor, sizeof(MINOR_LENGTH)); // copy minor
-		std::memcpy(temp_data + MAJOR_LENGTH + MINOR_LENGTH, &length, sizeof(INT_LENGTH)); // copy length
+		std::vector<char> temp_data(HEADER_LENGTH + length);
+		std::memcpy(temp_data.data(), &major, sizeof(MAJOR_LENGTH)); // copy major
+		std::memcpy(temp_data.data() + MAJOR_LENGTH, &minor, sizeof(MINOR_LENGTH)); // copy minor
+		std::memcpy(temp_data.data() + MAJOR_LENGTH + MINOR_LENGTH, &length, sizeof(INT_LENGTH)); // copy length
 		if (length != 0)
 		{
-			std::memcpy(temp_data + HEADER_LENGTH, ptr_value, length);
+			std::memcpy(temp_data.data() + HEADER_LENGTH, ptr_value, length);
 		}
-		std::cout << "send data length: " << HEADER_LENGTH + length << std::endl;
-		send(m_client_fd, temp_data, HEADER_LENGTH + length, 0);
+		send(m_client_fd, temp_data.data(), HEADER_LENGTH + length, 0);
 	}
 };

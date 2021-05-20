@@ -18,18 +18,15 @@ public:
         setsockopt(m_client_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 
         // sockaddr_in
-        std::memset(&m_client_sin, 0, sizeof(m_client_sin));
         m_client_sin.sin_family = AF_INET;
-        m_client_sin.sin_port = htons(static_cast<uint16_t>(port)); //
-        m_client_sin.sin_addr.s_addr = inet_addr(ip.c_str()); //
+        m_client_sin.sin_port = htons(static_cast<uint16_t>(port));
+        m_client_sin.sin_addr.s_addr = inet_addr(ip.c_str());
 
-        //
-		std::cout << "connect xxx" << std::endl;
-        if (connect(m_client_fd, (struct sockaddr*)&m_client_sin, sizeof(m_client_sin)) < 0)
-        {
-			std::cout << "connect xxxxx122" << std::endl;
-            ret = false;
-        }
+		if (connect(m_client_fd, (struct sockaddr*)&m_client_sin, sizeof(m_client_sin)) < 0)
+		{
+			fprintf(stderr, "socket connect error = %d ( %s )\n", errno, strerror(errno));
+			ret = false;
+		}
 
         return ret;
 	}
@@ -40,7 +37,7 @@ public:
 		if (m_buffer->GetHeaderStatus() == false)
 		{
 			// is not read length
-			auto remain_len = m_buffer->GetRemainLen();
+			auto remain_len = m_buffer->GetRemainingLen();
 			auto len_buf = remain_len < len ? remain_len : len;
 
 			//
@@ -48,14 +45,14 @@ public:
 			buf_remain_len -= len_buf;
 
 			//
-			if (m_buffer->GetRemainLen() == 0)
+			if (m_buffer->GetRemainingLen() == 0)
 			{
 				if (m_buffer->ResetHeader() == false)
 				{
 					return false;
 				}
 
-				if (m_buffer->GetRemainLen() == 0)
+				if (m_buffer->GetRemainingLen() == 0)
 				{
 					// io actor
 					// ProccessIO();
@@ -69,13 +66,13 @@ public:
 		if (buf_remain_len != 0)
 		{
 			//
-			auto unreceived_len = m_buffer->GetUnreceivedLen();
+			auto unreceived_len = m_buffer->GetRemainingLen();
 			auto push_data_len = unreceived_len < buf_remain_len ? unreceived_len : buf_remain_len;
 			m_buffer->PushData(buffer.data() + (len - buf_remain_len), push_data_len);
 			buf_remain_len -= push_data_len;
 		}
 
-		if (m_buffer->GetRemainLen() == 0)
+		if (m_buffer->GetRemainingLen() == 0)
 		{
 			// io
 			// ProccessIO();

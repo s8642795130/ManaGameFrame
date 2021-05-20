@@ -38,6 +38,8 @@ public:
 	void StartConnectServer();
 	//
 	void LibInit();
+	void LibAfterInit();
+	void LibReadyExecute();
 	void LibExecute();
 	//
 	void StartThreadPool();

@@ -8,10 +8,10 @@
 #include "ConfigFile.h"
 #include "Application.h"
 #include "GameMessage.h"
-#include "ClientDescriptor.h"
+#include "ServerType.h"
 
 std::map<int, std::string> NetMsgDefine::m_map_msg;
-NetMessage::ServerType ClientDescriptor::m_server_type;
+NetMessage::ServerType ServerType::m_server_type;
 
 int main(int argc, char* argv[])
 {
@@ -49,6 +49,8 @@ int main(int argc, char* argv[])
 	}
 	app->StartNetwork();
 	app->LibInit();
+	app->LibAfterInit();
+	app->LibReadyExecute();
 	app->LibExecute();
 	app->StartNetEventLoop();
 

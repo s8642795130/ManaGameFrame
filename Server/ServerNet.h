@@ -122,6 +122,7 @@ public:
 
 		epoll_event ev;
 		// ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	// client events will be handled in edge-triggered mode
+		ev.data.fd = ptr_client->m_client_fd;
 		ev.events = EPOLLIN | EPOLLET;
 		// ev.data.ptr = reinterpret_cast<void*>(ptr_client->m_client_fd); // we will pass client descriptor with every event
 
@@ -137,7 +138,7 @@ public:
 		m_ptr_thread_pool->AddActorToThreadCell(ptr_client);
 
 		// set callback map ptr
-		ptr_client->SetReceiveCallBackMapPtr(m_ptr_callback_map);
+		ptr_client->SetReceiveCallbackMapPtr(m_ptr_callback_map);
 
 		return true;
 	}
@@ -289,6 +290,6 @@ private:
 		m_map_clients.erase(it);
 
 		//
-		this->m_ptr_thread_pool->RemoveActorFromThreadCell(ptr_client->GetUUID());
+		m_ptr_thread_pool->RemoveActorFromThreadCell(ptr_client->GetUUID());
 	}
 };
