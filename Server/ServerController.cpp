@@ -40,6 +40,8 @@ void ServerController::ConnectMaster()
 		// send this server is online
 		ConnectServerOnline connect_server_online;
 		connect_server_online.m_server_name = m_ptr_config_file->GetMyServerInfo()->m_server_name;
+
+		// package
 		std::vector<char> msg_buffer;
 		PackageStructForEachField(connect_server_online, msg_buffer);
 		server_obj->SendData(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), 0, msg_buffer.data(), static_cast<int>(msg_buffer.size()));
@@ -59,14 +61,21 @@ void ServerController::ConnectMaster()
 			std::shared_ptr<ServerObj> server_obj{ std::make_shared<ServerObj>() };
 			SaveServerUUID(item.m_server_name, server_obj->GetUUID());
 
-			//
-			server_obj->ConnectServer(item.m_ip, item.m_port);
+			// check all is connector type
+			if (item.m_server_type.compare("server") == 0)
+			{
+				// connect server
+				server_obj->ConnectServer(item.m_ip, item.m_port);
 
-			//
-			ConnectServerOnline connect_server_online;
-			std::vector<char> buffer;
-			PackageStructForEachField(connect_server_online, buffer);
-			server_obj->SendData(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), 0, buffer.data(), static_cast<int>(buffer.size()));
+				// struct msg
+				ConnectServerOnline connect_server_online;
+				connect_server_online.m_server_name = m_ptr_config_file->GetMyServerInfo()->m_server_name;
+
+				// package
+				std::vector<char> buffer;
+				PackageStructForEachField(connect_server_online, buffer);
+				server_obj->SendData(static_cast<int>(NetMessage::ServerMsg::SERVER_ONLINE), 0, buffer.data(), static_cast<int>(buffer.size()));
+			}
 		}
 	);
 }

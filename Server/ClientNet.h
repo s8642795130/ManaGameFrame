@@ -185,7 +185,7 @@ public:
 			case NetMessage::ClientType::MASTER:
 				break;
 			default:
-				// 未知消息 (login server_online)
+				// (login)
 				ProcessFrontendUnknowMsg();
 				break;
 			}
@@ -207,7 +207,7 @@ public:
 			case NetMessage::ClientType::MASTER:
 				break;
 			default:
-				// 未知消息 (server_online)
+				// (server_online)
 				break;
 			}
 			break;
