@@ -17,9 +17,4 @@ public:
 		auto temp_uuid = std::strtoul(str_sub.c_str(), 0, 16);
 		return temp_uuid % m_thread_count;
 	}
-
-	static unsigned long GetThreadActorIndexBySocket(const int& fd)
-	{
-		return fd % m_thread_count;
-	}
 };

@@ -11,7 +11,7 @@ class ServerController
 private:
 	std::shared_ptr<IConfigFile> m_ptr_config_file;
 	std::shared_ptr<IThreadPool> m_ptr_thread_pool;
-	std::map<std::string, std::string> m_map_server; // key: server_name, value: uuid
+	static std::map<std::string, std::string> m_map_server; // key: server_name, value: uuid
 
 	void SaveServerUUID(const std::string& server_name, const std::string& uuid);
 public:
@@ -22,4 +22,9 @@ public:
 
 	void ConnectMaster();
 	void ConnectServer();
+
+	static const std::map<std::string, std::string>& GetServerMap()
+	{
+		return m_map_server;
+	}
 };

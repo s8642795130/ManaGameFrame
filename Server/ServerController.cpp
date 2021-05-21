@@ -8,9 +8,11 @@
 #include "PackageNetMsg.h"
 #include "GameMessageData.h"
 
+std::map<std::string, std::string> ServerController::m_map_server;
+
 void ServerController::SaveServerUUID(const std::string& server_name, const std::string& uuid)
 {
-	m_map_server.emplace(server_name, uuid);
+	ServerController::m_map_server.emplace(server_name, uuid);
 }
 
 void ServerController::ConnectMaster()

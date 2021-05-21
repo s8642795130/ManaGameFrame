@@ -11,6 +11,8 @@
 #include "GameMessage.h"
 #include "IConfigFile.h"
 #include "ServerType.h"
+#include "ServerController.h"
+#include "MsgRouter.h"
 
 class ClientNet : public ClientDescriptor
 {
@@ -119,17 +121,30 @@ public:
 			return;
 		}
 
-		// router
-		int majorId = m_buffer->GetMajorId();
+		// get msg corresponding to plugin
+		const auto majorId = m_buffer->GetMajorId();
 		auto map_msg = NetMsgDefine::GetNetMsg();
 		auto plugin_name = map_msg[majorId];
-		auto config_file = this->m_app->GetConfigPtr();
+
+		// get all the servers that the plugin exists
+		auto config_file = m_app->GetConfigPtr();
 		const auto server_list = config_file->GetServersByPluginName(plugin_name);
+
+		// router
+		const auto server_index = MsgRouter::GetMsgRouterByClient(plugin_name, server_list.size(), *this);
+
+		// get server uuid
+		auto server_map = ServerController::GetServerMap();
+		auto server_uuid = server_map[server_list[server_index]->m_server_name];
+
+		// send to backend server
+		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNet, const std::string, const std::string>>(GetUUID(), server_uuid, &ClientNet::SendBuffer, majorId, m_buffer);
+		m_app->SendMsgToActor(ptr);
 	}
 
 	void ProcessBackendIO()
 	{
-		// (rpc) (msg) (rcp callback)
+		// msg back to client
 		/*
 		auto thread_index = ThreadRouter::GetThreadActorIndexBySocket(m_client_fd);
 		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNetControlActor, int, int>>("", actor_uuid, &ClientNetControlActor::ProcClientMessage, 10, 20);
@@ -306,5 +321,10 @@ public:
 			std::memcpy(temp_data.data() + HEADER_LENGTH, ptr_value, length);
 		}
 		send(m_client_fd, temp_data.data(), HEADER_LENGTH + length, 0);
+	}
+
+	virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer)
+	{
+
 	}
 };
