@@ -47,6 +47,16 @@ public:
 		return m_is_received_header;
 	}
 
+	int GetCurPos()
+	{
+		return m_cur_pos;
+	}
+
+	void StepBufferPos(int step)
+	{
+		m_cur_pos += step;
+	}
+
 	bool ResetHeader()
 	{
 		std::memcpy(&m_major_id, m_msg_header, MAJOR_LENGTH); // recv major
@@ -102,6 +112,16 @@ public:
 	}
 
 	// data
+
+	const char* GetBuffer()
+	{
+		return m_buf_ptr;
+	}
+
+	const char* GetHeader()
+	{
+		return m_msg_header;
+	}
 
 	int GetInt()
 	{

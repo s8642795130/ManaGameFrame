@@ -79,6 +79,21 @@ namespace data_fn
         }
     }
 
+    template <typename Name>
+    void fn(std::vector<char>& data, Name&& field, std::shared_ptr<ByteBuffer>& byte_buffer)
+    {
+        // allocate memory to vector
+        int vec_len = byte_buffer->GetInt();
+        data.reserve(vec_len);
+
+        // copy data to vector
+        auto cur_pos = byte_buffer->GetCurPos();
+        std::memcpy(data.data(), byte_buffer->GetBuffer() + cur_pos, vec_len);
+        
+        // step buffer to new position
+        byte_buffer->StepBufferPos(vec_len);
+    }
+
     template <typename T, typename Name>
     void fn(std::vector<T>& data, Name&& field, std::shared_ptr<ByteBuffer>& byte_buffer)
     {

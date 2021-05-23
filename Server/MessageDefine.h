@@ -36,6 +36,7 @@ namespace NetMessage
 		NONE,
 		SERVER_ONLINE,
 		SERVER_OFFLINE,
-		FRONTEND_MSG
+		LOGIN_MSG,
+		UPDATE_CLIENT_MSG
 	};
 }

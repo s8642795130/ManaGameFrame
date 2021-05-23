@@ -13,6 +13,9 @@
 #include "ServerType.h"
 #include "ServerController.h"
 #include "MsgRouter.h"
+#include "CommonStruct.h"
+#include "GameMessageData.h"
+#include "MessageData.h"
 
 class ClientNet : public ClientDescriptor
 {
@@ -20,6 +23,7 @@ protected:
 	time_t m_last_active;
 	//
 	bool m_is_login = false;
+	bool m_is_working = false;
 	std::queue<std::unique_ptr<ByteBuffer>> m_queue_msg;
 public:
 	ClientNet()
@@ -131,34 +135,38 @@ public:
 		const auto server_list = config_file->GetServersByPluginName(plugin_name);
 
 		// router
-		const auto server_index = MsgRouter::GetMsgRouterByClient(plugin_name, server_list.size(), *this);
+		const auto server_index = MsgRouter::GetMsgRouterByClient(plugin_name, static_cast<int>(server_list.size()), *this);
 
 		// get server uuid
 		auto server_map = ServerController::GetServerMap();
 		auto server_uuid = server_map[server_list[server_index]->m_server_name];
 
 		// send to backend server
-		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNet, const std::string, const std::string>>(GetUUID(), server_uuid, &ClientNet::SendBuffer, majorId, m_buffer);
+		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNet, std::shared_ptr<ByteBuffer>>>(GetUUID(), server_uuid, &ClientNet::SendBuffer, std::move(m_buffer));
 		m_app->SendMsgToActor(ptr);
+
+		//
+		m_buffer = std::make_shared<ByteBuffer>();
 	}
 
 	void ProcessBackendIO()
 	{
-		// msg back to client
-		/*
-		auto thread_index = ThreadRouter::GetThreadActorIndexBySocket(m_client_fd);
-		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNetControlActor, int, int>>("", actor_uuid, &ClientNetControlActor::ProcClientMessage, 10, 20);
-		m_app->SendMsgToActor(ptr);
-		*/
+		// unpack msg
+		BackendMsgToClient backend_msg;
+		ForEachField(backend_msg, m_buffer);
 
-		const int frontend_msg = static_cast<std::underlying_type_t<NetMessage::ServerMsg>>(NetMessage::ServerMsg::FRONTEND_MSG);
-		std::function<void(ClientDescriptor*)> callback = (*m_receive_callBack)[frontend_msg];
-		callback(this);
+		// send to client
+		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNet, std::shared_ptr<ByteBuffer>>>(GetUUID(), backend_msg.m_client_uuid, &ClientNet::SendBuffer, std::move(backend_msg.m_buffer));
+		m_app->SendMsgToActor(ptr);
 	}
 
 	void ProcessFrontendUnknowMsg()
 	{
-
+		// check login info msg
+		if (m_buffer->GetMajorId() != static_cast<int>(NetMessage::ServerMsg::LOGIN_MSG)) // LOGIN_MSG
+		{
+			return;
+		}
 	}
 
 	void ProcessServerBackendIO()
@@ -193,7 +201,7 @@ public:
 				// frontend server
 				ProcessFrontendIO();
 				break;
-			case NetMessage::ClientType::BACKEND: // 后端发来的数据 直接找到客户端 返回客户端
+			case NetMessage::ClientType::BACKEND: // 后端发来的数据 直接找到客户端 返回客户端 (maybe update client data)
 				// backend server
 				ProcessBackendIO();
 				break;
@@ -325,6 +333,14 @@ public:
 
 	virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer)
 	{
+		int buffer_size = buffer->GetSize();
 
+		// build buffer
+		std::vector<char> temp_data(HEADER_LENGTH + buffer_size);
+		std::memcpy(temp_data.data(), buffer->GetHeader(), HEADER_LENGTH);
+		std::memcpy(temp_data.data() + HEADER_LENGTH, buffer->GetBuffer(), buffer_size);
+
+		//
+		send(m_client_fd, temp_data.data(), HEADER_LENGTH + buffer_size, 0);
 	}
 };

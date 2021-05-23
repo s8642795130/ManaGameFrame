@@ -9,9 +9,12 @@
 #include "Application.h"
 #include "GameMessage.h"
 #include "ServerType.h"
+#include "MsgRouter.h"
 
 std::map<int, std::string> NetMsgDefine::m_map_msg;
 NetMessage::ServerType ServerType::m_server_type;
+std::map<std::string, std::function<int(const int, const ClientNet&)>> MsgRouter::m_router_func;
+std::function<int(const int, const ClientNet&)> MsgRouter::m_defalut_router_func;
 
 int main(int argc, char* argv[])
 {

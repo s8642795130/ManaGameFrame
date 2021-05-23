@@ -20,6 +20,13 @@ struct ConnectServerOnline
 	std::string m_server_name;
 };
 
+struct BackendMsgToClient
+{
+	std::string m_client_uuid;
+	std::string m_uid;
+	std::vector<char> m_buffer;
+};
+
 DEFINE_STRUCT_SCHEMA(ServerOnlineData,
 	DEFINE_STRUCT_FIELD(m_server_type, MSG_TYPE::STRING),
 	DEFINE_STRUCT_FIELD(m_server_name, MSG_TYPE::STRING),
@@ -33,4 +40,9 @@ DEFINE_STRUCT_SCHEMA(ServerOnlineInfo,
 
 DEFINE_STRUCT_SCHEMA(ConnectServerOnline,
 	DEFINE_STRUCT_FIELD(m_server_name, MSG_TYPE::STRING)
+);
+
+DEFINE_STRUCT_SCHEMA(BackendMsgToClient,
+	DEFINE_STRUCT_FIELD(m_client_uuid, MSG_TYPE::STRING),
+	DEFINE_STRUCT_FIELD(m_buffer, MSG_TYPE::ARRAY_CHAR)
 );

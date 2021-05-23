@@ -7,5 +7,6 @@ enum class MSG_TYPE : int
     CHAR,
     STRING,
     ARRAY_STRUCT,
-    ARRAY_INT
+    ARRAY_INT,
+    ARRAY_CHAR
 };

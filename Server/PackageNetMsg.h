@@ -101,6 +101,21 @@ namespace data_fn
         );
     }
 
+    template <typename Name>
+    void fn(const std::vector<char>& data, Name&& field, std::vector<char>& vec_buffer)
+    {
+        // get size array
+        int size = static_cast<int>(data.size());
+        std::array<char, 4> arr_size;
+        std::memcpy(arr_size.data(), &size, sizeof(size));
+
+        // copy size
+        std::copy(std::begin(arr_size), std::end(arr_size), std::back_inserter(vec_buffer));
+
+        // copy data
+        std::copy(std::begin(data), std::end(data), std::back_inserter(vec_buffer));
+    }
+
     template <typename T, typename Name>
     void fn(const std::vector<T>& data, Name&& field, std::vector<char>& vec_buffer)
     {
