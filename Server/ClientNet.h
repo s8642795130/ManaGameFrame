@@ -151,13 +151,25 @@ public:
 
 	void ProcessBackendIO()
 	{
-		// unpack msg
-		BackendMsgToClient backend_msg;
-		ForEachField(backend_msg, m_buffer);
+		// there is two situations, case 1: back msg to client; case 2: change client data
+		if (m_buffer->GetMajorId() != static_cast<int>(NetMessage::ServerMsg::RETURN_CLIENT_MSG))
+		{
+			// unpack msg
+			BackendMsgToClient backend_msg;
+			ForEachField(backend_msg, m_buffer);
 
-		// send to client
-		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNet, std::shared_ptr<ByteBuffer>>>(GetUUID(), backend_msg.m_client_uuid, &ClientNet::SendBuffer, std::move(backend_msg.m_buffer));
-		m_app->SendMsgToActor(ptr);
+			// send to client
+			std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNet, std::shared_ptr<ByteBuffer>>>(GetUUID(), backend_msg.m_client_uuid, &ClientNet::SendBuffer, std::move(backend_msg.m_buffer));
+			m_app->SendMsgToActor(ptr);
+		}
+		else if (m_buffer->GetMajorId() != static_cast<int>(NetMessage::ServerMsg::UPDATE_CLIENT_MSG))
+		{
+
+		}
+		else
+		{
+			// error...
+		}
 	}
 
 	void ProcessFrontendUnknowMsg()

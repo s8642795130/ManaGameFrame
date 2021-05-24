@@ -87,7 +87,6 @@
     <ClCompile Include="DynLib.cpp" />
     <ClCompile Include="FrontendClient.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MasterObj.cpp" />
     <ClCompile Include="PluginManager.cpp" />
     <ClCompile Include="PollNet.cpp" />
     <ClCompile Include="ServerController.cpp" />
@@ -116,7 +115,6 @@
     <ClInclude Include="IModule.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IThreadPool.h" />
-    <ClInclude Include="MasterObj.h" />
     <ClInclude Include="MessageData.h" />
     <ClInclude Include="MessageDefine.h" />
     <ClInclude Include="MsgRouter.h" />
