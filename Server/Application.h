@@ -21,13 +21,18 @@ private:
 	std::unique_ptr<PluginManager> m_plugin_manager;
 public:
 	Application();
-	//
+	// NetPlugin (bind net msg)
+	// ServerNet_ClientPlugin (client list)
+	// ActorPlugin
+	// ConfigPlugin
+	// MessageDefinePlugin
+	// ServerControlPlugin
 	virtual void AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func);
-	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg);
-	virtual void RPCMsg();
-	virtual void ResponseMsg();
-	virtual void PushMsg();
-	virtual void BroadcastMsg();
+	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg); // need call
+	virtual void RPCMsg(); // need call
+	virtual void ResponseMsg(); // need call
+	virtual void PushMsg(); // need call
+	virtual void BroadcastMsg(); // need call
 	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
 	virtual void RemoveActorFromThreadCell(const std::string& uuid);
 	virtual std::shared_ptr<IConfigFile> GetConfigPtr();
