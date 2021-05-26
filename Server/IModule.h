@@ -1,16 +1,14 @@
 #pragma once
 #include <memory>
 
-// #include "IModuleManager.h"
-#include "IPlugin.h"
-#include "IApplication.h"
+#include "IPluginManager.h"
 
 class IModule
 {
 protected:
-	std::shared_ptr<IPlugin> m_plugin;
+	std::shared_ptr<IPluginManager> m_ptr_manager;
 public:
-	explicit IModule(std::shared_ptr<IPlugin> ptr) : m_plugin(ptr)
+	explicit IModule(std::shared_ptr<IPluginManager> ptr) : m_ptr_manager(ptr)
 	{
 	}
 

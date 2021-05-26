@@ -16,16 +16,19 @@ void PluginManager::LoadAllPluginLibrary(std::vector<std::shared_ptr<PluginData>
 
 bool PluginManager::LoadPluginLibrary(const std::string& plugin_dll_name)
 {
-	using MyFunc = std::shared_ptr<IPlugin>(*)(std::shared_ptr<IApplication>);
+	// 
+	using MyFunc = std::shared_ptr<IPlugin>(*)(std::shared_ptr<IPluginManager>);
 
+	//
 	std::shared_ptr<DynLib> ptr_dll{ std::make_shared<DynLib>("lib" + plugin_dll_name) };
 	ptr_dll->LoadLib();
 
+	//
 	MyFunc func = (MyFunc)ptr_dll->GetSymbol("DllStartPlugin");
 	if (func != nullptr)
 	{
 		m_map_lib.emplace(plugin_dll_name, ptr_dll);
-		m_map_plugin.emplace(plugin_dll_name, func(IApplication::GetPtr()));
+		m_map_plugin.emplace(plugin_dll_name, func(shared_from_this()));
 	}
 
 	return true;

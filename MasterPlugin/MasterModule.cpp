@@ -6,9 +6,12 @@
 #include "../Server/MessageData.h"
 #include "../Server/GameMessageData.h"
 
+#include "../Server/IPluginManager.h"
+
 void MasterModule::Init()
 {
 	// load actor
+	m_ptr_manager->GetModule<MasterModule>();
 	m_master_actor = std::make_shared<MasterActor>();
 }
 

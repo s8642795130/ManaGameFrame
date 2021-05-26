@@ -1,14 +1,14 @@
 #pragma once
+#include <vector>
 #include <thread>
 #include <memory>
 #include <iostream>
 #include <map>
 #include <functional>
 
-#include "IThreadPool.h"
-#include "ThreadSafeQueue.h"
+#include "IThreadPoolModule.h"
 #include "ThreadSafeMap.h"
-#include "IActor.h"
+#include "ThreadSafeQueue.h"
 #include "IActorMsg.h"
 
 /// <summary>
@@ -19,7 +19,7 @@ class ThreadTask
 private:
 	std::unique_ptr<IActorMsg> m_actor_msg;
 public:
-	ThreadTask(std::unique_ptr<IActorMsg>& actor_msg) : 
+	ThreadTask(std::unique_ptr<IActorMsg>& actor_msg) :
 		m_actor_msg(std::move(actor_msg))
 	{
 
@@ -89,19 +89,26 @@ public:
 	}
 };
 
-/// <summary>
-/// ThreadPool
-/// </summary>
-class ThreadPool : public IThreadPool
+class ThreadPoolModule : public IThreadPoolModule
 {
 private:
 	unsigned int m_thread_count = 0;
 	std::vector<std::shared_ptr<ThreadCell>> m_thread_pool;
 	std::vector<std::string> m_arr_thread_proc_actor_uuid;
-public:
+private:
 	void StartThreadPool();
-	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor);
-	virtual void AddActorMsgToThreadCell(std::unique_ptr<IActorMsg>& ptr_actor_msg);
-	virtual void RemoveActorFromThreadCell(const std::string& uuid);
+public:
+	ThreadPoolModule(std::shared_ptr<IPluginManager> ptr) : IThreadPoolModule(ptr)
+	{
+	}
+
+	// time
+	virtual void Init();
+	virtual void AfterInit();
+
+	// function
+	virtual void AddActorToThreadCell(std::shared_ptr<IActor> ptr_actor) override;
+	virtual void AddActorMsgToThreadCell(std::unique_ptr<IActorMsg>& ptr_actor_msg) override;
+	virtual void RemoveActorFromThreadCell(const std::string& uuid) override;
 };
 

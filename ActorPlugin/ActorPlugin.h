@@ -1,10 +1,10 @@
 #pragma once
 #include "../Server/Plugin.h"
 
-class MasterPlugin : public Plugin
+class ActorPlugin : public Plugin
 {
 public:
-	MasterPlugin(std::shared_ptr<IPluginManager> app) : Plugin(app)
+	ActorPlugin(std::shared_ptr<IPluginManager> ptr) : Plugin(ptr)
 	{
 
 	}
@@ -12,4 +12,3 @@ public:
 	void Install() override;
 	void Uninstall() override;
 };
-

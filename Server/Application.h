@@ -22,11 +22,11 @@ private:
 public:
 	Application();
 	// NetPlugin (bind net msg)
-	// ServerNet_ClientPlugin (client list)
-	// ActorPlugin
+	// ActorPlugin (thread actor)
 	// ConfigPlugin
 	// MessageDefinePlugin
 	// ServerControlPlugin
+	// ServerNetPlugin
 	virtual void AddReceiveCallBack(const int msg_id, std::function<void(ClientDescriptor*)> call_func);
 	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg); // need call
 	virtual void RPCMsg(); // need call

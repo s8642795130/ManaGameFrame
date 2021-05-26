@@ -159,8 +159,8 @@ public:
 			ForEachField(backend_msg, m_buffer);
 
 			// send to client
-			std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNet, std::shared_ptr<ByteBuffer>>>(GetUUID(), backend_msg.m_client_uuid, &ClientNet::SendBuffer, std::move(backend_msg.m_buffer));
-			m_app->SendMsgToActor(ptr);
+			// std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, ClientNet, std::shared_ptr<ByteBuffer>>>(GetUUID(), backend_msg.m_client_uuid, &ClientNet::SendBuffer, std::move(backend_msg.m_buffer));
+			// m_app->SendMsgToActor(ptr);
 		}
 		else if (m_buffer->GetMajorId() != static_cast<int>(NetMessage::ServerMsg::UPDATE_CLIENT_MSG))
 		{

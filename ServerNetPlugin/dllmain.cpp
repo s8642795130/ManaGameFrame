@@ -1,8 +1,8 @@
 #include <memory>
 #include <iostream>
 
-#include "MasterPlugin.h"
-#include "MasterActor.h"
+// #include "MasterPlugin.h"
+// #include "MasterActor.h"
 
 extern "C" __attribute((visibility("default"))) std::shared_ptr<IPlugin> DllStartPlugin(std::shared_ptr<IApplication> m_ptr_manager)
 {

@@ -4,10 +4,12 @@
 #include "IPlugin.h"
 #include "IModule.h"
 
+class IPluginManager;
+
 class Plugin : public IPlugin
 {
 public:
-	Plugin(std::shared_ptr<IApplication> app) : IPlugin(app)
+	Plugin(std::shared_ptr<IPluginManager> ptr) : IPlugin(ptr)
 	{
 
 	}
