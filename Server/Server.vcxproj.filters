@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BackendClient.cpp" />
+    <ClCompile Include="ConfigFile.cpp" />
+    <ClCompile Include="DynLib.cpp" />
+    <ClCompile Include="FrontendClient.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="PluginManager.cpp" />
+    <ClCompile Include="PollNet.cpp" />
+    <ClCompile Include="ServerController.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Actor.h" />
+    <ClInclude Include="ActorMsg.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="BackendClient.h" />
+    <ClInclude Include="ByteBuffer.h" />
+    <ClInclude Include="ClientNet.h" />
+    <ClInclude Include="ClientDescriptor.h" />
+    <ClInclude Include="ConfigFile.h" />
+    <ClInclude Include="DynLib.h" />
+    <ClInclude Include="FrontendClient.h" />
+    <ClInclude Include="GameMessage.h" />
+    <ClInclude Include="GameMessageData.h" />
+    <ClInclude Include="IActor.h" />
+    <ClInclude Include="IActorMsg.h" />
+    <ClInclude Include="IApplication.h" />
+    <ClInclude Include="IConfigFile.h" />
+    <ClInclude Include="IModule.h" />
+    <ClInclude Include="IPlugin.h" />
+    <ClInclude Include="IPluginManager.h" />
+    <ClInclude Include="IThreadPool.h" />
+    <ClInclude Include="MessageData.h" />
+    <ClInclude Include="MessageDefine.h" />
+    <ClInclude Include="MsgRouter.h" />
+    <ClInclude Include="MsgType.h" />
+    <ClInclude Include="PackageNetMsg.h" />
+    <ClInclude Include="Plugin.h" />
+    <ClInclude Include="PluginManager.h" />
+    <ClInclude Include="PollNet.h" />
+    <ClInclude Include="ServerController.h" />
+    <ClInclude Include="ServerNet.h" />
+    <ClInclude Include="ServerObj.h" />
+    <ClInclude Include="ServerType.h" />
+    <ClInclude Include="StructSchema.h" />
+    <ClInclude Include="CommonStruct.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineHeader.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header">
+      <UniqueIdentifier>{8fdd020c-e760-4b84-b23e-90305f0e1f6e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

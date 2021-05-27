@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <sys/epoll.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
@@ -17,22 +16,18 @@
 #include <functional>
 #include <iostream>
 
-#include "DefineHeader.h"
-#include "IThreadPool.h"
-#include "ClientNet.h"
-
 ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 	IServerNetModule(ptr),
 	m_listen_fd(-1),
-	m_epoll_fd(-1),
+	m_epoll_fd(-1)
 	//last_socket_check_(0)
-	m_ptr_thread_pool(ptr_thread_pool)
+	// m_ptr_thread_pool(ptr_thread_pool)
 {
 	// test code
-	m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(ClientDescriptor*)>>>();
+	m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(std::shared_ptr<IClientNetActor>)>>>();
 }
 
-~ServerNetModule::ServerNetModule()
+ServerNetModule::~ServerNetModule()
 {
 	if (m_listen_fd != -1)
 	{
@@ -43,6 +38,17 @@ ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 	{
 		close(m_epoll_fd);
 	}
+}
+
+void ServerNetModule::Init()
+{
+	m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
+	m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
+}
+
+void ServerNetModule::AfterInit()
+{
+
 }
 
 void ServerNetModule::StartNetwork(uint16_t listen_port, uint32_t timeout_secs)
@@ -100,7 +106,7 @@ void ServerNetModule::CreateEpoll()
 	}
 }
 
-bool ServerNetModule::AddFD(std::shared_ptr<ClientNet> ptr_client)
+bool ServerNetModule::AddFD(std::shared_ptr<IClientNetActor> ptr_client)
 {
 	if (!SetNonblocking(ptr_client->m_client_fd))
 	{
@@ -122,11 +128,11 @@ bool ServerNetModule::AddFD(std::shared_ptr<ClientNet> ptr_client)
 	}
 
 	// store new client descriptor into the map of clients
-	m_map_clients[ptr_client->m_client_fd] = ptr_client;
-	m_ptr_thread_pool->AddActorToThreadCell(ptr_client);
+	m_client_net_module->AddClientToMap(ptr_client);
+	m_thread_pool_module->AddActorToThreadCell(ptr_client);
 
 	// set callback map ptr
-	ptr_client->SetReceiveCallbackMapPtr(m_ptr_callback_map);
+	// ptr_client->SetReceiveCallbackMapPtr(m_ptr_callback_map);
 
 	return true;
 }
@@ -207,7 +213,7 @@ bool ServerNetModule::SetNonblocking(int fd)
 bool ServerNetModule::HandleAccept()
 {
 	// allocate and initialize a new descriptor for the client
-	std::shared_ptr<ClientNet> ptr_client = std::make_shared<ClientNet>();
+	std::shared_ptr<IClientNetActor> ptr_client = m_client_net_module->CreateClientNet();
 
 	// get sin struct size
 	socklen_t sin_size = sizeof(ptr_client->m_client_sin);
@@ -231,7 +237,7 @@ bool ServerNetModule::HandleClient(epoll_event ev)
 {
 	//retrieve client descriptor address from the data parameter
 	// ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
-	std::shared_ptr<ClientNet> ptr_client = m_map_clients[ev.data.fd];
+	std::shared_ptr<IClientNetActor> ptr_client = m_client_net_module->GetClientNet(ev.data.fd);
 
 	//we got some data from the client
 	if (ev.events & EPOLLIN)
@@ -271,11 +277,8 @@ bool ServerNetModule::HandleClient(epoll_event ev)
 	return true;
 }
 
-void ServerNetModule::RemoveClient(std::shared_ptr<ClientNet> ptr_client)
+void ServerNetModule::RemoveClient(std::shared_ptr<IClientNetActor> ptr_client)
 {
-	std::map<int, std::shared_ptr<ClientNet>>::iterator it = m_map_clients.find(ptr_client->GetSid());
-	m_map_clients.erase(it);
-
-	//
-	m_ptr_thread_pool->RemoveActorFromThreadCell(ptr_client->GetUUID());
+	m_client_net_module->RemoveClientFromMap(ptr_client->GetSid());
+	m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
 }

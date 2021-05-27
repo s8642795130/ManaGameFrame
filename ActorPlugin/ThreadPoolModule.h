@@ -102,7 +102,7 @@ public:
 	{
 	}
 
-	// time
+	// life cycle function
 	virtual void Init();
 	virtual void AfterInit();
 
