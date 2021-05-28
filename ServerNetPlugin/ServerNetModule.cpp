@@ -1,7 +1,3 @@
-#include "ServerNetModule.h"
-
-#pragma once
-
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
@@ -16,6 +12,8 @@
 #include <functional>
 #include <iostream>
 
+#include "ServerNetModule.h"
+
 ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 	IServerNetModule(ptr),
 	m_listen_fd(-1),
@@ -23,8 +21,6 @@ ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 	//last_socket_check_(0)
 	// m_ptr_thread_pool(ptr_thread_pool)
 {
-	// test code
-	m_ptr_callback_map = std::make_shared<std::map<int, std::function<void(std::shared_ptr<IClientNetActor>)>>>();
 }
 
 ServerNetModule::~ServerNetModule()
@@ -135,11 +131,6 @@ bool ServerNetModule::AddFD(std::shared_ptr<IClientNetActor> ptr_client)
 	// ptr_client->SetReceiveCallbackMapPtr(m_ptr_callback_map);
 
 	return true;
-}
-
-void ServerNetModule::AddReceiveCallBack(const int msgID, std::function<void(ClientDescriptor*)> call_func)
-{
-	m_ptr_callback_map->emplace(msgID, call_func);
 }
 
 void ServerNetModule::EventLoop()

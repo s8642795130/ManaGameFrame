@@ -1,5 +1,6 @@
 #pragma once
 #include "../Server/IModule.h"
+#include "IClientNetActor.h"
 
 class IClientNetModule : public IModule
 {

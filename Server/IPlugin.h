@@ -19,20 +19,20 @@ protected:
 	/// RegisterModule
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	template <typename T>
+	template <typename BaseT, typename T>
 	void RegisterModule(std::shared_ptr<IPluginManager> ptr)
 	{
 		// auto pair = std::make_pair(std::string(typeid(T).name()), std::make_shared<T>(m_module_manager));
 		// m_module_manager->AddModule(pair);
 
-		auto pair = std::make_pair(std::string(typeid(T).name()), std::make_shared<T>(ptr));
-		if (m_map_module.find(std::string(typeid(T).name())) != std::cend(m_map_module))
+		auto pair = std::make_pair(std::string(typeid(BaseT).name()), std::make_shared<T>(ptr));
+		if (m_map_module.find(std::string(typeid(BaseT).name())) != std::cend(m_map_module))
 		{
 			m_map_module.emplace(pair);
 		}
 		else
 		{
-			std::cout << std::string(typeid(T).name()) << std::endl;
+			std::cout << std::string(typeid(BaseT).name()) << std::endl;
 			// assertm(0, "There are five lights");
 			assert(0);
 		}

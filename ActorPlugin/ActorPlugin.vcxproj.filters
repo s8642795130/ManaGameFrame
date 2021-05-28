@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="ActorPlugin.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ThreadPoolModule.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ActorMsg.h" />
+    <ClInclude Include="ActorPlugin.h" />
+    <ClInclude Include="ThreadPoolModule.h" />
+    <ClInclude Include="IThreadPoolModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IActorMsg.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IActor.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="UUID.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadRouter.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadSafeMap.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadSafeQueue.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{7d153be8-f708-43ed-87fb-85e884eddea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{e99eeef1-3089-41e1-90d5-c174d0e1ed28}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

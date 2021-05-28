@@ -79,18 +79,23 @@
     <ClCompile Include="ClientNetActor.cpp" />
     <ClCompile Include="ClientNetModule.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="IClientNetModule.cpp" />
-    <ClCompile Include="INetCallBackModule.cpp" />
+    <ClCompile Include="NetCallBackModule.cpp" />
+    <ClCompile Include="NetProccessModule.cpp" />
     <ClCompile Include="ServerNetModule.cpp" />
     <ClCompile Include="ServerNetPlugin.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientImpl.h" />
     <ClInclude Include="ClientNetActor.h" />
     <ClInclude Include="ClientNetModule.h" />
     <ClInclude Include="IClientNetActor.h" />
     <ClInclude Include="IClientNetModule.h" />
     <ClInclude Include="INetCallBackModule.h" />
+    <ClInclude Include="INetProccessModule.h" />
     <ClInclude Include="IServerNetModule.h" />
+    <ClInclude Include="NetCallBackModule.h" />
+    <ClInclude Include="NetDefine.h" />
+    <ClInclude Include="NetProccessModule.h" />
     <ClInclude Include="ServerNetModule.h" />
     <ClInclude Include="ServerNetPlugin.h" />
   </ItemGroup>

@@ -2,10 +2,8 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="BackendClient.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="DynLib.cpp" />
-    <ClCompile Include="FrontendClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PluginManager.cpp" />
     <ClCompile Include="PollNet.cpp" />
@@ -13,19 +11,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
-    <ClInclude Include="ActorMsg.h" />
     <ClInclude Include="Application.h" />
-    <ClInclude Include="BackendClient.h" />
-    <ClInclude Include="ByteBuffer.h" />
     <ClInclude Include="ClientNet.h" />
     <ClInclude Include="ClientDescriptor.h" />
     <ClInclude Include="ConfigFile.h" />
     <ClInclude Include="DynLib.h" />
-    <ClInclude Include="FrontendClient.h" />
     <ClInclude Include="GameMessage.h" />
     <ClInclude Include="GameMessageData.h" />
-    <ClInclude Include="IActor.h" />
-    <ClInclude Include="IActorMsg.h" />
     <ClInclude Include="IApplication.h" />
     <ClInclude Include="IConfigFile.h" />
     <ClInclude Include="IModule.h" />
@@ -49,6 +41,9 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="DefineHeader.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteBuffer.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

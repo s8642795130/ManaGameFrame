@@ -14,11 +14,9 @@ private:
 	int m_listen_fd = -1;
 	int m_epoll_fd = -1;
 	std::array<epoll_event, WORKER_MAX_EVENTS> m_arr_events;
-	//uint32_t timeout_secs_;
-	//time_t last_socket_check_;
+	// uint32_t timeout_secs_;
+	// time_t last_socket_check_;
 	// std::shared_ptr<IThreadPool> m_ptr_thread_pool;
-	//
-	std::shared_ptr<std::map<int, std::function<void(std::shared_ptr<IClientNetActor>)>>> m_ptr_callback_map;
 
 	// other module
 	std::shared_ptr<IThreadPoolModule> m_thread_pool_module;

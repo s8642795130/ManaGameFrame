@@ -9,12 +9,11 @@
 #include <cstring>
 
 #include "DefineHeader.h"
-#include "Actor.h"
-#include "ByteBuffer.h"
 #include "ThreadRouter.h"
 #include "ActorMsg.h"
 #include "MessageDefine.h"
 
+#include "../Server/ByteBuffer.h"
 #include "../ActorPlugin/IActor.h"
 
 /*
@@ -25,27 +24,12 @@
 class IClientNetActor : public IActor
 {
 protected:
-	// Client Type
-	NetMessage::ClientType m_client_type;
-	//
-	const int m_timeout = 30;
 	std::string m_uid;
-	//
-	std::shared_ptr<std::map<int, std::function<void(ClientDescriptor*)>>> m_receive_callBack;
 public:
-	IClientNetActor() :
-		m_receive_callBack(std::make_shared<std::map<int, std::function<void(ClientDescriptor*)>>>()),
-		m_buffer(std::make_shared<ByteBuffer>())
-	{
-	}
-
-	virtual ~IClientNetActor()
-	{
-
-	}
+	IClientNetActor() = default;
+	virtual ~IClientNetActor() = default;
 
 	// member
-	std::shared_ptr<ByteBuffer> m_buffer;
 	int m_client_fd = 0;
 	sockaddr_in m_client_sin = { 0 };
 
@@ -72,4 +56,6 @@ public:
 	{
 		return m_uid;
 	}
+
+	virtual std::shared_ptr<ByteBuffer>& GetBuffer() = 0;
 };

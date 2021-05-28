@@ -1,12 +1,14 @@
 #include "ServerNetPlugin.h"
-#include "IServerNetModule.h"
-#include "IClientNetModule.h"
+#include "ServerNetModule.h"
+#include "ClientNetModule.h"
+#include "NetCallBackModule.h"
 
 void ServerNetPlugin::Install()
 {
 	// load module
-	RegisterModule<IServerNetModule>(m_ptr_manager);
-	RegisterModule<IClientNetModule>(m_ptr_manager);
+	RegisterModule<IServerNetModule, ServerNetModule>(m_ptr_manager);
+	RegisterModule<IClientNetModule, ClientNetModule>(m_ptr_manager);
+	RegisterModule<INetCallBackModule, NetCallBackModule>(m_ptr_manager);
 }
 
 void ServerNetPlugin::Uninstall()

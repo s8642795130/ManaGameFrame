@@ -114,7 +114,7 @@ public:
 
 	bool AddFD(std::shared_ptr<ClientNet> ptr_client)
 	{
-		if (!SetNonblocking(ptr_client->m_client_fd))
+		if (!SetNonblocking(ptr_client->GetSid()))
 		{
 			std::cout << "failed to put fd into non-blocking mode, error code: " << errno << std::endl;
 			return false;
@@ -122,11 +122,11 @@ public:
 
 		epoll_event ev;
 		// ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	// client events will be handled in edge-triggered mode
-		ev.data.fd = ptr_client->m_client_fd;
+		ev.data.fd = ptr_client->GetSid();
 		ev.events = EPOLLIN | EPOLLET;
 		// ev.data.ptr = reinterpret_cast<void*>(ptr_client->m_client_fd); // we will pass client descriptor with every event
 
-		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->m_client_fd, &ev) == 1)
+		if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->GetSid(), &ev) == 1)
 		{
 			std::cout << "epoll_ctl() failed, error code: " << errno << std::endl;
 			// delete ptr_client;
@@ -134,7 +134,7 @@ public:
 		}
 
 		// store new client descriptor into the map of clients
-		m_map_clients[ptr_client->m_client_fd] = ptr_client;
+		m_map_clients[ptr_client->GetSid()] = ptr_client;
 		m_ptr_thread_pool->AddActorToThreadCell(ptr_client);
 
 		// set callback map ptr
@@ -225,8 +225,8 @@ private:
 		// get sin struct size
 		socklen_t sin_size = sizeof(ptr_client->m_client_sin);
 
-		ptr_client->m_client_fd = accept(m_listen_fd, reinterpret_cast<sockaddr*>(&ptr_client->m_client_sin), &sin_size);
-		if (ptr_client->m_client_fd == -1)
+		int fd = accept(m_listen_fd, reinterpret_cast<sockaddr*>(&ptr_client->m_client_sin), &sin_size);
+		if (fd == -1)
 		{
 			if (errno != EAGAIN && errno != ECONNABORTED && errno != EPROTO && errno != EINTR)
 			{
@@ -235,6 +235,7 @@ private:
 			std::cout << "accept() failed, error code: " << errno << std::endl;
 			return false;
 		}
+		ptr_client->SetSid(fd);
 
 		return AddFD(ptr_client);
 	}

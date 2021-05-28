@@ -1,10 +1,10 @@
 #include "ActorPlugin.h"
-#include "IThreadPoolModule.h"
+#include "ThreadPoolModule.h"
 
 void ActorPlugin::Install()
 {
 	// load module
-	RegisterModule<IThreadPoolModule>(m_ptr_manager);
+	RegisterModule<IThreadPoolModule, ThreadPoolModule>(m_ptr_manager);
 }
 
 void ActorPlugin::Uninstall()

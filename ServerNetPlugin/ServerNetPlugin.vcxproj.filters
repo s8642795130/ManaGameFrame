@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="ClientNetActor.cpp" />
+    <ClCompile Include="ClientNetModule.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ServerNetModule.cpp" />
+    <ClCompile Include="ServerNetPlugin.cpp" />
+    <ClCompile Include="NetCallBackModule.cpp" />
+    <ClCompile Include="NetProccessModule.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ClientNetActor.h" />
+    <ClInclude Include="ClientNetModule.h" />
+    <ClInclude Include="ServerNetModule.h" />
+    <ClInclude Include="ServerNetPlugin.h" />
+    <ClInclude Include="IClientNetActor.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IClientNetModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="INetCallBackModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="IServerNetModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientImpl.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="NetCallBackModule.h" />
+    <ClInclude Include="NetProccessModule.h" />
+    <ClInclude Include="NetDefine.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="INetProccessModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{258c65b0-ca08-4fb2-ab8b-12ff41e9cd19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{0583989b-2c28-49b8-a581-11220488a7c8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
