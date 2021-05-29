@@ -1,18 +1,25 @@
 #pragma once
 #include "IClientNetActor.h"
 #include "ClientImpl.h"
-#include "NetDefine.h"
+
+#include "../Server/ServerTypeDefine.h"
 
 class ClientNetActor : public IClientNetActor
 {
 private:
-	std::unique_ptr<ClientImpl> m_impl;
+	// client data
+	std::unique_ptr<ClientImpl> m_client_impl;
 	std::shared_ptr<ByteBuffer> m_buffer; // buffer
+
 	// client Type
-	NetDefine::ClientType m_client_type;
+	NetServerType::ClientType m_client_type;
+
+	// timeout
 	const int m_timeout = 30;
+	time_t m_last_active;
 protected:
-	void SetClientType(NetDefine::ClientType client_type);
+	void SetClientType(NetServerType::ClientType client_type);
+	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len);
 	void ProccessIO();
 public:
 	ClientNetActor();
@@ -23,5 +30,7 @@ public:
 	virtual bool WriteReady() override;
 	virtual bool HeartBeat() override;
 	virtual void ClientClose() override;
+	virtual void SendData(const int major, const int minor, const char* ptr_value, const int length);
+	virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer);
 };
 

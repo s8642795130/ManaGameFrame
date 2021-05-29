@@ -1,16 +1,21 @@
 #include "NetProccessModule.h"
 #include "IClientNetActor.h"
 
-void NetProccessModule::ProcessFrontendIO(std::shared_ptr<IClientNetActor>& client)
+void NetProccessModule::Init()
+{
+	m_router_module = m_ptr_manager->GetModule<IMsgRouterModule>();
+}
+
+void NetProccessModule::ProcessFrontendIO(IClientNetActor* client)
 {
 	// send to backend
-	if (!m_is_login)
-	{
-		return;
-	}
+	//if (!m_is_login)
+	//{
+		//return;
+	//}
 
 	// get msg corresponding to plugin
-	const auto majorId = m_buffer->GetMajorId();
+	const auto majorId = client->m_buffer->GetMajorId();
 	auto map_msg = NetMsgDefine::GetNetMsg();
 	auto plugin_name = map_msg[majorId];
 
@@ -33,7 +38,7 @@ void NetProccessModule::ProcessFrontendIO(std::shared_ptr<IClientNetActor>& clie
 	m_buffer = std::make_shared<ByteBuffer>();
 }
 
-void NetProccessModule::ProcessBackendIO(std::shared_ptr<IClientNetActor>& client)
+void NetProccessModule::ProcessBackendIO(IClientNetActor* client)
 {
 	// there is two situations, case 1: back msg to client; case 2: change client data
 	if (m_buffer->GetMajorId() != static_cast<int>(NetMessage::ServerMsg::RETURN_CLIENT_MSG))
@@ -56,7 +61,7 @@ void NetProccessModule::ProcessBackendIO(std::shared_ptr<IClientNetActor>& clien
 	}
 }
 
-void NetProccessModule::ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor>& client)
+void NetProccessModule::ProcessFrontendUnknowMsg(IClientNetActor* client)
 {
 	// check login info msg
 	if (m_buffer->GetMajorId() != static_cast<int>(NetMessage::ServerMsg::LOGIN_MSG)) // LOGIN_MSG
@@ -65,17 +70,17 @@ void NetProccessModule::ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor
 	}
 }
 
-void NetProccessModule::ProcessServerBackendIO(std::shared_ptr<IClientNetActor>& client)
+void NetProccessModule::ProcessServerBackendIO(IClientNetActor* client)
 {
 
 }
 
-void NetProccessModule::ProcessRPCIO(std::shared_ptr<IClientNetActor>& client)
+void NetProccessModule::ProcessRPCIO(IClientNetActor* client)
 {
 
 }
 
-void NetProccessModule::ProcessMasterIO(std::shared_ptr<IClientNetActor>& client)
+void NetProccessModule::ProcessMasterIO(IClientNetActor* client)
 {
 	int majorId = m_buffer->GetMajorId();
 	std::function<void(ClientDescriptor*)> callback = (*m_receive_callBack)[majorId];

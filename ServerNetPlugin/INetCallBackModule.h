@@ -2,10 +2,10 @@
 #include "../Server/IModule.h"
 #include "IClientNetActor.h"
 
-class INetCallBackModule : public IModule
+class INetCallbackModule : public IModule
 {
 public:
-	INetCallBackModule(std::shared_ptr<IPluginManager> ptr) : IModule(ptr)
+	INetCallbackModule(std::shared_ptr<IPluginManager> ptr) : IModule(ptr)
 	{
 	}
 

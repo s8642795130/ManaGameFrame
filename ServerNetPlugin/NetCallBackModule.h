@@ -1,14 +1,14 @@
 #pragma once
-#include "INetCallBackModule.h"
+#include "INetCallbackModule.h"
 #include "IClientNetActor.h"
 
-class NetCallBackModule : public INetCallBackModule
+class NetCallbackModule : public INetCallbackModule
 {
 private:
 	std::shared_ptr<std::map<int, std::function<void(std::shared_ptr<IClientNetActor>)>>> m_ptr_callback_map; // frontend callback
 	// m_receive_callBack; // backend callback
 public:
-	NetCallBackModule(std::shared_ptr<IPluginManager> ptr) : INetCallBackModule(ptr),
+	NetCallbackModule(std::shared_ptr<IPluginManager> ptr) : INetCallbackModule(ptr),
 		m_ptr_callback_map(std::make_shared<std::map<int, std::function<void(std::shared_ptr<IClientNetActor>)>>>())
 	{
 	}

@@ -114,7 +114,7 @@ bool ServerNetModule::AddFD(std::shared_ptr<IClientNetActor> ptr_client)
 	// ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	// client events will be handled in edge-triggered mode
 	ev.data.fd = ptr_client->m_client_fd;
 	ev.events = EPOLLIN | EPOLLET;
-	// ev.data.ptr = reinterpret_cast<void*>(ptr_client->m_client_fd); // we will pass client descriptor with every event
+	ev.data.ptr = reinterpret_cast<void*>(ptr_client.get()); // we will pass client descriptor with every event
 
 	if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->m_client_fd, &ev) == 1)
 	{

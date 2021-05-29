@@ -25,7 +25,6 @@
     <ClInclude Include="IPluginManager.h" />
     <ClInclude Include="IThreadPool.h" />
     <ClInclude Include="MessageData.h" />
-    <ClInclude Include="MessageDefine.h" />
     <ClInclude Include="MsgRouter.h" />
     <ClInclude Include="MsgType.h" />
     <ClInclude Include="PackageNetMsg.h" />
@@ -44,6 +43,9 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="ByteBuffer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerTypeDefine.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

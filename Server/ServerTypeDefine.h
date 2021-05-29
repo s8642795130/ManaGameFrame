@@ -1,6 +1,6 @@
 #pragma once
 
-namespace NetMessage
+namespace NetServerType
 {
 	enum class EventCode : int
 	{
@@ -31,7 +31,7 @@ namespace NetMessage
 		FAKE
 	};
 
-	enum class ServerMsg : int
+	enum class ServerMsg : int // built-in system
 	{
 		NONE,
 		SERVER_ONLINE,

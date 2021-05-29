@@ -94,7 +94,6 @@
     <ClInclude Include="INetProccessModule.h" />
     <ClInclude Include="IServerNetModule.h" />
     <ClInclude Include="NetCallBackModule.h" />
-    <ClInclude Include="NetDefine.h" />
     <ClInclude Include="NetProccessModule.h" />
     <ClInclude Include="ServerNetModule.h" />
     <ClInclude Include="ServerNetPlugin.h" />

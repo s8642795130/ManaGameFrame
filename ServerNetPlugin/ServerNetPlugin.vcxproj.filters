@@ -31,9 +31,6 @@
     </ClInclude>
     <ClInclude Include="NetCallBackModule.h" />
     <ClInclude Include="NetProccessModule.h" />
-    <ClInclude Include="NetDefine.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="INetProccessModule.h">
       <Filter>Interface</Filter>
     </ClInclude>

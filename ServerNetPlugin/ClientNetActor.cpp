@@ -7,13 +7,15 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#include "../Server/ServerTypeDefine.h"
+
 ClientNetActor::ClientNetActor() : 
 	m_buffer(std::make_shared<ByteBuffer>())
 {
 
 }
 
-void ClientNetActor::SetClientType(NetDefine::ClientType client_type)
+void ClientNetActor::SetClientType(NetServerType::ClientType client_type)
 {
 	m_client_type = client_type;
 }
@@ -96,43 +98,43 @@ std::shared_ptr<ByteBuffer>& ClientNetActor::GetBuffer()
 /// </summary>
 void ClientNetActor::ProccessIO()
 {
-	switch (ServerType::GetServerType())
+	switch (m_client_impl->m_config_module->GetServerType())
 	{
-	case NetMessage::ServerType::FRONTEND: // 主机是前端服务器
+	case NetServerType::ServerType::FRONTEND: // 主机是前端服务器
 	{
 		switch (m_client_type)
 		{
-		case NetMessage::ClientType::CLIENT: // 玩家发送的信息 直接处理
+		case NetServerType::ClientType::CLIENT: // 玩家发送的信息 直接处理
 			// frontend server
-			ProcessFrontendIO();
+			m_client_impl->m_proccess_module->ProcessFrontendIO();
 			break;
-		case NetMessage::ClientType::BACKEND: // 后端发来的数据 直接找到客户端 返回客户端 (maybe update client data)
+		case NetServerType::ClientType::BACKEND: // 后端发来的数据 直接找到客户端 返回客户端 (maybe update client data)
 			// backend server
-			ProcessBackendIO();
+			m_client_impl->m_proccess_module->ProcessBackendIO();
 			break;
-		case NetMessage::ClientType::MASTER:
+		case NetServerType::ClientType::MASTER:
 			break;
 		default:
 			// (login)
-			ProcessFrontendUnknowMsg();
+			m_client_impl->m_proccess_module->ProcessFrontendUnknowMsg();
 			break;
 		}
 
 		// exit
 		break;
 	}
-	case NetMessage::ServerType::BACKEND: // 主机是后端服务器
+	case NetServerType::ServerType::BACKEND: // 主机是后端服务器
 	{
 		switch (m_client_type)
 		{
-		case NetMessage::ClientType::FRONTEND:
-			ProcessServerBackendIO();
+		case NetServerType::ClientType::FRONTEND:
+			m_client_impl->m_proccess_module->ProcessServerBackendIO();
 			break;
-		case NetMessage::ClientType::BACKEND:
+		case NetServerType::ClientType::BACKEND:
 			// backend server
-			ProcessRPCIO();
+			m_client_impl->m_proccess_module->ProcessRPCIO();
 			break;
-		case NetMessage::ClientType::MASTER:
+		case NetServerType::ClientType::MASTER:
 			break;
 		default:
 			// (server_online)
@@ -140,9 +142,9 @@ void ClientNetActor::ProccessIO()
 		}
 		break;
 	}
-	case NetMessage::ServerType::MASTER:
+	case NetServerType::ServerType::MASTER:
 	{
-		ProcessMasterIO();
+		m_client_impl->m_proccess_module->ProcessMasterIO();
 		break;
 	}
 	default:
@@ -155,7 +157,7 @@ void ClientNetActor::ProccessIO()
 /// </summary>
 /// <param name="buffer"></param>
 /// <param name="len"></param>
-void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
+void ClientNetActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
 {
 	auto buf_remain_len = len;
 	if (m_buffer->GetHeaderStatus() == false)
@@ -223,7 +225,7 @@ void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
 /// SendData
 /// </summary>
 /// <param name="value"></param>
-virtual void SendData(const int major, const int minor, const char* ptr_value, const int length)
+void ClientNetActor::SendData(const int major, const int minor, const char* ptr_value, const int length)
 {
 	std::vector<char> temp_data(HEADER_LENGTH + length);
 	std::memcpy(temp_data.data(), &major, sizeof(MAJOR_LENGTH)); // copy major
@@ -236,7 +238,7 @@ virtual void SendData(const int major, const int minor, const char* ptr_value, c
 	send(m_client_fd, temp_data.data(), HEADER_LENGTH + length, 0);
 }
 
-virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer)
+void ClientNetActor::SendBuffer(std::shared_ptr<ByteBuffer> buffer)
 {
 	int buffer_size = buffer->GetSize();
 
