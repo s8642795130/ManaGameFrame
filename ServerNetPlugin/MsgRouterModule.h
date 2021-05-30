@@ -3,7 +3,16 @@
 
 class MsgRouterModule : public IMsgRouterModule
 {
+private:
+	std::map<std::string, std::function<int(const int, const IClientNetActor&)>> m_router_func;
+protected:
+	void initRouterFunc();
+	int DefaultRouter(const int server_count, const IClientNetActor& client);
 public:
-	virtual int GetMsgRouterByClient(const std::string plugin_name, const int server_count, const IClientNetActor* client);
+	// life cycle
+	virtual void Init();
+
+	// interface
+	virtual int GetMsgRouterByClient(const std::string plugin_name, const int server_count, const IClientNetActor& client);
 };
 

@@ -3,10 +3,11 @@
 #include <tuple>
 #include <type_traits>
 #include <vector>
+#include <memory>
 
 #include "StructSchema.h"
+#include "DataType.h"
 #include "ByteBuffer.h"
-#include "MsgType.h"
 
 namespace detail
 {
@@ -108,7 +109,7 @@ namespace data_fn
 }
 
 template <typename T>
-inline constexpr void ForEachField(T& value, std::shared_ptr<ByteBuffer>& byte_buffer)
+inline constexpr void UnpackStructForEachField(T& value, std::shared_ptr<ByteBuffer>& byte_buffer)
 {
     // get a tuple
     constexpr auto struct_schema = StructSchema<std::decay_t<T>>();

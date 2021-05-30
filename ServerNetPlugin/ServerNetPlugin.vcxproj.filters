@@ -6,8 +6,10 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ServerNetModule.cpp" />
     <ClCompile Include="ServerNetPlugin.cpp" />
-    <ClCompile Include="NetCallBackModule.cpp" />
     <ClCompile Include="NetProccessModule.cpp" />
+    <ClCompile Include="NetCallbackModule.cpp" />
+    <ClCompile Include="MsgRouterModule.cpp" />
+    <ClCompile Include="ServerObjModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientNetActor.h" />
@@ -20,19 +22,27 @@
     <ClInclude Include="IClientNetModule.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="INetCallBackModule.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="IServerNetModule.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="ClientImpl.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="NetCallBackModule.h" />
     <ClInclude Include="NetProccessModule.h" />
     <ClInclude Include="INetProccessModule.h">
       <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="INetCallbackModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="NetCallbackModule.h" />
+    <ClInclude Include="MsgRouterModule.h" />
+    <ClInclude Include="IMsgRouterModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerObjModule.h" />
+    <ClInclude Include="IServerObjModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientPimpl.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

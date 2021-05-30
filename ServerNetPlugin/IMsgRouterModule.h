@@ -1,5 +1,5 @@
 #pragma once
-#include "..\Server\IModule.h"
+#include "../Server/IModule.h"
 #include "IClientNetActor.h"
 
 class IMsgRouterModule : public IModule
@@ -9,6 +9,10 @@ public:
 	{
 	}
 
-	virtual int GetMsgRouterByClient(const std::string plugin_name, const int server_count, const IClientNetActor* client) = 0;
+	// life cycle
+	virtual void Init() = 0;
+
+	// interface
+	virtual int GetMsgRouterByClient(const std::string plugin_name, const int server_count, const IClientNetActor& client) = 0;
 };
 

@@ -76,11 +76,17 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="ActorModule.cpp" />
     <ClCompile Include="ActorPlugin.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ThreadPoolModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
+    <ClInclude Include="ActorModule.h" />
+    <ClInclude Include="ActorPimpl.h" />
+    <ClInclude Include="IActorModule.h" />
+    <ClInclude Include="IActorPimpl.h" />
     <ClInclude Include="ActorMsg.h" />
     <ClInclude Include="ActorPlugin.h" />
     <ClInclude Include="IActor.h" />

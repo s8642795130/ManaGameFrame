@@ -8,7 +8,7 @@
 #include <algorithm>
 
 #include "StructSchema.h"
-#include "MsgType.h"
+#include "DataType.h"
 #include "ByteBuffer.h"
 
 namespace detail_package

@@ -5,12 +5,35 @@
 
 #include <unistd.h>
 
+#include "ConfigFile.h"
 #include "PluginManager.h"
+#include "../ServerNetPlugin/IServerNetModule.h"
 
-// std::map<int, std::string> NetMsgDefine::m_map_msg;
-// NetMessage::ServerType ServerType::m_server_type;
-// std::map<std::string, std::function<int(const int, const ClientNet&)>> MsgRouter::m_router_func;
-// std::function<int(const int, const ClientNet&)> MsgRouter::m_defalut_router_func;
+const std::string GetServerNameFromParam(int argc, char* argv[])
+{
+
+	// get work dir
+	std::array<char, 260> path_buf;
+	getcwd(path_buf.data(), 260);
+	std::cout << path_buf.data() << std::endl;
+
+	// server name
+	std::string server_name;
+
+	//
+	std::cout << "param count: " << argc << std::endl;
+	if (argc > 1)
+	{
+		std::cout << "param is: " << argv[1] << std::endl;
+		server_name = argv[1];
+	}
+	else
+	{
+		server_name = "master-1";
+	}
+
+	return server_name;
+}
 
 int main(int argc, char* argv[])
 {
@@ -18,45 +41,31 @@ int main(int argc, char* argv[])
 	// va_list, va_start, va_arg, va_end
 	// int getopt(int argc, char * const argv[], const char * optstring);
 	std::cout << "hello world" << std::endl;
-	std::string plugin_name;
 
-	std::array<char, 260> path_buf;
-	getcwd(path_buf.data(), 260);
-	std::cout << path_buf.data() << std::endl;
+	// get server name from main param
+	const auto server_name = GetServerNameFromParam(argc, argv);
 
-	std::cout << "param count: " << argc << std::endl;
-	if (argc > 1)
-	{
-		std::cout << "param is: " << argv[1] << std::endl;
-		plugin_name = argv[1];
-	}
-	else
-	{
-		plugin_name = "master-1";
-	}
+	// config
+	std::shared_ptr<ConfigFile> config_file{ std::make_shared<ConfigFile>() };
+	config_file->SetServerName(server_name);
+	config_file->ReadServerConfigFile();
+	config_file->SetServerType();
 
-	PluginManager manager;
-	manager.
+	// manager
+	std::shared_ptr<PluginManager> manager{ std::make_shared<PluginManager>() };
 
-	StartLoadAllLibrary();
+	auto plugin_list = config_file->GetPluginsByServerName(config_file->GetMyServerInfo()->m_server_name);
+	manager->LoadAllPluginLibrary(plugin_list);
 
-	// Application
-	std::shared_ptr<Application> app{ std::make_shared<Application>() };
-	IApplication::SetPtr(app);
-	//
-	app->LoadConfig(plugin_name);
-	app->StartLoadAllLibrary();
-	app->StartThreadPool();
-	if (argc > 1)
-	{
-		app->StartConnectServer();
-	}
-	app->StartNetwork();
-	app->LibInit();
-	app->LibAfterInit();
-	app->LibReadyExecute();
-	app->LibExecute();
-	app->StartNetEventLoop();
+	// life cycle
+	manager->Init();
+	manager->AfterInit();
+	manager->ReadyExecute();
+	manager->Execute();
+
+	// start network loop
+	auto server_net_module = manager->GetModule<IServerNetModule>();
+	server_net_module->EventLoop();
 
 	return 0;
 }

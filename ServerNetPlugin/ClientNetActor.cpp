@@ -9,6 +9,8 @@
 
 #include "../Server/ServerTypeDefine.h"
 
+std::shared_ptr<IActorPimpl> IActorPimpl::m_pimpl;
+
 ClientNetActor::ClientNetActor() : 
 	m_buffer(std::make_shared<ByteBuffer>())
 {
@@ -106,17 +108,17 @@ void ClientNetActor::ProccessIO()
 		{
 		case NetServerType::ClientType::CLIENT: // 玩家发送的信息 直接处理
 			// frontend server
-			m_client_impl->m_proccess_module->ProcessFrontendIO();
+			m_client_impl->m_proccess_module->ProcessFrontendIO(*this);
 			break;
 		case NetServerType::ClientType::BACKEND: // 后端发来的数据 直接找到客户端 返回客户端 (maybe update client data)
 			// backend server
-			m_client_impl->m_proccess_module->ProcessBackendIO();
+			m_client_impl->m_proccess_module->ProcessBackendIO(*this);
 			break;
 		case NetServerType::ClientType::MASTER:
 			break;
 		default:
 			// (login)
-			m_client_impl->m_proccess_module->ProcessFrontendUnknowMsg();
+			m_client_impl->m_proccess_module->ProcessFrontendUnknowMsg(*this);
 			break;
 		}
 
@@ -128,11 +130,11 @@ void ClientNetActor::ProccessIO()
 		switch (m_client_type)
 		{
 		case NetServerType::ClientType::FRONTEND:
-			m_client_impl->m_proccess_module->ProcessServerBackendIO();
+			m_client_impl->m_proccess_module->ProcessServerBackendIO(*this);
 			break;
 		case NetServerType::ClientType::BACKEND:
 			// backend server
-			m_client_impl->m_proccess_module->ProcessRPCIO();
+			m_client_impl->m_proccess_module->ProcessRPCIO(*this);
 			break;
 		case NetServerType::ClientType::MASTER:
 			break;
@@ -144,12 +146,15 @@ void ClientNetActor::ProccessIO()
 	}
 	case NetServerType::ServerType::MASTER:
 	{
-		m_client_impl->m_proccess_module->ProcessMasterIO();
+		m_client_impl->m_proccess_module->ProcessMasterIO(*this);
 		break;
 	}
 	default:
 		break;
 	}
+
+	// reset msg
+	m_buffer = std::make_shared<ByteBuffer>();
 }
 
 /// <summary>
@@ -249,4 +254,9 @@ void ClientNetActor::SendBuffer(std::shared_ptr<ByteBuffer> buffer)
 
 	//
 	send(m_client_fd, temp_data.data(), HEADER_LENGTH + buffer_size, 0);
+}
+
+void ClientNetActor::SendStream(std::vector<char> stream)
+{
+	send(m_client_fd, stream.data(), stream.size(), 0);
 }

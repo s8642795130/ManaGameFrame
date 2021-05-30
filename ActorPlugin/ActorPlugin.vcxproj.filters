@@ -4,18 +4,12 @@
     <ClCompile Include="ActorPlugin.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ThreadPoolModule.cpp" />
+    <ClCompile Include="ActorModule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ActorMsg.h" />
     <ClInclude Include="ActorPlugin.h" />
     <ClInclude Include="ThreadPoolModule.h" />
     <ClInclude Include="IThreadPoolModule.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="IActorMsg.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="IActor.h">
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="UUID.h">
@@ -29,6 +23,28 @@
     </ClInclude>
     <ClInclude Include="ThreadSafeQueue.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorMsg.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="IActor.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="IActorMsg.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="IActorPimpl.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorPimpl.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorModule.h" />
+    <ClInclude Include="IActorModule.h">
+      <Filter>Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

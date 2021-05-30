@@ -8,20 +8,15 @@
 #include <memory>
 #include <cstring>
 
-#include "DefineHeader.h"
-#include "ThreadRouter.h"
-#include "ActorMsg.h"
-#include "MessageDefine.h"
-
 #include "../Server/ByteBuffer.h"
-#include "../ActorPlugin/IActor.h"
+#include "../ActorPlugin/Actor.h"
 
 /*
 	This is a base client descriptor and virtual methods should be implemented by a derived class.
 	Returning false from any of the methods will result in Cleanup() being called and the client
 	descriptor being deconstructed immediately.
 */
-class IClientNetActor : public IActor
+class IClientNetActor : public Actor
 {
 protected:
 	std::string m_uid;
@@ -61,4 +56,5 @@ public:
 
 	virtual void SendData(const int major, const int minor, const char* ptr_value, const int length) = 0;
 	virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer) = 0;
+	virtual void SendStream(std::vector<char> stream) = 0;
 };

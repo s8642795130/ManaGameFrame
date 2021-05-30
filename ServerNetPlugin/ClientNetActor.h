@@ -1,6 +1,6 @@
 #pragma once
 #include "IClientNetActor.h"
-#include "ClientImpl.h"
+#include "ClientPimpl.h"
 
 #include "../Server/ServerTypeDefine.h"
 
@@ -8,8 +8,9 @@ class ClientNetActor : public IClientNetActor
 {
 private:
 	// client data
-	std::unique_ptr<ClientImpl> m_client_impl;
+	std::unique_ptr<ClientPimpl> m_client_impl;
 	std::shared_ptr<ByteBuffer> m_buffer; // buffer
+	std::map<std::string, std::string> m_client_data; // team id, room id ...
 
 	// client Type
 	NetServerType::ClientType m_client_type;
@@ -32,5 +33,6 @@ public:
 	virtual void ClientClose() override;
 	virtual void SendData(const int major, const int minor, const char* ptr_value, const int length);
 	virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer);
+	virtual void SendStream(std::vector<char> stream);
 };
 

@@ -23,8 +23,8 @@ private:
 	std::shared_ptr<IClientNetModule> m_client_net_module;
 protected:
 	void CreateEpoll();
+	void StartNetwork(uint16_t listen_port, uint32_t timeout_secs);
 	bool SetNonblocking(int fd);
-	void EventLoop();
 	bool HandleAccept();
 	bool HandleClient(epoll_event ev);
 	void RemoveClient(std::shared_ptr<IClientNetActor> ptr_client);
@@ -37,7 +37,7 @@ public:
 	virtual void AfterInit();
 
 	// function
-	virtual void StartNetwork(uint16_t listen_port, uint32_t timeout_secs);
 	virtual bool AddFD(std::shared_ptr<IClientNetActor> ptr_client);
+	virtual void EventLoop();
 };
 

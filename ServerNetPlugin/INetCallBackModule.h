@@ -9,6 +9,9 @@ public:
 	{
 	}
 
-	virtual void AddReceiveCallBack(const int msgID, std::function<void(std::shared_ptr<IClientNetActor>)> call_func) = 0;
+	// interface
+	virtual void AddReceiveCallBack(const int msgID, std::function<void(IClientNetActor&)> call_func) = 0;
+	virtual const std::map<int, std::function<void(IClientNetActor&)>>& GetReceiveCallBackMap() = 0;
+	virtual const std::map<int, std::string> GetGameMsgMap() = 0;
 };
 

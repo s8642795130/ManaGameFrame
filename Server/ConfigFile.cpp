@@ -6,8 +6,6 @@
 #include <algorithm>
 #include <regex>
 
-#include "ServerType.h"
-
 /// <summary>
 /// ·Ö¸î×Ö·û´®
 /// </summary>
@@ -174,23 +172,6 @@ void ConfigFile::AnalysePluginList()
 				m_plugin_config[plugin_item->m_plugin].push_back(m_server_config[server_item.first]);
 			}
 		}
-	}
-}
-
-void ConfigFile::SetServerType()
-{
-	auto server_type = m_server_config[m_server_name]->m_server_type;
-	if (server_type.compare("master") == 0)
-	{
-		ServerType::SetServerType(NetMessage::ServerType::MASTER);
-	}
-	else if (server_type.compare("connector") == 0)
-	{
-		ServerType::SetServerType(NetMessage::ServerType::FRONTEND);
-	}
-	else if (server_type.compare("server") == 0)
-	{
-		ServerType::SetServerType(NetMessage::ServerType::BACKEND);
 	}
 }
 

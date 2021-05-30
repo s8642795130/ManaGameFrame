@@ -11,10 +11,11 @@ struct PluginData;
 
 class PluginManager : public IPluginManager
 {
-public:
-	void LoadAllPluginLibrary(std::vector<std::shared_ptr<PluginData>> vec_plugin);
+protected:
 	bool LoadPluginLibrary(const std::string& pluginDLLName);
 	void RegisterAll();
+public:
+	void LoadAllPluginLibrary(std::vector<std::shared_ptr<PluginData>> vec_plugin);
 
 	// runtime
 	void Init();

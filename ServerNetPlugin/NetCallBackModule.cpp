@@ -1,6 +1,16 @@
 #include "NetCallbackModule.h"
 
-void NetCallbackModule::AddReceiveCallBack(const int msgID, std::function<void(std::shared_ptr<IClientNetActor>)> call_func)
+const std::map<int, std::string> NetCallbackModule::GetGameMsgMap()
 {
-	m_ptr_callback_map->emplace(msgID, call_func);
+	return m_map_game_msg;
+}
+
+void NetCallbackModule::AddReceiveCallBack(const int msgID, std::function<void(IClientNetActor&)> call_func)
+{
+	m_receive_callback.emplace(msgID, call_func);
+}
+
+const std::map<int, std::function<void(IClientNetActor&)>>& NetCallbackModule::GetReceiveCallBackMap()
+{
+	return m_receive_callback;
 }

@@ -1,14 +1,13 @@
 #include <memory>
 #include <iostream>
 
-// #include "MasterPlugin.h"
-// #include "MasterActor.h"
+#include "ServerNetPlugin.h"
 
-extern "C" __attribute((visibility("default"))) std::shared_ptr<IPlugin> DllStartPlugin(std::shared_ptr<IApplication> m_ptr_manager)
+extern "C" __attribute((visibility("default"))) std::shared_ptr<IPlugin> DllStartPlugin(std::shared_ptr<IPluginManager> ptr)
 {
 	//CREATE_PLUGIN(pm, NFChatPlugin)
-	std::shared_ptr<MasterPlugin> ptr{ std::make_shared<MasterPlugin>(m_ptr_manager) };
-	return ptr;
+	std::shared_ptr<ServerNetPlugin> plugin{ std::make_shared<ServerNetPlugin>(ptr) };
+	return plugin;
 }
 
 extern "C" __attribute((visibility("default"))) void DllStopPlugin()

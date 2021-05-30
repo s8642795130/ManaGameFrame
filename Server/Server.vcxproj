@@ -80,7 +80,6 @@
     <IntDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
     <ClCompile Include="ConfigFile.cpp" />
     <ClCompile Include="DynLib.cpp" />
     <ClCompile Include="main.cpp" />
@@ -89,35 +88,27 @@
     <ClCompile Include="ServerController.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actor.h" />
-    <ClInclude Include="Application.h" />
+    <ClInclude Include="BuiltInMsgDefine.h" />
     <ClInclude Include="ByteBuffer.h" />
-    <ClInclude Include="ClientNet.h" />
-    <ClInclude Include="ClientDescriptor.h" />
     <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="ConfigFile.h" />
     <ClInclude Include="DefineHeader.h" />
     <ClInclude Include="DynLib.h" />
     <ClInclude Include="GameMessage.h" />
-    <ClInclude Include="GameMessageData.h" />
-    <ClInclude Include="IApplication.h" />
+    <ClInclude Include="BuiltInDataDefine.h" />
     <ClInclude Include="IConfigFile.h" />
     <ClInclude Include="IModule.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IPluginManager.h" />
-    <ClInclude Include="IThreadPool.h" />
-    <ClInclude Include="MessageData.h" />
+    <ClInclude Include="UnpackNetMsg.h" />
     <ClInclude Include="ServerTypeDefine.h" />
-    <ClInclude Include="MsgRouter.h" />
-    <ClInclude Include="MsgType.h" />
+    <ClInclude Include="DataType.h" />
     <ClInclude Include="PackageNetMsg.h" />
     <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="PollNet.h" />
     <ClInclude Include="ServerController.h" />
-    <ClInclude Include="ServerNet.h" />
     <ClInclude Include="ServerObj.h" />
-    <ClInclude Include="ServerType.h" />
     <ClInclude Include="StructSchema.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

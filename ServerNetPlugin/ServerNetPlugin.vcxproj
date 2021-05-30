@@ -79,24 +79,30 @@
     <ClCompile Include="ClientNetActor.cpp" />
     <ClCompile Include="ClientNetModule.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="NetCallBackModule.cpp" />
+    <ClCompile Include="MsgRouterModule.cpp" />
+    <ClCompile Include="NetCallbackModule.cpp" />
     <ClCompile Include="NetProccessModule.cpp" />
     <ClCompile Include="ServerNetModule.cpp" />
     <ClCompile Include="ServerNetPlugin.cpp" />
+    <ClCompile Include="ServerObjModule.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ClientImpl.h" />
+    <ClInclude Include="ClientPimpl.h" />
     <ClInclude Include="ClientNetActor.h" />
     <ClInclude Include="ClientNetModule.h" />
     <ClInclude Include="IClientNetActor.h" />
     <ClInclude Include="IClientNetModule.h" />
-    <ClInclude Include="INetCallBackModule.h" />
+    <ClInclude Include="IMsgRouterModule.h" />
+    <ClInclude Include="INetCallbackModule.h" />
     <ClInclude Include="INetProccessModule.h" />
     <ClInclude Include="IServerNetModule.h" />
-    <ClInclude Include="NetCallBackModule.h" />
+    <ClInclude Include="IServerObjModule.h" />
+    <ClInclude Include="MsgRouterModule.h" />
+    <ClInclude Include="NetCallbackModule.h" />
     <ClInclude Include="NetProccessModule.h" />
     <ClInclude Include="ServerNetModule.h" />
     <ClInclude Include="ServerNetPlugin.h" />
+    <ClInclude Include="ServerObjModule.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

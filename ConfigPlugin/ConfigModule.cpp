@@ -6,7 +6,13 @@
 #include <algorithm>
 #include <regex>
 
-#include "ServerType.h"
+#include "../Server/ServerTypeDefine.h"
+
+void ConfigModule::Init()
+{
+	ReadServerConfigFile();
+	SetServerType();
+}
 
 /// <summary>
 /// 分割字符串
@@ -177,23 +183,6 @@ void ConfigModule::AnalysePluginList()
 	}
 }
 
-void ConfigModule::SetServerType()
-{
-	auto server_type = m_server_config[m_server_name]->m_server_type;
-	if (server_type.compare("master") == 0)
-	{
-		ServerType::SetServerType(NetMessage::ServerType::MASTER);
-	}
-	else if (server_type.compare("connector") == 0)
-	{
-		ServerType::SetServerType(NetMessage::ServerType::FRONTEND);
-	}
-	else if (server_type.compare("server") == 0)
-	{
-		ServerType::SetServerType(NetMessage::ServerType::BACKEND);
-	}
-}
-
 /// <summary>
 /// 根据插件名获取所有包含该类型插件的服务器组
 /// </summary>
@@ -222,4 +211,26 @@ const std::shared_ptr<ServerData>& ConfigModule::GetMyServerInfo()
 const std::vector<std::shared_ptr<PluginData>>& ConfigModule::GetPluginsByServerName(const std::string& server_name)
 {
 	return m_plugin_list[server_name];
+}
+
+void ConfigModule::SetServerType()
+{
+	auto server_type = m_server_config[m_server_name]->m_server_type;
+	if (server_type.compare("master") == 0)
+	{
+		m_server_type = NetServerType::ServerType::MASTER;
+	}
+	else if (server_type.compare("connector") == 0)
+	{
+		m_server_type = NetServerType::ServerType::FRONTEND;
+	}
+	else if (server_type.compare("server") == 0)
+	{
+		m_server_type = NetServerType::ServerType::BACKEND;
+	}
+}
+
+const NetServerType::ServerType ConfigModule::GetServerType()
+{
+	return m_server_type;
 }

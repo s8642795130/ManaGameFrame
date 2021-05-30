@@ -1,5 +1,8 @@
 #pragma once
-#include "MsgType.h"
+#include <string>
+#include <vector>
+
+#include "DataType.h"
 #include "StructSchema.h"
 
 struct ServerOnlineData
@@ -28,21 +31,21 @@ struct BackendMsgToClient
 };
 
 DEFINE_STRUCT_SCHEMA(ServerOnlineData,
-	DEFINE_STRUCT_FIELD(m_server_type, MSG_TYPE::STRING),
-	DEFINE_STRUCT_FIELD(m_server_name, MSG_TYPE::STRING),
-	DEFINE_STRUCT_FIELD(m_ip, MSG_TYPE::STRING),
-	DEFINE_STRUCT_FIELD(m_port, MSG_TYPE::INT)
+	DEFINE_STRUCT_FIELD(m_server_type, DATA_TYPE::STRING),
+	DEFINE_STRUCT_FIELD(m_server_name, DATA_TYPE::STRING),
+	DEFINE_STRUCT_FIELD(m_ip, DATA_TYPE::STRING),
+	DEFINE_STRUCT_FIELD(m_port, DATA_TYPE::INT)
 );
 
 DEFINE_STRUCT_SCHEMA(ServerOnlineInfo,
-	DEFINE_STRUCT_FIELD(m_vec_server, MSG_TYPE::ARRAY_STRUCT)
+	DEFINE_STRUCT_FIELD(m_vec_server, DATA_TYPE::ARRAY_STRUCT)
 );
 
 DEFINE_STRUCT_SCHEMA(ConnectServerOnline,
-	DEFINE_STRUCT_FIELD(m_server_name, MSG_TYPE::STRING)
+	DEFINE_STRUCT_FIELD(m_server_name, DATA_TYPE::STRING)
 );
 
 DEFINE_STRUCT_SCHEMA(BackendMsgToClient,
-	DEFINE_STRUCT_FIELD(m_client_uuid, MSG_TYPE::STRING),
-	DEFINE_STRUCT_FIELD(m_buffer, MSG_TYPE::ARRAY_CHAR)
+	DEFINE_STRUCT_FIELD(m_client_uuid, DATA_TYPE::STRING),
+	DEFINE_STRUCT_FIELD(m_buffer, DATA_TYPE::ARRAY_CHAR)
 );

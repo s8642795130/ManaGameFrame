@@ -4,7 +4,7 @@
 #include "INetProccessModule.h"
 #include "../ConfigPlugin/IConfigModule.h"
 
-class ClientImpl
+class ClientPimpl
 {
 public:
 	std::shared_ptr<IConfigModule> m_config_module;

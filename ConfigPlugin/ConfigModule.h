@@ -1,5 +1,6 @@
 #pragma once
 #include "IConfigModule.h"
+#include "../Server/ServerTypeDefine.h"
 
 class ConfigModule : public IConfigModule
 {
@@ -17,6 +18,8 @@ private:
 
 	// my server name
 	std::string m_server_name;
+	// my server type
+	NetServerType::ServerType m_server_type;
 protected:
 	void AnalyseConfigStr(const std::vector<std::string>& config_str);
 	void AnalysePluginList();
@@ -28,11 +31,15 @@ public:
 	{
 	}
 
+	// life cycle
+	virtual void Init();
+
 	// interface
 	virtual const std::shared_ptr <ServerData>& GetServerDataByName(const std::string& server_name);
 	virtual const std::vector<std::shared_ptr<ServerData>>& GetServersByPluginName(const std::string& plugin_name);
 	virtual const std::vector<std::shared_ptr<ServerData>>& GetServersByType(const std::string& server_type); // type: master, connector
 	virtual const std::shared_ptr<ServerData>& GetMyServerInfo();
 	virtual const std::vector<std::shared_ptr<PluginData>>& GetPluginsByServerName(const std::string& server_name);
+	virtual const NetServerType::ServerType GetServerType();
 };
 
