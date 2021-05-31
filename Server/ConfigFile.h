@@ -27,6 +27,7 @@ private:
 protected:
 	void AnalyseConfigStr(const std::vector<std::string>& config_str);
 	void AnalysePluginList();
+	void PushBuiltInPlugin(std::vector<std::shared_ptr<PluginData>>& vec_plugin_data);
 public:
 	bool ReadServerConfigFile();
 	void SetServerName(const std::string& server_name);

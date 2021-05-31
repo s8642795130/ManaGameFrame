@@ -11,7 +11,6 @@
 
 const std::string GetServerNameFromParam(int argc, char* argv[])
 {
-
 	// get work dir
 	std::array<char, 260> path_buf;
 	getcwd(path_buf.data(), 260);
@@ -53,6 +52,10 @@ int main(int argc, char* argv[])
 	// manager
 	std::shared_ptr<PluginManager> manager{ std::make_shared<PluginManager>() };
 
+	// set server name
+	manager->SetServerName(server_name);
+
+	// load plugin
 	auto plugin_list = config_file->GetPluginsByServerName(config_file->GetMyServerInfo()->m_server_name);
 	manager->LoadAllPluginLibrary(plugin_list);
 

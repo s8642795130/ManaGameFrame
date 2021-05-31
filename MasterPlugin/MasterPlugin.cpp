@@ -5,7 +5,7 @@
 void MasterPlugin::Install()
 {
 	// load module
-	RegisterModule<IMasterModule, MasterModule>(m_ptr_manager);
+	m_ptr_manager->RegisterModule<IMasterModule, MasterModule>();
 }
 
 void MasterPlugin::Uninstall()

@@ -9,6 +9,10 @@ protected:
 	void initRouterFunc();
 	int DefaultRouter(const int server_count, const IClientNetActor& client);
 public:
+	MsgRouterModule(std::shared_ptr<IPluginManager> ptr) : IMsgRouterModule(ptr)
+	{
+	}
+
 	// life cycle
 	virtual void Init();
 

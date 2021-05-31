@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "PluginManager.h"
+#include "IModule.h"
 #include "CommonStruct.h"
 
 void PluginManager::LoadAllPluginLibrary(std::vector<std::shared_ptr<PluginData>> vec_plugin)
@@ -42,34 +43,52 @@ void PluginManager::RegisterAll()
 	}
 }
 
+// config
+
+void PluginManager::SetServerName(const std::string& server_name)
+{
+	m_server_name = server_name;
+}
+
+const std::string& PluginManager::GetServerName()
+{
+	return m_server_name;
+}
+
+// runtime
+
 void PluginManager::Init()
 {
-	for (const auto& item : m_map_plugin)
-	{
-		item.second->Init();
-	}
+	std::for_each(std::begin(m_map_module), std::end(m_map_module), [](auto& it) -> void
+		{
+			(it.second)->Init();
+		}
+	);
 }
 
 void PluginManager::AfterInit()
 {
-	for (const auto& item : m_map_plugin)
-	{
-		item.second->AfterInit();
-	}
+	std::for_each(std::begin(m_map_module), std::end(m_map_module), [](auto& it) -> void
+		{
+			(it.second)->AfterInit();
+		}
+	);
 }
 
 void PluginManager::ReadyExecute()
 {
-	for (const auto& item : m_map_plugin)
-	{
-		item.second->ReadyExecute();
-	}
+	std::for_each(std::begin(m_map_module), std::end(m_map_module), [](auto& it) -> void
+		{
+			(it.second)->ReadyExecute();
+		}
+	);
 }
 
 void PluginManager::Execute()
 {
-	for (const auto& item : m_map_plugin)
-	{
-		item.second->Execute();
-	}
+	std::for_each(std::begin(m_map_module), std::end(m_map_module), [](auto& it) -> void
+		{
+			(it.second)->Execute();
+		}
+	);
 }

@@ -103,7 +103,6 @@
     <ClInclude Include="ServerTypeDefine.h" />
     <ClInclude Include="DataType.h" />
     <ClInclude Include="PackageNetMsg.h" />
-    <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="PollNet.h" />
     <ClInclude Include="StructSchema.h" />

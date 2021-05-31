@@ -1,10 +1,10 @@
 #pragma once
-#include "../Server/Plugin.h"
+#include "../Server/IPlugin.h"
 
-class ConfigPlugin : public Plugin
+class ConfigPlugin : public IPlugin
 {
 public:
-	ConfigPlugin(std::shared_ptr<IPluginManager> ptr) : Plugin(ptr)
+	ConfigPlugin(std::shared_ptr<IPluginManager> ptr) : IPlugin(ptr)
 	{
 
 	}

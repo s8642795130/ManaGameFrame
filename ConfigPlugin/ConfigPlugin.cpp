@@ -4,7 +4,7 @@
 void ConfigPlugin::Install()
 {
 	// load module
-	RegisterModule<IConfigModule, ConfigModule>(m_ptr_manager);
+	m_ptr_manager->RegisterModule<IConfigModule, ConfigModule>();
 }
 
 void ConfigPlugin::Uninstall()

@@ -69,6 +69,10 @@ bool ConfigFile::ReadServerConfigFile()
 	AnalyseConfigStr(config_str);
 	AnalysePluginList();
 
+	//
+	in.close();
+
+	//
 	return true;
 }
 
@@ -115,6 +119,9 @@ void ConfigFile::AnalyseConfigStr(const std::vector<std::string>& config_str)
 
 			// plugin list
 			std::vector<std::shared_ptr<PluginData>> vec_plugin_data;
+
+			// push built-in plugin
+			PushBuiltInPlugin(vec_plugin_data);
 			m_plugin_list[server_data->m_server_name] = vec_plugin_data;
 
 			// type list
@@ -173,6 +180,24 @@ void ConfigFile::AnalysePluginList()
 			}
 		}
 	}
+}
+
+void ConfigFile::PushBuiltInPlugin(std::vector<std::shared_ptr<PluginData>>& vec_plugin_data)
+{
+	std::shared_ptr<PluginData> plugin_data_config = std::make_shared<PluginData>();
+	plugin_data_config->m_plugin = "ConfigPlugin";
+	plugin_data_config->m_plugin_name = "ConfigPlugin";
+	vec_plugin_data.push_back(plugin_data_config);
+
+	std::shared_ptr<PluginData> plugin_data_actor = std::make_shared<PluginData>();
+	plugin_data_actor->m_plugin = "ActorPlugin";
+	plugin_data_actor->m_plugin_name = "ActorPlugin";
+	vec_plugin_data.push_back(plugin_data_actor);
+
+	std::shared_ptr<PluginData> plugin_data_server_net = std::make_shared<PluginData>();
+	plugin_data_server_net->m_plugin = "ServerNetPlugin";
+	plugin_data_server_net->m_plugin_name = "ServerNetPlugin";
+	vec_plugin_data.push_back(plugin_data_server_net);
 }
 
 /// <summary>

@@ -5,6 +5,8 @@
 #include "../Server/PackageNetMsg.h"
 #include "../Server/UnpackNetMsg.h"
 
+#include <iostream>
+
 void ServerObjModule::Init()
 {
 	m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
@@ -14,6 +16,11 @@ void ServerObjModule::Init()
 
 void ServerObjModule::AfterInit()
 {
+	if (m_config_module->GetServerType() == NetServerType::ServerType::MASTER)
+	{
+		return;
+	}
+
 	// create client obj
 	std::shared_ptr<IClientNetActor> ptr_client = m_client_net_module->CreateClientNet();
 

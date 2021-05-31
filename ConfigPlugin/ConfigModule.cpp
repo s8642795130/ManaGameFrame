@@ -10,6 +10,7 @@
 
 void ConfigModule::Init()
 {
+	SetServerName(m_ptr_manager->GetServerName());
 	ReadServerConfigFile();
 	SetServerType();
 }
@@ -76,6 +77,9 @@ bool ConfigModule::ReadServerConfigFile()
 	// 处理配置信息
 	AnalyseConfigStr(config_str);
 	AnalysePluginList();
+
+	// close
+	in.close();
 
 	return true;
 }

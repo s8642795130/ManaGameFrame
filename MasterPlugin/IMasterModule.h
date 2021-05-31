@@ -10,4 +10,5 @@ public:
 
 	// life cycle
 	virtual void Init() = 0;
+	virtual void AfterInit() = 0;
 };

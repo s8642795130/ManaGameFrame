@@ -10,6 +10,7 @@ void MasterModule::Init()
 {
 	// module
 	m_callback_module = m_ptr_manager->GetModule<INetCallbackModule>();
+	
 	m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
 
 	// load actor

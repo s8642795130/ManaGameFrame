@@ -15,7 +15,6 @@
     <ClInclude Include="IModule.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IPluginManager.h" />
-    <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="PollNet.h" />
     <ClInclude Include="CommonStruct.h">
