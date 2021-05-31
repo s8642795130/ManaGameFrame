@@ -7,9 +7,9 @@
     <ClCompile Include="ServerNetModule.cpp" />
     <ClCompile Include="ServerNetPlugin.cpp" />
     <ClCompile Include="NetProccessModule.cpp" />
-    <ClCompile Include="NetCallbackModule.cpp" />
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="ServerObjModule.cpp" />
+    <ClCompile Include="NetCallbackModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientNetActor.h" />
@@ -26,10 +26,6 @@
     <ClInclude Include="INetProccessModule.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="INetCallbackModule.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="NetCallbackModule.h" />
     <ClInclude Include="MsgRouterModule.h" />
     <ClInclude Include="IMsgRouterModule.h">
       <Filter>Interface</Filter>
@@ -43,6 +39,10 @@
     </ClInclude>
     <ClInclude Include="IClientNetActor.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="NetCallbackModule.h" />
+    <ClInclude Include="INetCallbackModule.h">
+      <Filter>Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
