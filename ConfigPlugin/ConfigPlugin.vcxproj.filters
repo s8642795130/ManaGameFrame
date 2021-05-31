@@ -10,8 +10,11 @@
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="ConfigModule.h" />
+    <ClInclude Include="ConfigPlugin.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConfigModule.cpp" />
+    <ClCompile Include="ConfigPlugin.cpp" />
+    <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
 </Project>
