@@ -16,9 +16,6 @@
     <ClInclude Include="ClientNetModule.h" />
     <ClInclude Include="ServerNetModule.h" />
     <ClInclude Include="ServerNetPlugin.h" />
-    <ClInclude Include="IClientNetActor.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="IClientNetModule.h">
       <Filter>Interface</Filter>
     </ClInclude>
@@ -42,6 +39,9 @@
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="ClientPimpl.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="IClientNetActor.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

@@ -28,6 +28,9 @@ public:
 	int m_client_fd = 0;
 	sockaddr_in m_client_sin = { 0 };
 
+	// connect server
+	virtual bool ConnectServer(const std::string& ip, const int port) = 0;
+
 	//called when a client fd becomes available for writing
 	virtual bool ReadReady() { throw std::runtime_error("ReadReady() not implemented"); }
 

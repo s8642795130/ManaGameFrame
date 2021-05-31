@@ -6,7 +6,7 @@
 
 class ClientNetActor : public IClientNetActor
 {
-private:
+protected:
 	// client data
 	std::unique_ptr<ClientPimpl> m_client_impl;
 	std::shared_ptr<ByteBuffer> m_buffer; // buffer
@@ -27,6 +27,7 @@ public:
 
 	// interface
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer() override;
+	virtual bool ConnectServer(const std::string& ip, const int port);
 	virtual bool ReadReady() override;
 	virtual bool WriteReady() override;
 	virtual bool HeartBeat() override;
