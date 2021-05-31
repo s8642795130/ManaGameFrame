@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
 	std::shared_ptr<ConfigFile> config_file{ std::make_shared<ConfigFile>() };
 	config_file->SetServerName(server_name);
 	config_file->ReadServerConfigFile();
-	config_file->SetServerType();
 
 	// manager
 	std::shared_ptr<PluginManager> manager{ std::make_shared<PluginManager>() };

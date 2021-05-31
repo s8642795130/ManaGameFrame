@@ -57,7 +57,7 @@ public:
 
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer() = 0;
 
-	virtual void SendData(const int major, const int minor, const char* ptr_value, const int length) = 0;
+	virtual void SendData(const int major, const int minor, std::vector<char> value) = 0;
 	virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer) = 0;
 	virtual void SendStream(std::vector<char> stream) = 0;
 };

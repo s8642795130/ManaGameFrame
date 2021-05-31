@@ -85,6 +85,7 @@
     <ClCompile Include="MasterPlugin.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IMasterModule.h" />
     <ClInclude Include="MasterActor.h" />
     <ClInclude Include="MasterModule.h" />
     <ClInclude Include="MasterPlugin.h" />

@@ -254,15 +254,19 @@ void ClientNetActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t l
 /// SendData
 /// </summary>
 /// <param name="value"></param>
-void ClientNetActor::SendData(const int major, const int minor, const char* ptr_value, const int length)
+void ClientNetActor::SendData(const int major, const int minor, std::vector<char> value)
 {
+	// get length
+	int length = static_cast<int>(value.size());
+
+	//
 	std::vector<char> temp_data(HEADER_LENGTH + length);
 	std::memcpy(temp_data.data(), &major, sizeof(MAJOR_LENGTH)); // copy major
 	std::memcpy(temp_data.data() + MAJOR_LENGTH, &minor, sizeof(MINOR_LENGTH)); // copy minor
 	std::memcpy(temp_data.data() + MAJOR_LENGTH + MINOR_LENGTH, &length, sizeof(INT_LENGTH)); // copy length
 	if (length != 0)
 	{
-		std::memcpy(temp_data.data() + HEADER_LENGTH, ptr_value, length);
+		std::memcpy(temp_data.data() + HEADER_LENGTH, value.data(), length);
 	}
 	send(m_client_fd, temp_data.data(), HEADER_LENGTH + length, 0);
 }

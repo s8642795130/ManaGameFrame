@@ -32,7 +32,7 @@ public:
 	virtual bool WriteReady() override;
 	virtual bool HeartBeat() override;
 	virtual void ClientClose() override;
-	virtual void SendData(const int major, const int minor, const char* ptr_value, const int length);
+	virtual void SendData(const int major, const int minor, std::vector<char> value);
 	virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer);
 	virtual void SendStream(std::vector<char> stream);
 };

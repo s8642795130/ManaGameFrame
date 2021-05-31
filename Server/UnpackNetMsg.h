@@ -102,7 +102,7 @@ namespace data_fn
         for (auto i = 0; i < vec_len; ++i)
         {
             T t;
-            ForEachField(t, byte_buffer);
+            UnpackStructForEachField(t, byte_buffer);
             data.push_back(t);
         }
     }

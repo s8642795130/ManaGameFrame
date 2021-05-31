@@ -85,7 +85,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PluginManager.cpp" />
     <ClCompile Include="PollNet.cpp" />
-    <ClCompile Include="ServerController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuiltInMsgDefine.h" />
@@ -107,8 +106,6 @@
     <ClInclude Include="Plugin.h" />
     <ClInclude Include="PluginManager.h" />
     <ClInclude Include="PollNet.h" />
-    <ClInclude Include="ServerController.h" />
-    <ClInclude Include="ServerObj.h" />
     <ClInclude Include="StructSchema.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

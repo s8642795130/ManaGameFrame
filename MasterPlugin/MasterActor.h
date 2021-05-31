@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include "../Server/Actor.h"
+#include "../ActorPlugin/Actor.h"
 
 class MasterActor : public Actor
 {

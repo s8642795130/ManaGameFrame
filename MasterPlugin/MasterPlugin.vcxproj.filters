@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="MasterActor.cpp" />
+    <ClCompile Include="MasterModule.cpp" />
+    <ClCompile Include="MasterPlugin.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MasterActor.h" />
+    <ClInclude Include="MasterModule.h" />
+    <ClInclude Include="MasterPlugin.h" />
+    <ClInclude Include="IMasterModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{8281346b-0841-4d94-b329-8fad3d5a9722}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

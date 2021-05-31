@@ -7,10 +7,7 @@
 
 struct ServerOnlineData
 {
-	std::string m_server_type;
 	std::string m_server_name;
-	std::string m_ip;
-	int m_port;
 };
 
 struct ServerOnlineInfo
@@ -31,10 +28,7 @@ struct BackendMsgToClient
 };
 
 DEFINE_STRUCT_SCHEMA(ServerOnlineData,
-	DEFINE_STRUCT_FIELD(m_server_type, DATA_TYPE::STRING),
-	DEFINE_STRUCT_FIELD(m_server_name, DATA_TYPE::STRING),
-	DEFINE_STRUCT_FIELD(m_ip, DATA_TYPE::STRING),
-	DEFINE_STRUCT_FIELD(m_port, DATA_TYPE::INT)
+	DEFINE_STRUCT_FIELD(m_server_name, DATA_TYPE::STRING)
 );
 
 DEFINE_STRUCT_SCHEMA(ServerOnlineInfo,
