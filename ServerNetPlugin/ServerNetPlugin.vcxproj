@@ -90,6 +90,7 @@
     <ClCompile Include="ServerObjModule.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackendClient.h" />
     <ClInclude Include="ClientPimpl.h" />
     <ClInclude Include="ClientNetActor.h" />
     <ClInclude Include="ClientNetModule.h" />

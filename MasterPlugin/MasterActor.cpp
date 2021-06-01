@@ -4,13 +4,13 @@
 #include "../Server/PackageNetMsg.h"
 #include "../Server/IConfigFile.h"
 #include "../Server/BuiltInDataDefine.h"
+#include "../ActorPlugin/ActorMsg.h"
+#include "../ServerNetPlugin/IClientNetActor.h"
 
 std::shared_ptr<IActorPimpl> IActorPimpl::m_pimpl;
 
 void MasterActor::ServerOnline(const std::string server_name, const std::string uuid)
 {
-	std::cout << "Server is online !" << std::endl;
-
 	ServerOnlineInfo server_online_info;
 	for (auto& it : m_map_online_server)
 	{
@@ -27,4 +27,8 @@ void MasterActor::ServerOnline(const std::string server_name, const std::string 
 
 	// save online server data
 	m_map_online_server.emplace(server_name, uuid);
+
+	// send online server struct to server
+	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(GetUUID(), uuid, &IClientNetActor::SendStream, std::move(buffer));
+	m_pimpl->SendMsgToActor(ptr);
 }

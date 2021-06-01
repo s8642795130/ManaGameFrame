@@ -10,7 +10,6 @@ void MasterModule::Init()
 {
 	// module
 	m_callback_module = m_ptr_manager->GetModule<INetCallbackModule>();
-	
 	m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
 
 	// load actor
@@ -19,6 +18,10 @@ void MasterModule::Init()
 
 void MasterModule::AfterInit()
 {
+	// add actor to thread poll
+	m_thread_pool_module->AddActorToThreadCell(m_master_actor);
+
+	// bind msg
 	std::function<void(IClientNetActor&)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1);
 	m_callback_module->AddReceiveCallBack(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), call_func);
 }

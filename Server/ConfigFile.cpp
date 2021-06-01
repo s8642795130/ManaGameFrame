@@ -184,6 +184,14 @@ void ConfigFile::AnalysePluginList()
 
 void ConfigFile::PushBuiltInPlugin(std::vector<std::shared_ptr<PluginData>>& vec_plugin_data)
 {
+	if (m_server_name.compare("master-1") == 0)
+	{
+		std::shared_ptr<PluginData> plugin_data_master = std::make_shared<PluginData>();
+		plugin_data_master->m_plugin = "MasterPlugin";
+		plugin_data_master->m_plugin_name = "MasterPlugin";
+		vec_plugin_data.push_back(plugin_data_master);
+	}
+
 	std::shared_ptr<PluginData> plugin_data_config = std::make_shared<PluginData>();
 	plugin_data_config->m_plugin = "ConfigPlugin";
 	plugin_data_config->m_plugin_name = "ConfigPlugin";

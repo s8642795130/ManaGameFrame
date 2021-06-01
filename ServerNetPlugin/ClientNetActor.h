@@ -8,7 +8,7 @@ class ClientNetActor : public IClientNetActor
 {
 protected:
 	// client data
-	std::unique_ptr<ClientPimpl> m_client_impl;
+	std::shared_ptr<ClientPimpl> m_client_impl;
 	std::shared_ptr<ByteBuffer> m_buffer; // buffer
 	std::map<std::string, std::string> m_client_data; // team id, room id ...
 
@@ -23,7 +23,7 @@ protected:
 	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len);
 	void ProccessIO();
 public:
-	ClientNetActor();
+	ClientNetActor(std::shared_ptr<ClientPimpl> ptr);
 
 	// interface
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer() override;

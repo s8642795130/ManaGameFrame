@@ -44,6 +44,9 @@
     <ClInclude Include="INetCallbackModule.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="BackendClient.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interface">

@@ -4,6 +4,7 @@
 #include "IServerNetModule.h"
 #include "IClientNetActor.h"
 #include "IClientNetModule.h"
+#include "../ConfigPlugin/IConfigModule.h"
 #include "../ActorPlugin/IThreadPoolModule.h"
 #include "../Server/DefineHeader.h"
 
@@ -19,6 +20,7 @@ private:
 	// std::shared_ptr<IThreadPool> m_ptr_thread_pool;
 
 	// other module
+	std::shared_ptr<IConfigModule> m_config_module;
 	std::shared_ptr<IThreadPoolModule> m_thread_pool_module;
 	std::shared_ptr<IClientNetModule> m_client_net_module;
 protected:
@@ -26,8 +28,8 @@ protected:
 	void StartNetwork(uint16_t listen_port, uint32_t timeout_secs);
 	bool SetNonblocking(int fd);
 	bool HandleAccept();
-	bool HandleClient(epoll_event ev);
-	void RemoveClient(std::shared_ptr<IClientNetActor> ptr_client);
+	bool HandleClient(epoll_event& ev);
+	void RemoveClient(std::shared_ptr<IClientNetActor>& ptr_client);
 public:
 	ServerNetModule(std::shared_ptr<IPluginManager> ptr);
 	~ServerNetModule();

@@ -38,13 +38,15 @@ ServerNetModule::~ServerNetModule()
 
 void ServerNetModule::Init()
 {
+	m_config_module = m_ptr_manager->GetModule<IConfigModule>();
 	m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
 	m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
 }
 
 void ServerNetModule::AfterInit()
 {
-
+	auto port = m_config_module->GetMyServerInfo()->m_port;
+	StartNetwork(static_cast<uint16_t>(port), 30);
 }
 
 void ServerNetModule::StartNetwork(uint16_t listen_port, uint32_t timeout_secs)
@@ -106,29 +108,25 @@ bool ServerNetModule::AddFD(std::shared_ptr<IClientNetActor> ptr_client)
 {
 	if (!SetNonblocking(ptr_client->m_client_fd))
 	{
-		std::cout << "failed to put fd into non-blocking mode, error code: " << errno << std::endl;
+		throw std::runtime_error("failed to put fd into non-blocking mode, error code: " + std::to_string(errno));
 		return false;
 	}
 
 	epoll_event ev;
 	// ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	// client events will be handled in edge-triggered mode
 	ev.data.fd = ptr_client->m_client_fd;
+	// ev.data.ptr = reinterpret_cast<void*>(ptr_client.get()); // we will pass client descriptor with every event
 	ev.events = EPOLLIN | EPOLLET;
-	ev.data.ptr = reinterpret_cast<void*>(ptr_client.get()); // we will pass client descriptor with every event
 
-	if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->m_client_fd, &ev) == 1)
+	if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->m_client_fd, &ev) == -1)
 	{
-		std::cout << "epoll_ctl() failed, error code: " << errno << std::endl;
-		// delete ptr_client;
+		throw std::runtime_error("epoll_ctl() failed, error code: " + std::to_string(errno));
 		return false;
 	}
 
 	// store new client descriptor into the map of clients
 	m_client_net_module->AddClientToMap(ptr_client);
 	m_thread_pool_module->AddActorToThreadCell(ptr_client);
-
-	// set callback map ptr
-	// ptr_client->SetReceiveCallbackMapPtr(m_ptr_callback_map);
 
 	return true;
 }
@@ -224,10 +222,11 @@ bool ServerNetModule::HandleAccept()
 }
 
 //called whenever and EPOLLIN event occurs on a client fd
-bool ServerNetModule::HandleClient(epoll_event ev)
+bool ServerNetModule::HandleClient(epoll_event& ev)
 {
-	//retrieve client descriptor address from the data parameter
-	// ClientDescriptor* client = reinterpret_cast<ClientDescriptor*>(ev.data.ptr);
+	// retrieve client descriptor address from the data parameter (test code)
+	// IClientNetActor* client = reinterpret_cast<IClientNetActor*>(ev.data.ptr);
+	//
 	std::shared_ptr<IClientNetActor> ptr_client = m_client_net_module->GetClientNet(ev.data.fd);
 
 	//we got some data from the client
@@ -268,7 +267,7 @@ bool ServerNetModule::HandleClient(epoll_event ev)
 	return true;
 }
 
-void ServerNetModule::RemoveClient(std::shared_ptr<IClientNetActor> ptr_client)
+void ServerNetModule::RemoveClient(std::shared_ptr<IClientNetActor>& ptr_client)
 {
 	m_client_net_module->RemoveClientFromMap(ptr_client->GetSid());
 	m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());

@@ -5,8 +5,6 @@
 #include "../Server/PackageNetMsg.h"
 #include "../Server/UnpackNetMsg.h"
 
-#include <iostream>
-
 void ServerObjModule::Init()
 {
 	m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
@@ -91,17 +89,20 @@ void ServerObjModule::OnServerOnlineCallback(IClientNetActor& ptr_client)
 			// get server data
 			auto server_data = m_config_module->GetServerDataByName(item.m_server_name);
 
-			// connect server
-			ptr_client->ConnectServer(server_data->m_server_ip, server_data->m_port);
+			if (!(server_data->m_server_type.compare("connector") && m_config_module->GetServerType() == NetServerType::ServerType::FRONTEND))
+			{
+				// connect server
+				ptr_client->ConnectServer(server_data->m_server_ip, server_data->m_port);
 
-			// struct msg
-			ConnectServerOnline connect_server_online;
-			connect_server_online.m_server_name = m_config_module->GetMyServerInfo()->m_server_name;
+				// struct msg
+				ConnectServerOnline connect_server_online;
+				connect_server_online.m_server_name = m_config_module->GetMyServerInfo()->m_server_name;
 
-			// package
-			std::vector<char> buffer;
-			PackageStructForEachField(connect_server_online, buffer);
-			ptr_client->SendData(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), 0, buffer);
+				// package
+				std::vector<char> buffer;
+				PackageStructForEachField(connect_server_online, buffer);
+				ptr_client->SendData(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), 0, buffer);
+			}
 		}
 	);
 }

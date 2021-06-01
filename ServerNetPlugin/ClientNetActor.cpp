@@ -11,7 +11,8 @@
 
 std::shared_ptr<IActorPimpl> IActorPimpl::m_pimpl;
 
-ClientNetActor::ClientNetActor() : 
+ClientNetActor::ClientNetActor(std::shared_ptr<ClientPimpl> ptr) :
+	m_client_impl(ptr),
 	m_buffer(std::make_shared<ByteBuffer>())
 {
 
@@ -141,7 +142,7 @@ void ClientNetActor::ProccessIO()
 		case NetServerType::ClientType::MASTER:
 			break;
 		default:
-			// (login)
+			// (login server_online)
 			m_client_impl->m_proccess_module->ProcessFrontendUnknowMsg(*this);
 			break;
 		}
