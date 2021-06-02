@@ -10,5 +10,6 @@ enum class DATA_TYPE : int
     ARRAY_INT,
     ARRAY_CHAR,
     ARRAY_BOOL,
-    ARRAY_STRING
+    ARRAY_STRING,
+    MAP_STRING
 };

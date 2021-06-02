@@ -11,5 +11,5 @@ public:
 	std::string m_uid;
 	std::string m_uuid;
 	std::map<std::string, std::string> m_client_data;
-	std::shared_ptr<ByteBuffer> m_buffer;
+	std::unique_ptr<ByteBuffer> m_buffer;
 };

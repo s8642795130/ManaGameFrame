@@ -3,6 +3,7 @@
 #include <tuple>
 #include <type_traits>
 #include <vector>
+#include <map>
 #include <memory>
 
 #include "StructSchema.h"
@@ -84,26 +85,75 @@ namespace data_fn
     void fn(std::vector<char>& data, Name&& field, std::shared_ptr<ByteBuffer>& byte_buffer)
     {
         // allocate memory to vector
-        int vec_len = byte_buffer->GetInt();
+        auto vec_len = byte_buffer->GetInt();
         data.reserve(vec_len);
 
         // copy data to vector
         auto cur_pos = byte_buffer->GetCurPos();
-        std::memcpy(data.data(), byte_buffer->GetBuffer() + cur_pos, vec_len);
+        std::memcpy(data.data(), byte_buffer->GetStream().data() + cur_pos, vec_len);
         
         // step buffer to new position
         byte_buffer->StepBufferPos(vec_len);
     }
 
+    template <typename Name>
+    void fn(std::vector<std::string>& data, Name&& field, std::shared_ptr<ByteBuffer>& byte_buffer)
+    {
+        // allocate memory to vector
+        int vec_len = byte_buffer->GetInt();
+        data.reserve(vec_len);
+
+        for (auto i = 0; i < vec_len; ++i)
+        {
+            auto str_len = byte_buffer->GetInt();
+            std::string str = byte_buffer->GetString(str_len);
+            data.push_back(str);
+        }
+    }
+
+    template <typename Name>
+    void fn(std::vector<bool>& data, Name&& field, std::shared_ptr<ByteBuffer>& byte_buffer)
+    {
+        // allocate memory to vector
+        int vec_len = byte_buffer->GetInt();
+        data.reserve(vec_len);
+
+        // copy data to vector
+        for (auto i = 0; i < vec_len; ++i)
+        {
+            auto value = byte_buffer->GetBool();
+            data.push_back(value);
+        }
+    }
+
     template <typename T, typename Name>
     void fn(std::vector<T>& data, Name&& field, std::shared_ptr<ByteBuffer>& byte_buffer)
     {
-        int vec_len = byte_buffer->GetInt();
+        auto vec_len = byte_buffer->GetInt();
         for (auto i = 0; i < vec_len; ++i)
         {
             T t;
             UnpackStructForEachField(t, byte_buffer);
             data.push_back(t);
+        }
+    }
+
+    template <typename Name>
+    void fn(std::map<std::string, std::string>& data, Name&& field, std::shared_ptr<ByteBuffer>& byte_buffer)
+    {
+        auto map_len = byte_buffer->GetInt();
+        for (auto i = 0; i < map_len; ++i)
+        {
+            // get key
+            auto key_length = byte_buffer->GetInt();
+            auto key = byte_buffer->GetString(key_length);
+
+            // get value
+            auto value_length = byte_buffer->GetInt();
+            auto value = byte_buffer->GetString(key_length);
+
+            // copy data
+            data.emplace(key, value);
         }
     }
 }

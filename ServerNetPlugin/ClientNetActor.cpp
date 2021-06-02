@@ -115,6 +115,11 @@ void ClientNetActor::ClientClose()
 	std::cout << "[-] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by client" << std::endl;
 }
 
+const std::map<std::string, std::string> ClientNetActor::GetClientData() const
+{
+	return m_client_data;
+}
+
 std::shared_ptr<ByteBuffer>& ClientNetActor::GetBuffer()
 {
 	return m_buffer;
@@ -272,6 +277,7 @@ void ClientNetActor::SendData(const int major, const int minor, std::vector<char
 	send(m_client_fd, temp_data.data(), HEADER_LENGTH + length, 0);
 }
 
+/*
 void ClientNetActor::SendBuffer(std::shared_ptr<ByteBuffer> buffer)
 {
 	int buffer_size = buffer->GetSize();
@@ -284,6 +290,7 @@ void ClientNetActor::SendBuffer(std::shared_ptr<ByteBuffer> buffer)
 	//
 	send(m_client_fd, temp_data.data(), HEADER_LENGTH + buffer_size, 0);
 }
+*/
 
 void ClientNetActor::SendStream(std::vector<char> stream)
 {

@@ -32,8 +32,10 @@ public:
 	virtual bool WriteReady() override;
 	virtual bool HeartBeat() override;
 	virtual void ClientClose() override;
+	//
+	virtual const std::map<std::string, std::string> GetClientData() const;
 	virtual void SendData(const int major, const int minor, std::vector<char> value);
-	virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer);
+	// virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer);
 	virtual void SendStream(std::vector<char> stream);
 };
 

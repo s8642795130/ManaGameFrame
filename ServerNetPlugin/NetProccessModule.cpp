@@ -4,6 +4,7 @@
 #include "../Server/BuiltInMsgDefine.h"
 #include "../Server/BuiltInDataDefine.h"
 #include "../Server/UnpackNetMsg.h"
+#include "../Server/PackageNetMsg.h"
 #include "../ActorPlugin/ActorMsg.h"
 
 void NetProccessModule::Init()
@@ -38,13 +39,21 @@ void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
 	auto server_uuid = server_map[server_list[server_index]->m_server_name];
 
 	// create backend client struct
-	BackendClient backend_client;
-	backend_client.m_uid = client.GetUid();
-	backend_client.m_uuid = client.GetUUID();
-	backend_client.m_client_data = client.GetClientData();
+	FrontendToBackendMsg backend_msg;
+	auto buffer = client.GetBuffer();
+	backend_msg.m_client_uid = client.GetUid();
+	backend_msg.m_client_uuid = client.GetUUID();
+	backend_msg.m_client_data = client.GetClientData();
+	backend_msg.m_major_id = buffer->GetMajorId();
+	backend_msg.m_minor_id = buffer->GetMinorId();
+	backend_msg.m_stream = buffer->GetStream();
+
+	// packge
+	std::vector<char> package;
+	PackageStructForEachField(backend_msg, package);
 
 	// send to backend server
-	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::shared_ptr<ByteBuffer>>>(client.GetUUID(), server_uuid, &IClientNetActor::SendBuffer, std::move(client.GetBuffer()));
+	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(client.GetUUID(), server_uuid, &IClientNetActor::SendStream, std::move(package));
 	client.GetActorPimpl()->SendMsgToActor(ptr);
 }
 
