@@ -14,7 +14,7 @@ void ServerObjModule::Init()
 
 void ServerObjModule::AfterInit()
 {
-	if (m_config_module->GetServerType() == NetServerType::ServerType::MASTER)
+	if (m_config_module->GetServerType() == EnumDefine::ServerType::MASTER)
 	{
 		return;
 	}
@@ -65,9 +65,15 @@ void ServerObjModule::SaveServerToMap(const std::string& server_name, const std:
 }
 
 // interface
-const std::map<std::string, std::string>& ServerObjModule::GetServerMap()
+
+const std::string ServerObjModule::GetServerUUIDByName(const std::string& server_name)
 {
-	return m_map_server;
+	std::string uuid;
+	if (m_map_server.find(server_name) != std::cend(m_map_server))
+	{
+		uuid = m_map_server[server_name];
+	}
+	return uuid;
 }
 
 // callback
@@ -89,7 +95,7 @@ void ServerObjModule::OnServerOnlineCallback(IClientNetActor& ptr_client)
 			// get server data
 			auto server_data = m_config_module->GetServerDataByName(item.m_server_name);
 
-			if (!(server_data->m_server_type.compare("connector") && m_config_module->GetServerType() == NetServerType::ServerType::FRONTEND))
+			if (!(server_data->m_server_type.compare("connector") && m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND))
 			{
 				// connect server
 				ptr_client->ConnectServer(server_data->m_server_ip, server_data->m_port);

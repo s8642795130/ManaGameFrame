@@ -2,7 +2,7 @@
 #include "IClientNetActor.h"
 #include "ClientPimpl.h"
 
-#include "../Server/ServerTypeDefine.h"
+#include "../Server/ServerEnumDefine.h"
 
 class ClientNetActor : public IClientNetActor
 {
@@ -13,13 +13,13 @@ protected:
 	std::map<std::string, std::string> m_client_data; // team id, room id ...
 
 	// client Type
-	NetServerType::ClientType m_client_type;
+	EnumDefine::ClientType m_client_type;
 
 	// timeout
 	const int m_timeout = 30;
 	time_t m_last_active;
 protected:
-	void SetClientType(NetServerType::ClientType client_type);
+	void SetClientType(EnumDefine::ClientType client_type);
 	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len);
 	void ProccessIO();
 public:

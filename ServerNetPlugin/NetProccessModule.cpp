@@ -35,8 +35,7 @@ void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
 	const auto server_index = m_router_module->GetMsgRouterByClient(plugin_name, static_cast<int>(server_list.size()), client);
 
 	// get server uuid
-	auto server_map = m_server_obj_module->GetServerMap();
-	auto server_uuid = server_map[server_list[server_index]->m_server_name];
+	auto server_uuid = m_server_obj_module->GetServerUUIDByName(server_list[server_index]->m_server_name);
 
 	// create backend client struct
 	FrontendToBackendMsg backend_msg;
@@ -70,7 +69,7 @@ void NetProccessModule::ProcessBackendIO(IClientNetActor& client)
 		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(client.GetUUID(), backend_msg.m_client_uuid, &IClientNetActor::SendStream, std::move(backend_msg.m_buffer));
 		client.GetActorPimpl()->SendMsgToActor(ptr);
 	}
-	else if (client.GetBuffer()->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::UPDATE_CLIENT_MSG))
+	else if (client.GetBuffer()->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::UPDATE_CLIENT_DATA))
 	{
 
 	}
@@ -98,8 +97,26 @@ void NetProccessModule::ProcessFrontendUnknowMsg(IClientNetActor& client)
 
 void NetProccessModule::ProcessServerBackendIO(IClientNetActor& client)
 {
-	BackendClient backend_client;
-	// jie xi
+	// parsing
+	FrontendToBackendMsg backend_msg;
+	UnpackStructForEachField(backend_msg, client.GetBuffer());
+
+	// buffer
+	std::unique_ptr<ByteBuffer> buffer{ std::make_unique<ByteBuffer>() };
+
+	// create param
+	BackendClient backend_client(std::move(buffer));
+	backend_client.m_uid = backend_msg.m_client_uid;
+	backend_client.m_uuid = backend_msg.m_client_uuid;
+	backend_client.m_client_data = backend_msg.m_client_data;
+
+	// call callback
+	auto map_callback = m_callback_module->GetBackendCallBackMap();
+	if (map_callback.find(buffer->GetMajorId()) != std::cend(map_callback))
+	{
+		auto callback = map_callback[buffer->GetMajorId()];
+		callback(backend_client);
+	}
 }
 
 void NetProccessModule::ProcessRPCIO(IClientNetActor& client)

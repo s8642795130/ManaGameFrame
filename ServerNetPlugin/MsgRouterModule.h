@@ -17,6 +17,7 @@ public:
 	virtual void Init();
 
 	// interface
+	virtual int GetConnectorIndexByClient(const int server_count, const std::string& uid);
 	virtual int GetMsgRouterByClient(const std::string plugin_name, const int server_count, const IClientNetActor& client);
 };
 

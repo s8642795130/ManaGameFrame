@@ -1,6 +1,6 @@
 #pragma once
 
-namespace NetServerType
+namespace EnumDefine
 {
 	enum class ServerType : int
 	{
@@ -18,5 +18,17 @@ namespace NetServerType
 		BACKEND,
 		MASTER,
 		FAKE
+	};
+
+	enum class PushMsgType : int
+	{
+		RESPONSE,
+		PUSH
+	};
+
+	enum class UpdateClientDataType : int
+	{
+		MODIFY,
+		DEL
 	};
 }

@@ -32,9 +32,17 @@ struct FrontendToBackendMsg
 
 struct BackendMsgToClient
 {
+	int m_msg_type;
 	std::string m_client_uuid;
-	std::string m_uid;
 	std::vector<char> m_buffer;
+};
+
+struct UpdateClient
+{
+	std::string m_client_uuid;
+	std::string m_data_key;
+	int m_update_type;
+	std::string m_data_value;
 };
 
 DEFINE_STRUCT_SCHEMA(ServerOnlineData,
@@ -59,7 +67,14 @@ DEFINE_STRUCT_SCHEMA(FrontendToBackendMsg,
 );
 
 DEFINE_STRUCT_SCHEMA(BackendMsgToClient,
+	DEFINE_STRUCT_FIELD(m_msg_type, DATA_TYPE::INT),
 	DEFINE_STRUCT_FIELD(m_client_uuid, DATA_TYPE::STRING),
-	DEFINE_STRUCT_FIELD(m_uid, DATA_TYPE::STRING),
 	DEFINE_STRUCT_FIELD(m_buffer, DATA_TYPE::ARRAY_CHAR)
+);
+
+DEFINE_STRUCT_SCHEMA(UpdateClientData,
+	DEFINE_STRUCT_FIELD(m_client_uuid, DATA_TYPE::STRING),
+	DEFINE_STRUCT_FIELD(m_data_key, DATA_TYPE::STRING),
+	DEFINE_STRUCT_FIELD(m_update_type, DATA_TYPE::INT),
+	DEFINE_STRUCT_FIELD(m_data_value, DATA_TYPE::STRING)
 );

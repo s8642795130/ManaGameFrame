@@ -7,7 +7,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include "../Server/ServerTypeDefine.h"
+#include "../Server/ServerEnumDefine.h"
 
 std::shared_ptr<IActorPimpl> IActorPimpl::m_pimpl;
 
@@ -42,7 +42,7 @@ bool ClientNetActor::ConnectServer(const std::string& ip, const int port)
 	return ret;
 }
 
-void ClientNetActor::SetClientType(NetServerType::ClientType client_type)
+void ClientNetActor::SetClientType(EnumDefine::ClientType client_type)
 {
 	m_client_type = client_type;
 }
@@ -132,19 +132,19 @@ void ClientNetActor::ProccessIO()
 {
 	switch (m_client_impl->m_config_module->GetServerType())
 	{
-	case NetServerType::ServerType::FRONTEND: // 主机是前端服务器
+	case EnumDefine::ServerType::FRONTEND: // 主机是前端服务器
 	{
 		switch (m_client_type)
 		{
-		case NetServerType::ClientType::CLIENT: // 玩家发送的信息 直接处理
+		case EnumDefine::ClientType::CLIENT: // 玩家发送的信息 直接处理
 			// frontend server
 			m_client_impl->m_proccess_module->ProcessFrontendIO(*this);
 			break;
-		case NetServerType::ClientType::BACKEND: // 后端发来的数据 直接找到客户端 返回客户端 (maybe update client data)
+		case EnumDefine::ClientType::BACKEND: // 后端发来的数据 直接找到客户端 返回客户端 (maybe update client data)
 			// backend server
 			m_client_impl->m_proccess_module->ProcessBackendIO(*this);
 			break;
-		case NetServerType::ClientType::MASTER:
+		case EnumDefine::ClientType::MASTER:
 			break;
 		default:
 			// (login server_online)
@@ -155,18 +155,18 @@ void ClientNetActor::ProccessIO()
 		// exit
 		break;
 	}
-	case NetServerType::ServerType::BACKEND: // 主机是后端服务器
+	case EnumDefine::ServerType::BACKEND: // 主机是后端服务器
 	{
 		switch (m_client_type)
 		{
-		case NetServerType::ClientType::FRONTEND:
+		case EnumDefine::ClientType::FRONTEND:
 			m_client_impl->m_proccess_module->ProcessServerBackendIO(*this);
 			break;
-		case NetServerType::ClientType::BACKEND:
+		case EnumDefine::ClientType::BACKEND:
 			// backend server
 			m_client_impl->m_proccess_module->ProcessRPCIO(*this);
 			break;
-		case NetServerType::ClientType::MASTER:
+		case EnumDefine::ClientType::MASTER:
 			break;
 		default:
 			// (server_online)
@@ -174,7 +174,7 @@ void ClientNetActor::ProccessIO()
 		}
 		break;
 	}
-	case NetServerType::ServerType::MASTER:
+	case EnumDefine::ServerType::MASTER:
 	{
 		m_client_impl->m_proccess_module->ProcessMasterIO(*this);
 		break;

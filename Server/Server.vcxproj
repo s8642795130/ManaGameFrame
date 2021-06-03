@@ -99,8 +99,9 @@
     <ClInclude Include="IModule.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IPluginManager.h" />
+    <ClInclude Include="StringDefine.h" />
     <ClInclude Include="UnpackNetMsg.h" />
-    <ClInclude Include="ServerTypeDefine.h" />
+    <ClInclude Include="ServerEnumDefine.h" />
     <ClInclude Include="DataType.h" />
     <ClInclude Include="PackageNetMsg.h" />
     <ClInclude Include="PluginManager.h" />

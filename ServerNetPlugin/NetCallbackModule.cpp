@@ -14,3 +14,13 @@ const std::map<int, std::function<void(IClientNetActor&)>>& NetCallbackModule::G
 {
 	return m_receive_callback;
 }
+
+void NetCallbackModule::AddBackendCallBack(const int msgID, std::function<void(BackendClient&)> call_func)
+{
+	m_map_backend_callback.emplace(msgID, call_func);
+}
+
+const std::map<int, std::function<void(BackendClient&)>>& NetCallbackModule::GetBackendCallBackMap()
+{
+	return m_map_backend_callback;
+}

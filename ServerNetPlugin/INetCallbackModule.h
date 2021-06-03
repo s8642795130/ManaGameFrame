@@ -12,6 +12,8 @@ public:
 	// interface
 	virtual void AddReceiveCallBack(const int msgID, std::function<void(IClientNetActor&)> call_func) = 0;
 	virtual const std::map<int, std::function<void(IClientNetActor&)>>& GetReceiveCallBackMap() = 0;
+	virtual void AddBackendCallBack(const int msgID, std::function<void(BackendClient&)> call_func) = 0;
+	virtual const std::map<int, std::function<void(BackendClient&)>>& GetBackendCallBackMap() = 0;
 	virtual const std::map<int, std::string> GetGameMsgMap() = 0;
 };
 

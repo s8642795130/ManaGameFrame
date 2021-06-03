@@ -26,9 +26,6 @@
     <ClInclude Include="ByteBuffer.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="ServerTypeDefine.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="BuiltInMsgDefine.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -46,6 +43,12 @@
     </ClInclude>
     <ClInclude Include="BuiltInDataDefine.h">
       <Filter>Package</Filter>
+    </ClInclude>
+    <ClInclude Include="StringDefine.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerEnumDefine.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

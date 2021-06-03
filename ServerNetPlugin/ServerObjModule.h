@@ -24,7 +24,7 @@ public:
 	virtual void AfterInit();
 
 	// interface
-	virtual const std::map<std::string, std::string>& GetServerMap();
+	virtual const std::string GetServerUUIDByName(const std::string& server_name);
 
 	// callback
 	void OnServerOnlineCallback(IClientNetActor& ptr_client);

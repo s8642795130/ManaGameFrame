@@ -16,5 +16,5 @@ public:
 	virtual void AfterInit() = 0;
 
 	// interface
-	virtual const std::map<std::string, std::string>& GetServerMap() = 0;
+	virtual const std::string GetServerUUIDByName(const std::string& server_name) = 0;
 };

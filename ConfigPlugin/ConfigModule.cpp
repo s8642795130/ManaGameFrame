@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <regex>
 
-#include "../Server/ServerTypeDefine.h"
+#include "../Server/ServerEnumDefine.h"
 
 void ConfigModule::Init()
 {
@@ -222,19 +222,19 @@ void ConfigModule::SetServerType()
 	auto server_type = m_server_config[m_server_name]->m_server_type;
 	if (server_type.compare("master") == 0)
 	{
-		m_server_type = NetServerType::ServerType::MASTER;
+		m_server_type = EnumDefine::ServerType::MASTER;
 	}
 	else if (server_type.compare("connector") == 0)
 	{
-		m_server_type = NetServerType::ServerType::FRONTEND;
+		m_server_type = EnumDefine::ServerType::FRONTEND;
 	}
 	else if (server_type.compare("server") == 0)
 	{
-		m_server_type = NetServerType::ServerType::BACKEND;
+		m_server_type = EnumDefine::ServerType::BACKEND;
 	}
 }
 
-const NetServerType::ServerType ConfigModule::GetServerType()
+const EnumDefine::ServerType ConfigModule::GetServerType()
 {
 	return m_server_type;
 }

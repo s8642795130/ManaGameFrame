@@ -23,6 +23,12 @@ int MsgRouterModule::DefaultRouter(const int server_count, const IClientNetActor
 	return (uid % server_count);
 }
 
+int MsgRouterModule::GetConnectorIndexByClient(const int server_count, const std::string& uid)
+{
+	auto temp_uid = std::stoi(uid);
+	return (temp_uid % server_count);
+}
+
 int MsgRouterModule::GetMsgRouterByClient(const std::string plugin_name, const int server_count, const IClientNetActor& client)
 {
 	int ret = 0;

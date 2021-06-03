@@ -9,7 +9,7 @@ namespace BuiltInMsg
 		SERVER_OFFLINE,
 		LOGIN_MSG,
 		RETURN_CLIENT_MSG,
-		UPDATE_CLIENT_MSG
+		UPDATE_CLIENT_DATA
 	};
 
 	enum class EventCode : int
