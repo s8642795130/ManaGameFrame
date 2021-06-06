@@ -19,7 +19,7 @@ public:
 		m_data_map.emplace(value, element);
 	}
 
-	Element& GetElement(T value)
+	Element& GetElement(const T value)
 	{
 		std::lock_guard<std::mutex> lk(m_mut);
 		return m_data_map[value];

@@ -20,6 +20,30 @@ protected:
 	std::shared_ptr<IMsgRouterModule> m_router_module;
 	std::shared_ptr<IConfigModule> m_config_module;
 	std::shared_ptr<IServerObjModule> m_server_obj_module;
+protected:
+	void PushMsg(const std::string& uid, const std::vector<char>& stream, const EnumDefine::PushMsgType type)
+	{
+		// build struct
+		BackendMsgToClient backend_msg;
+		backend_msg.m_msg_type = static_cast<int>(type);
+		backend_msg.m_client_uid = uid;
+		backend_msg.m_buffer = stream;
+
+		// package
+		std::vector<char> package;
+		PackageStructForEachField(backend_msg, package);
+
+		// router
+		auto connector_server = m_config_module->GetServersByType(CONNECTOR);
+		auto index = m_router_module->GetConnectorIndexByClient(static_cast<int>(connector_server.size()), uid);
+
+		// get frontend uuid
+		auto frontend_uuid = m_server_obj_module->GetServerUUIDByName(connector_server[index]->m_server_name);
+
+		// send to frontend
+		std::unique_ptr<IActorMsg> actor_msg = std::make_unique<ActorMsg<void, IClientNetActor, const int, const int, std::vector<char>>>("", frontend_uuid, &IClientNetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::RETURN_CLIENT_MSG), 0, std::move(package));
+		m_thread_pool_module->AddActorMsgToThreadCell(actor_msg);
+	}
 public:
 	ActorPimpl(std::shared_ptr<IPluginManager> ptr)
 	{
@@ -39,38 +63,14 @@ public:
 
 	}
 
-	virtual void ResponseMsg(const std::string& uuid, const std::vector<char>& stream)
+	virtual void ResponseMsg(const std::string& uid, const std::vector<char>& stream)
 	{
-		PushMsg(uuid, stream, EnumDefine::PushMsgType::RESPONSE);
+		PushMsg(uid, stream, EnumDefine::PushMsgType::RESPONSE);
 	}
 
-	virtual void NotifyMsg(const std::string& uuid, const std::vector<char>& stream)
+	virtual void NotifyMsg(const std::string& uid, const std::vector<char>& stream)
 	{
-		PushMsg(uuid, stream, EnumDefine::PushMsgType::PUSH);
-	}
-
-	virtual void PushMsg(const std::string& uuid, const std::vector<char>& stream, const EnumDefine::PushMsgType type)
-	{
-		// build struct
-		BackendMsgToClient backend_msg;
-		backend_msg.m_msg_type = static_cast<int>(type);
-		backend_msg.m_client_uuid = uuid;
-		backend_msg.m_buffer = stream;
-
-		// package
-		std::vector<char> package;
-		PackageStructForEachField(backend_msg, package);
-
-		// router
-		auto connector_server = m_config_module->GetServersByType(CONNECTOR);
-		auto index = m_router_module->GetConnectorIndexByClient(connector_server.size(), uuid);
-
-		// get frontend uuid
-		auto frontend_uuid = m_server_obj_module->GetServerUUIDByName(connector_server[index]->m_server_name);
-
-		// send to frontend
-		std::unique_ptr<IActorMsg> actor_msg = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>("", frontend_uuid, &IClientNetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::RETURN_CLIENT_MSG), 0, std::move(package));
-		m_thread_pool_module->AddActorMsgToThreadCell(actor_msg);
+		PushMsg(uid, stream, EnumDefine::PushMsgType::PUSH);
 	}
 
 	virtual void BroadcastMsg()
@@ -78,10 +78,10 @@ public:
 
 	}
 
-	virtual void UpdateClientData(const std::string& uuid, const std::string& key, const std::string& value, const EnumDefine::UpdateClientDataType type)
+	virtual void UpdateClientData(const std::string& uid, const std::string& key, const std::string& value, const EnumDefine::UpdateClientDataType type)
 	{
 		UpdateClient update_client;
-		update_client.m_client_uuid = uuid;
+		update_client.m_client_uid = uid;
 		update_client.m_data_key = key;
 		update_client.m_data_value = value;
 		update_client.m_update_type = static_cast<int>(type);
@@ -92,7 +92,7 @@ public:
 
 		// router
 		auto connector_server = m_config_module->GetServersByType(CONNECTOR);
-		auto index = m_router_module->GetConnectorIndexByClient(connector_server.size(), uuid);
+		auto index = m_router_module->GetConnectorIndexByClient(static_cast<int>(connector_server.size()), uid);
 
 		// get frontend uuid
 		auto frontend_uuid = m_server_obj_module->GetServerUUIDByName(connector_server[index]->m_server_name);

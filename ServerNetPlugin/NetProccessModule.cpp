@@ -13,6 +13,7 @@ void NetProccessModule::Init()
 	m_callback_module = m_ptr_manager->GetModule<INetCallbackModule>();
 	m_server_obj_module = m_ptr_manager->GetModule<IServerObjModule>();
 	m_config_module = m_ptr_manager->GetModule<IConfigModule>();
+	m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
 }
 
 void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
@@ -41,7 +42,6 @@ void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
 	FrontendToBackendMsg backend_msg;
 	auto buffer = client.GetBuffer();
 	backend_msg.m_client_uid = client.GetUid();
-	backend_msg.m_client_uuid = client.GetUUID();
 	backend_msg.m_client_data = client.GetClientData();
 	backend_msg.m_major_id = buffer->GetMajorId();
 	backend_msg.m_minor_id = buffer->GetMinorId();
@@ -65,13 +65,28 @@ void NetProccessModule::ProcessBackendIO(IClientNetActor& client)
 		BackendMsgToClient backend_msg;
 		UnpackStructForEachField(backend_msg, client.GetBuffer());
 
-		// send to client
-		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(client.GetUUID(), backend_msg.m_client_uuid, &IClientNetActor::SendStream, std::move(backend_msg.m_buffer));
-		client.GetActorPimpl()->SendMsgToActor(ptr);
+		// find login uid
+		auto ptr_client = m_client_net_module->GetLoginClient(backend_msg.m_client_uid);
+
+		if (ptr_client != nullptr)
+		{
+			// send to client
+			std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(client.GetUUID(), ptr_client->GetUUID(), &IClientNetActor::SendStream, std::move(backend_msg.m_buffer));
+			client.GetActorPimpl()->SendMsgToActor(ptr);
+		}
 	}
 	else if (client.GetBuffer()->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::UPDATE_CLIENT_DATA))
 	{
+		// unpack msg
+		UpdateClient update_client;
+		UnpackStructForEachField(update_client, client.GetBuffer());
 
+		// find client uid
+		auto ptr_client = m_client_net_module->GetLoginClient(update_client.m_client_uid);
+		if (ptr_client != nullptr)
+		{
+			ptr_client->UpdateClientData(update_client.m_data_key, update_client.m_data_value, update_client.m_update_type);
+		}
 	}
 	else
 	{
@@ -79,15 +94,14 @@ void NetProccessModule::ProcessBackendIO(IClientNetActor& client)
 	}
 }
 
-void NetProccessModule::ProcessFrontendUnknowMsg(IClientNetActor& client)
+void NetProccessModule::ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor> client)
 {
 	// check login msg
-	if (client.GetBuffer()->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::LOGIN_MSG)) // LOGIN_MSG
+	if (client->GetBuffer()->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::LOGIN_MSG)) // LOGIN_MSG
 	{
 		// check
-
-		//
-		return;
+		client->SetUid("");
+		m_client_net_module->AddLoginClientToMap(client);
 	}
 	else if (1)
 	{
@@ -104,16 +118,16 @@ void NetProccessModule::ProcessServerBackendIO(IClientNetActor& client)
 	// buffer
 	std::unique_ptr<ByteBuffer> buffer{ std::make_unique<ByteBuffer>() };
 
-	// create param
-	BackendClient backend_client(std::move(buffer));
-	backend_client.m_uid = backend_msg.m_client_uid;
-	backend_client.m_uuid = backend_msg.m_client_uuid;
-	backend_client.m_client_data = backend_msg.m_client_data;
-
 	// call callback
 	auto map_callback = m_callback_module->GetBackendCallBackMap();
 	if (map_callback.find(buffer->GetMajorId()) != std::cend(map_callback))
 	{
+		// create param
+		BackendClient backend_client(std::move(buffer));
+		backend_client.m_uid = backend_msg.m_client_uid;
+		backend_client.m_client_data = backend_msg.m_client_data;
+
+		// call callback
 		auto callback = map_callback[buffer->GetMajorId()];
 		callback(backend_client);
 	}

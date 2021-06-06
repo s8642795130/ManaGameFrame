@@ -2,6 +2,8 @@
 #include "../Server/IModule.h"
 #include "IClientNetActor.h"
 
+class BackendClient;
+
 class INetCallbackModule : public IModule
 {
 public:

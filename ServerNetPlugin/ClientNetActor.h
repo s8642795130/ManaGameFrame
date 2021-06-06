@@ -13,6 +13,7 @@ protected:
 	std::map<std::string, std::string> m_client_data; // team id, room id ...
 
 	// client Type
+	std::string m_uid;
 	EnumDefine::ClientType m_client_type;
 
 	// timeout
@@ -32,8 +33,12 @@ public:
 	virtual bool WriteReady() override;
 	virtual bool HeartBeat() override;
 	virtual void ClientClose() override;
-	//
+	// client data
 	virtual const std::map<std::string, std::string> GetClientData() const;
+	virtual void UpdateClientData(const std::string& key, const std::string& value, int type);
+	//
+	virtual void SetUid(const std::string& uid);
+	virtual const std::string& GetUid() const;
 	virtual void SendData(const int major, const int minor, std::vector<char> value);
 	// virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer);
 	virtual void SendStream(std::vector<char> stream);

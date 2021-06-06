@@ -3,6 +3,7 @@
 #include "IMsgRouterModule.h"
 #include "INetCallbackModule.h"
 #include "IServerObjModule.h"
+#include "IClientNetModule.h"
 #include "../ConfigPlugin/IConfigModule.h"
 
 class NetProccessModule : public INetProccessModule
@@ -12,6 +13,7 @@ private:
 	std::shared_ptr<INetCallbackModule> m_callback_module;
 	std::shared_ptr<IServerObjModule> m_server_obj_module;
 	std::shared_ptr<IConfigModule> m_config_module;
+	std::shared_ptr<IClientNetModule> m_client_net_module;
 public:
 	NetProccessModule(std::shared_ptr<IPluginManager> ptr) : INetProccessModule(ptr)
 	{
@@ -23,7 +25,7 @@ public:
 	// interface
 	virtual void ProcessFrontendIO(IClientNetActor& client);
 	virtual void ProcessBackendIO(IClientNetActor& client);
-	virtual void ProcessFrontendUnknowMsg(IClientNetActor& client);
+	virtual void ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor> client);
 	virtual void ProcessServerBackendIO(IClientNetActor& client);
 	virtual void ProcessRPCIO(IClientNetActor& client);
 	virtual void ProcessMasterIO(IClientNetActor& client);

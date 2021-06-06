@@ -16,10 +16,8 @@
 	Returning false from any of the methods will result in Cleanup() being called and the client
 	descriptor being deconstructed immediately.
 */
-class IClientNetActor : public Actor
+class IClientNetActor : public Actor, public std::enable_shared_from_this<IClientNetActor>
 {
-protected:
-	std::string m_uid;
 public:
 	IClientNetActor() = default;
 	virtual ~IClientNetActor() = default;
@@ -49,13 +47,13 @@ public:
 	//client's unique id
 	const int GetSid() { return m_client_fd; }
 
-	// client uuid
-	const std::string& GetUid() const
-	{
-		return m_uid;
-	}
+	// client uid
+	virtual void SetUid(const std::string& uid) = 0;
+	virtual const std::string& GetUid() const = 0;
 
+	// client data
 	virtual const std::map<std::string, std::string> GetClientData() const = 0;
+	virtual void UpdateClientData(const std::string& key, const std::string& value, int type) = 0;
 
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer() = 0;
 

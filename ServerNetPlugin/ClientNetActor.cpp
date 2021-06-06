@@ -47,6 +47,16 @@ void ClientNetActor::SetClientType(EnumDefine::ClientType client_type)
 	m_client_type = client_type;
 }
 
+void ClientNetActor::SetUid(const std::string& uid)
+{
+	m_uid = uid;
+}
+
+const std::string& ClientNetActor::GetUid() const
+{
+	return m_uid;
+}
+
 bool ClientNetActor::ReadReady()
 {
 	bool ret = true;
@@ -120,6 +130,18 @@ const std::map<std::string, std::string> ClientNetActor::GetClientData() const
 	return m_client_data;
 }
 
+void ClientNetActor::UpdateClientData(const std::string& key, const std::string& value, int type)
+{
+	if (type == static_cast<int>(EnumDefine::UpdateClientDataType::MODIFY))
+	{
+		m_client_data[key] = value;
+	}
+	else
+	{
+		m_client_data.erase(key);
+	}
+}
+
 std::shared_ptr<ByteBuffer>& ClientNetActor::GetBuffer()
 {
 	return m_buffer;
@@ -148,7 +170,7 @@ void ClientNetActor::ProccessIO()
 			break;
 		default:
 			// (login server_online)
-			m_client_impl->m_proccess_module->ProcessFrontendUnknowMsg(*this);
+			m_client_impl->m_proccess_module->ProcessFrontendUnknowMsg(shared_from_this());
 			break;
 		}
 

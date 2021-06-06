@@ -270,5 +270,6 @@ bool ServerNetModule::HandleClient(epoll_event& ev)
 void ServerNetModule::RemoveClient(std::shared_ptr<IClientNetActor>& ptr_client)
 {
 	m_client_net_module->RemoveClientFromMap(ptr_client->GetSid());
+	m_client_net_module->RemoveLoginClientFromMap(ptr_client->GetUid());
 	m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
 }

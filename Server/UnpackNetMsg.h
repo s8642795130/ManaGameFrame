@@ -150,7 +150,7 @@ namespace data_fn
 
             // get value
             auto value_length = byte_buffer->GetInt();
-            auto value = byte_buffer->GetString(key_length);
+            auto value = byte_buffer->GetString(value_length);
 
             // copy data
             data.emplace(key, value);
