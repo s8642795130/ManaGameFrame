@@ -1,21 +1,27 @@
 #pragma once
+#include <memory>
+
 #include "IActor.h"
 #include "IActorPimpl.h"
+#include "IActorModule.h"
 
 class Actor : public IActor
 {
 protected:
-	std::shared_ptr<IActorPimpl> m_pimpl;
+	std::unique_ptr<IActorPimpl> m_pimpl;
+	std::shared_ptr<IActorModule> m_actor_module;
 public:
 	Actor() : IActor()
 	{
-		m_pimpl = IActorPimpl::GetActorPimpl();
+		m_actor_module = IActorPimpl::GetActorPimpl()->GetModule<IActorModule>();
 	}
 
-	const std::shared_ptr<IActorPimpl>& GetActorPimpl()
+	/*
+	const std::unique_ptr<IActorPimpl>& GetActorPimpl()
 	{
 		return m_pimpl;
 	}
+	*/
 
 	virtual ~Actor() = default;
 };

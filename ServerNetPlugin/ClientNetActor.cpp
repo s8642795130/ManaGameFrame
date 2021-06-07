@@ -9,7 +9,7 @@
 
 #include "../Server/ServerEnumDefine.h"
 
-std::shared_ptr<IActorPimpl> IActorPimpl::m_pimpl;
+std::shared_ptr<IPluginManager> IActorPimpl::m_pimpl;
 
 ClientNetActor::ClientNetActor(std::shared_ptr<ClientPimpl> ptr) :
 	m_client_impl(ptr),

@@ -53,7 +53,7 @@ void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
 
 	// send to backend server
 	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(client.GetUUID(), server_uuid, &IClientNetActor::SendStream, std::move(package));
-	client.GetActorPimpl()->SendMsgToActor(ptr);
+	//client.GetActorPimpl()->SendMsgToActor(ptr);
 }
 
 void NetProccessModule::ProcessBackendIO(IClientNetActor& client)
@@ -72,7 +72,7 @@ void NetProccessModule::ProcessBackendIO(IClientNetActor& client)
 		{
 			// send to client
 			std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(client.GetUUID(), ptr_client->GetUUID(), &IClientNetActor::SendStream, std::move(backend_msg.m_buffer));
-			client.GetActorPimpl()->SendMsgToActor(ptr);
+			//client.GetActorPimpl()->SendMsgToActor(ptr);
 		}
 	}
 	else if (client.GetBuffer()->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::UPDATE_CLIENT_DATA))
