@@ -7,8 +7,6 @@
 #include "../ActorPlugin/ActorMsg.h"
 #include "../ServerNetPlugin/IClientNetActor.h"
 
-std::shared_ptr<IActorPimpl> IActorPimpl::m_pimpl;
-
 void MasterActor::ServerOnline(const std::string server_name, const std::string uuid)
 {
 	ServerOnlineInfo server_online_info;

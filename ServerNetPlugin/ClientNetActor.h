@@ -24,7 +24,7 @@ protected:
 	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len);
 	void ProccessIO();
 public:
-	ClientNetActor(std::shared_ptr<ClientPimpl> ptr);
+	ClientNetActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr);
 
 	// interface
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer() override;

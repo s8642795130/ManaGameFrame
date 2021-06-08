@@ -12,7 +12,7 @@ void ClientNetModule::Init()
 
 std::shared_ptr<IClientNetActor> ClientNetModule::CreateClientNet()
 {
-	std::shared_ptr<IClientNetActor> client = std::make_shared<ClientNetActor>(m_client_pimpl);
+	std::shared_ptr<IClientNetActor> client = std::make_shared<ClientNetActor>(m_ptr_manager, m_client_pimpl);
 	return client;
 }
 

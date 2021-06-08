@@ -45,7 +45,7 @@ protected:
 		m_thread_pool_module->AddActorMsgToThreadCell(actor_msg);
 	}
 public:
-	ActorPimpl(std::shared_ptr<IPluginManager> ptr)
+	ActorPimpl(std::shared_ptr<IPluginManager>& ptr)
 	{
 		m_thread_pool_module = ptr->GetModule<IThreadPoolModule>();
 		m_router_module = ptr->GetModule<IMsgRouterModule>();
@@ -58,7 +58,12 @@ public:
 		m_thread_pool_module->AddActorMsgToThreadCell(actor_msg);
 	}
 
-	virtual void RPCMsg()
+	virtual void RPCMsg(const int major_id, const int minor_id, const std::vector<char>& stream, std::function<void(std::vector<char>)> callback)
+	{
+		RPCMsgData rpc_data;
+	}
+
+	virtual void ResponseRPC(const std::vector<char>& stream, const std::string& uuid, const int callback_id)
 	{
 
 	}

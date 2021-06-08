@@ -11,17 +11,16 @@ protected:
 	std::unique_ptr<IActorPimpl> m_pimpl;
 	std::shared_ptr<IActorModule> m_actor_module;
 public:
-	Actor() : IActor()
+	Actor(std::shared_ptr<IPluginManager> ptr_manager) : IActor()
 	{
-		m_actor_module = IActorPimpl::GetActorPimpl()->GetModule<IActorModule>();
+		m_actor_module = ptr_manager->GetModule<IActorModule>();
+		m_pimpl = std::move(m_actor_module->CreateActorPimpl());
 	}
 
-	/*
 	const std::unique_ptr<IActorPimpl>& GetActorPimpl()
 	{
 		return m_pimpl;
 	}
-	*/
 
 	virtual ~Actor() = default;
 };

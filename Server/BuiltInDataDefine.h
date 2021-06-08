@@ -44,6 +44,15 @@ struct UpdateClient
 	std::string m_data_value;
 };
 
+struct RPCMsgData
+{
+	int m_major_id;
+	int m_minor_id;
+	std::vector<char> m_stream;
+	int m_callback_id;
+	std::string uuid;
+};
+
 DEFINE_STRUCT_SCHEMA(ServerOnlineData,
 	DEFINE_STRUCT_FIELD(m_server_name, DATA_TYPE::STRING)
 );

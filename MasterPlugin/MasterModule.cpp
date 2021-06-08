@@ -13,7 +13,7 @@ void MasterModule::Init()
 	m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
 
 	// load actor
-	m_master_actor = std::make_shared<MasterActor>();
+	m_master_actor = std::make_shared<MasterActor>(m_ptr_manager);
 }
 
 void MasterModule::AfterInit()

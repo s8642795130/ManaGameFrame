@@ -10,5 +10,8 @@ public:
 
 	// life cycle
 	virtual void Init();
+
+	// interface
+	virtual std::unique_ptr<IActorPimpl> CreateActorPimpl();
 };
 

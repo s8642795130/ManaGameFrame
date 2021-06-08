@@ -19,7 +19,10 @@
 class IClientNetActor : public Actor, public std::enable_shared_from_this<IClientNetActor>
 {
 public:
-	IClientNetActor() = default;
+	IClientNetActor(std::shared_ptr<IPluginManager> ptr_manager) : Actor(ptr_manager)
+	{
+
+	}
 	virtual ~IClientNetActor() = default;
 
 	// member

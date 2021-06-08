@@ -19,7 +19,6 @@ ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 	m_listen_fd(-1),
 	m_epoll_fd(-1)
 	//last_socket_check_(0)
-	// m_ptr_thread_pool(ptr_thread_pool)
 {
 }
 

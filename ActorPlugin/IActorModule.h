@@ -2,6 +2,7 @@
 #include <memory>
 
 #include "../Server/IModule.h"
+#include "IActorPimpl.h"
 
 class IActorModule : public IModule
 {
@@ -12,4 +13,7 @@ public:
 
 	// life cycle
 	virtual void Init() = 0;
+
+	// interface
+	virtual std::unique_ptr<IActorPimpl> CreateActorPimpl() = 0;
 };

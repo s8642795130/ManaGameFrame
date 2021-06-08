@@ -9,9 +9,8 @@
 
 #include "../Server/ServerEnumDefine.h"
 
-std::shared_ptr<IPluginManager> IActorPimpl::m_pimpl;
-
-ClientNetActor::ClientNetActor(std::shared_ptr<ClientPimpl> ptr) :
+ClientNetActor::ClientNetActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr) :
+	IClientNetActor(ptr_manager),
 	m_client_impl(ptr),
 	m_buffer(std::make_shared<ByteBuffer>())
 {
