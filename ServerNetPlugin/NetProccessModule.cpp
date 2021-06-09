@@ -135,7 +135,18 @@ void NetProccessModule::ProcessServerBackendIO(IClientNetActor& client)
 
 void NetProccessModule::ProcessRPCIO(IClientNetActor& client)
 {
+	// parsing
+	RPCMsgData rpc_data;
+	UnpackStructForEachField(rpc_data, client.GetBuffer());
 
+	// map callback
+	auto map_callback = m_callback_module->GetRPCCallBackMap();
+
+	// find callback
+	if (map_callback.find(rpc_data.m_major_id) != std::cend(map_callback))
+	{
+		map_callback[rpc_data.m_major_id](rpc_data.m_stream, client.GetUUID(), rpc_data.m_uuid);
+	}
 }
 
 void NetProccessModule::ProcessMasterIO(IClientNetActor& client)

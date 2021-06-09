@@ -90,17 +90,23 @@ public:
 		const auto server_index = m_router_module->GetMsgRouterByString(plugin_name, static_cast<int>(server_list.size()), router);
 
 		// check ! server name is the same as the local server name
+		if (m_config_module->GetMyServerInfo()->m_server_name.compare(server_list[server_index]->m_server_name) == 0)
+		{
 
-		// get server uuid
-		auto server_uuid = m_server_obj_module->GetServerUUIDByName(server_list[server_index]->m_server_name);
+		}
+		else
+		{
+			// get server uuid
+			auto server_uuid = m_server_obj_module->GetServerUUIDByName(server_list[server_index]->m_server_name);
 
-		// package
-		std::vector<char> package;
-		PackageStructForEachField(rpc_data, package);
+			// package
+			std::vector<char> package;
+			PackageStructForEachField(rpc_data, package);
 
-		// send to backend server
-		std::unique_ptr<IActorMsg> ptr_actor_msg = std::make_unique<ActorMsg<void, IClientNetActor, const int, const int, std::vector<char>>>(m_uuid, server_uuid, &IClientNetActor::SendData, std::move(package));
-		m_thread_pool_module->AddActorMsgToThreadCell(ptr_actor_msg);
+			// send to backend server
+			std::unique_ptr<IActorMsg> ptr_actor_msg = std::make_unique<ActorMsg<void, IClientNetActor, const int, const int, std::vector<char>>>(m_uuid, server_uuid, &IClientNetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::PRC_MSG), 0, std::move(package));
+			m_thread_pool_module->AddActorMsgToThreadCell(ptr_actor_msg);
+		}
 	}
 
 	virtual void ResponseRPC(const std::vector<char>& stream, const std::string& uuid, const int callback_id)
