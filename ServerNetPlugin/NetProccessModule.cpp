@@ -25,9 +25,9 @@ void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
 	//}
 
 	// get msg corresponding to plugin
-	const auto majorId = client.GetBuffer()->GetMajorId();
+	const auto major_id = client.GetBuffer()->GetMajorId();
 	auto map_msg = m_callback_module->GetGameMsgMap();
-	auto plugin_name = map_msg[majorId];
+	auto plugin_name = map_msg[major_id];
 
 	// get all the servers that the plugin exists
 	const auto server_list = m_config_module->GetServersByPluginName(plugin_name);
@@ -47,7 +47,7 @@ void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
 	backend_msg.m_minor_id = buffer->GetMinorId();
 	backend_msg.m_stream = buffer->GetStream();
 
-	// packge
+	// package
 	std::vector<char> package;
 	PackageStructForEachField(backend_msg, package);
 

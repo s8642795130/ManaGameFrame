@@ -15,6 +15,7 @@ public:
 	{
 		m_actor_module = ptr_manager->GetModule<IActorModule>();
 		m_pimpl = std::move(m_actor_module->CreateActorPimpl());
+		m_pimpl->SetUUID(GetUUID());
 	}
 
 	const std::unique_ptr<IActorPimpl>& GetActorPimpl()

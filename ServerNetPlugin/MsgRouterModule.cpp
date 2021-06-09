@@ -44,3 +44,8 @@ int MsgRouterModule::GetMsgRouterByClient(const std::string plugin_name, const i
 	}
 	return ret;
 }
+
+int MsgRouterModule::GetMsgRouterByString(const std::string plugin_name, const int server_count, const std::string& router)
+{
+	return 0;
+}

@@ -9,6 +9,9 @@ class IPluginManager;
 class IActorPimpl
 {
 public:
+	// function
+	virtual void SetUUID(const std::string& uuid) = 0;
+	// interface
 	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& actor_msg) = 0;
 	virtual void RPCMsg() = 0;
 	virtual void ResponseMsg(const std::string& uid, const std::vector<char>& stream) = 0;

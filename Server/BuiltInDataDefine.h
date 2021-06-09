@@ -50,7 +50,7 @@ struct RPCMsgData
 	int m_minor_id;
 	std::vector<char> m_stream;
 	int m_callback_id;
-	std::string uuid;
+	std::string m_uuid;
 };
 
 DEFINE_STRUCT_SCHEMA(ServerOnlineData,
@@ -84,4 +84,12 @@ DEFINE_STRUCT_SCHEMA(UpdateClient,
 	DEFINE_STRUCT_FIELD(m_data_key, DATA_TYPE::STRING),
 	DEFINE_STRUCT_FIELD(m_update_type, DATA_TYPE::INT),
 	DEFINE_STRUCT_FIELD(m_data_value, DATA_TYPE::STRING)
+);
+
+DEFINE_STRUCT_SCHEMA(RPCMsgData,
+	DEFINE_STRUCT_FIELD(m_major_id, DATA_TYPE::INT),
+	DEFINE_STRUCT_FIELD(m_minor_id, DATA_TYPE::INT),
+	DEFINE_STRUCT_FIELD(m_stream, DATA_TYPE::ARRAY_CHAR),
+	DEFINE_STRUCT_FIELD(m_callback_id, DATA_TYPE::INT),
+	DEFINE_STRUCT_FIELD(m_uuid, DATA_TYPE::STRING)
 );
