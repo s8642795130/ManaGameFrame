@@ -25,5 +25,6 @@ public:
 	virtual const std::vector<std::shared_ptr<ServerData>>& GetServersByType(const std::string& server_name) = 0;
 	virtual const std::shared_ptr<ServerData>& GetMyServerInfo() = 0;
 	virtual const std::vector<std::shared_ptr<PluginData>>& GetPluginsByServerName(const std::string& server_name) = 0;
+	virtual const EnumDefine::ServerType GetTypeByServerName(const std::string& server_name) = 0;
 	virtual const EnumDefine::ServerType GetServerType() = 0;
 };

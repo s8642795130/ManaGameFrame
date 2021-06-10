@@ -27,6 +27,7 @@ public:
 	virtual void ProcessBackendIO(IClientNetActor& client);
 	virtual void ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor> client);
 	virtual void ProcessServerBackendIO(IClientNetActor& client);
+	virtual void ProcessBackendUnknowMsg(IClientNetActor& client);
 	virtual void ProcessRPCIO(IClientNetActor& client);
 	virtual void ProcessMasterIO(IClientNetActor& client);
 };

@@ -25,12 +25,12 @@ const std::map<int, std::function<void(BackendClient&)>>& NetCallbackModule::Get
 	return m_map_backend_callback;
 }
 
-void NetCallbackModule::AddRPCCallback(const int msg_id, std::function<void(std::vector<char>&, const std::string&, const std::string&)> callback)
+void NetCallbackModule::AddRPCCallback(const int msg_id, std::function<void(const int, const int, std::vector<char>&)> callback)
 {
 	m_rpc_callback.emplace(msg_id, callback);
 }
 
-const std::map<int, std::function<void(std::vector<char>&, const std::string&, const std::string&)>>& NetCallbackModule::GetRPCCallBackMap()
+const std::map<int, std::function<void(const int, const int, std::vector<char>&)>>& NetCallbackModule::GetRPCCallBackMap()
 {
 	return m_rpc_callback;
 }

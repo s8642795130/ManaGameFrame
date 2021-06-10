@@ -26,6 +26,7 @@ protected:
 	bool ReadServerConfigFile();
 	void SetServerName(const std::string& server_name);
 	void SetServerType();
+	const EnumDefine::ServerType StrTypeToEnumType(const std::string& server_type);
 public:
 	ConfigModule(std::shared_ptr<IPluginManager> ptr) : IConfigModule(ptr)
 	{
@@ -40,6 +41,7 @@ public:
 	virtual const std::vector<std::shared_ptr<ServerData>>& GetServersByType(const std::string& server_type); // type: master, connector
 	virtual const std::shared_ptr<ServerData>& GetMyServerInfo();
 	virtual const std::vector<std::shared_ptr<PluginData>>& GetPluginsByServerName(const std::string& server_name);
+	virtual const EnumDefine::ServerType GetTypeByServerName(const std::string& server_name);
 	virtual const EnumDefine::ServerType GetServerType();
 };
 

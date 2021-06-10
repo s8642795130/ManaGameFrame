@@ -23,8 +23,6 @@ protected:
 	std::shared_ptr<IServerObjModule> m_server_obj_module;
 	std::shared_ptr<INetCallbackModule> m_callback_module;
 	// rpc callback
-	std::string m_uuid;
-	int m_callback_id = 0;
 	std::map<int, std::function<void()>> m_rpc_callback;
 protected:
 	void PushMsg(const std::string& uid, const std::vector<char>& stream, const EnumDefine::PushMsgType type)
@@ -60,24 +58,17 @@ public:
 		m_callback_module = ptr->GetModule<INetCallbackModule>();
 	}
 
-	virtual void SetUUID(const std::string& uuid)
-	{
-		m_uuid = uuid;
-	}
-
 	virtual void SendMsgToActor(std::unique_ptr<IActorMsg>& ptr_actor_msg)
 	{
 		m_thread_pool_module->AddActorMsgToThreadCell(ptr_actor_msg);
 	}
 
-	virtual void RPCMsg(const int major_id, const int minor_id, const std::vector<char>& stream, std::function<void(std::vector<char>)> callback, const std::string& router = "")
+	virtual void RPCMsg(const int major_id, const int minor_id, const std::vector<char>& stream, const std::string& router = "")
 	{
 		RPCMsgData rpc_data;
 		rpc_data.m_major_id = major_id;
 		rpc_data.m_minor_id = minor_id;
 		rpc_data.m_stream = stream;
-		rpc_data.m_uuid = m_uuid;
-		rpc_data.m_callback_id = ++m_callback_id;
 
 		// get msg corresponding to plugin
 		auto map_msg = m_callback_module->GetGameMsgMap();
@@ -92,7 +83,8 @@ public:
 		// check ! server name is the same as the local server name
 		if (m_config_module->GetMyServerInfo()->m_server_name.compare(server_list[server_index]->m_server_name) == 0)
 		{
-
+			std::perror("rpc: the same server name.\n");
+			std::exit(1);
 		}
 		else
 		{
@@ -104,14 +96,9 @@ public:
 			PackageStructForEachField(rpc_data, package);
 
 			// send to backend server
-			std::unique_ptr<IActorMsg> ptr_actor_msg = std::make_unique<ActorMsg<void, IClientNetActor, const int, const int, std::vector<char>>>(m_uuid, server_uuid, &IClientNetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::PRC_MSG), 0, std::move(package));
+			std::unique_ptr<IActorMsg> ptr_actor_msg = std::make_unique<ActorMsg<void, IClientNetActor, const int, const int, std::vector<char>>>("", server_uuid, &IClientNetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::PRC_MSG), 0, std::move(package));
 			m_thread_pool_module->AddActorMsgToThreadCell(ptr_actor_msg);
 		}
-	}
-
-	virtual void ResponseRPC(const std::vector<char>& stream, const std::string& uuid, const int callback_id)
-	{
-
 	}
 
 	virtual void ResponseMsg(const std::string& uid, const std::vector<char>& stream)

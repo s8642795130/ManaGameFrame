@@ -191,6 +191,7 @@ void ClientNetActor::ProccessIO()
 			break;
 		default:
 			// (server_online)
+			m_client_impl->m_proccess_module->ProcessBackendUnknowMsg(*this);
 			break;
 		}
 		break;

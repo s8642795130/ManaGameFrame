@@ -17,4 +17,5 @@ public:
 
 	// interface
 	virtual const std::string GetServerUUIDByName(const std::string& server_name) = 0;
+	virtual void SaveServerToMap(const std::string& server_name, const std::string& uuid) = 0;
 };

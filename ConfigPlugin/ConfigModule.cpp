@@ -187,6 +187,26 @@ void ConfigModule::AnalysePluginList()
 	}
 }
 
+//
+const EnumDefine::ServerType ConfigModule::StrTypeToEnumType(const std::string& server_type)
+{
+	// server type(str) => type(enum)
+	auto type = EnumDefine::ServerType::NONE;
+	if (server_type.compare("master") == 0)
+	{
+		type = EnumDefine::ServerType::MASTER;
+	}
+	else if (server_type.compare("connector") == 0)
+	{
+		type = EnumDefine::ServerType::FRONTEND;
+	}
+	else if (server_type.compare("server") == 0)
+	{
+		type = EnumDefine::ServerType::BACKEND;
+	}
+	return type;
+}
+
 /// <summary>
 /// 根据插件名获取所有包含该类型插件的服务器组
 /// </summary>
@@ -217,21 +237,21 @@ const std::vector<std::shared_ptr<PluginData>>& ConfigModule::GetPluginsByServer
 	return m_plugin_list[server_name];
 }
 
+const EnumDefine::ServerType ConfigModule::GetTypeByServerName(const std::string& server_name)
+{
+	// get server type
+	auto server_data = m_server_config[server_name];
+	auto server_type = server_data->m_server_type;
+
+	// server type(str) => type(enum)
+	auto type = StrTypeToEnumType(server_type);
+	return type;
+}
+
 void ConfigModule::SetServerType()
 {
 	auto server_type = m_server_config[m_server_name]->m_server_type;
-	if (server_type.compare("master") == 0)
-	{
-		m_server_type = EnumDefine::ServerType::MASTER;
-	}
-	else if (server_type.compare("connector") == 0)
-	{
-		m_server_type = EnumDefine::ServerType::FRONTEND;
-	}
-	else if (server_type.compare("server") == 0)
-	{
-		m_server_type = EnumDefine::ServerType::BACKEND;
-	}
+	m_server_type = StrTypeToEnumType(server_type);
 }
 
 const EnumDefine::ServerType ConfigModule::GetServerType()

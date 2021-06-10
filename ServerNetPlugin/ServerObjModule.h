@@ -12,8 +12,6 @@ private:
 	std::shared_ptr<IServerNetModule> m_server_net_module;
 	//
 	std::map<std::string, std::string> m_map_server; // key: server_name, value: uuid
-protected:
-	void SaveServerToMap(const std::string& server_name, const std::string& uuid);
 public:
 	ServerObjModule(std::shared_ptr<IPluginManager> ptr) : IServerObjModule(ptr)
 	{
@@ -25,6 +23,7 @@ public:
 
 	// interface
 	virtual const std::string GetServerUUIDByName(const std::string& server_name);
+	virtual void SaveServerToMap(const std::string& server_name, const std::string& uuid);
 
 	// callback
 	void OnServerOnlineCallback(IClientNetActor& ptr_client);

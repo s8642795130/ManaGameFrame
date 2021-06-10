@@ -20,7 +20,6 @@ protected:
 	const int m_timeout = 30;
 	time_t m_last_active;
 protected:
-	void SetClientType(EnumDefine::ClientType client_type);
 	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len);
 	void ProccessIO();
 public:
@@ -33,6 +32,8 @@ public:
 	virtual bool WriteReady() override;
 	virtual bool HeartBeat() override;
 	virtual void ClientClose() override;
+	//
+	virtual void SetClientType(EnumDefine::ClientType client_type);
 	// client data
 	virtual const std::map<std::string, std::string> GetClientData() const;
 	virtual void UpdateClientData(const std::string& key, const std::string& value, int type);

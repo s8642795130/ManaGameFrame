@@ -103,9 +103,66 @@ void NetProccessModule::ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor
 		client->SetUid("");
 		m_client_net_module->AddLoginClientToMap(client);
 	}
-	else if (1)
+	else if (client->GetBuffer()->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE))
 	{
 		// check server online
+		ConnectServerOnline connect_server_online;
+		UnpackStructForEachField(connect_server_online, client->GetBuffer());
+
+		// get server data by server_name
+		auto server_type = m_config_module->GetTypeByServerName(connect_server_online.m_server_name);
+		switch (server_type)
+		{
+		case EnumDefine::ServerType::FRONTEND:
+			client->SetClientType(EnumDefine::ClientType::FRONTEND);
+			break;
+		case EnumDefine::ServerType::BACKEND:
+			client->SetClientType(EnumDefine::ClientType::BACKEND);
+			break;
+		default:
+			std::perror("frontend unknow msg error: error server type");
+			break;
+		}
+		
+		// save server to map
+		m_server_obj_module->SaveServerToMap(connect_server_online.m_server_name, client->GetUUID());
+	}
+	else
+	{
+		// error...
+	}
+}
+
+void NetProccessModule::ProcessBackendUnknowMsg(IClientNetActor& client)
+{
+	// check login msg
+	if (client.GetBuffer()->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE))
+	{
+		// check server online
+		ConnectServerOnline connect_server_online;
+		UnpackStructForEachField(connect_server_online, client.GetBuffer());
+
+		// get server data by server_name
+		auto server_type = m_config_module->GetTypeByServerName(connect_server_online.m_server_name);
+		switch (server_type)
+		{
+		case EnumDefine::ServerType::FRONTEND:
+			client.SetClientType(EnumDefine::ClientType::FRONTEND);
+			break;
+		case EnumDefine::ServerType::BACKEND:
+			client.SetClientType(EnumDefine::ClientType::BACKEND);
+			break;
+		default:
+			std::perror("frontend unknow msg error: error server type");
+			break;
+		}
+
+		// save server to map
+		m_server_obj_module->SaveServerToMap(connect_server_online.m_server_name, client.GetUUID());
+	}
+	else
+	{
+		// error...
 	}
 }
 
@@ -145,9 +202,11 @@ void NetProccessModule::ProcessRPCIO(IClientNetActor& client)
 	// find callback
 	if (map_callback.find(rpc_data.m_major_id) != std::cend(map_callback))
 	{
-		map_callback[rpc_data.m_major_id](rpc_data.m_stream, client.GetUUID(), rpc_data.m_uuid);
+		map_callback[rpc_data.m_major_id](rpc_data.m_major_id, rpc_data.m_minor_id, rpc_data.m_stream);
 	}
 }
+
+
 
 void NetProccessModule::ProcessMasterIO(IClientNetActor& client)
 {

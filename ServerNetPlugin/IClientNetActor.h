@@ -8,6 +8,7 @@
 #include <memory>
 #include <cstring>
 
+#include "../Server/ServerEnumDefine.h"
 #include "../Server/ByteBuffer.h"
 #include "../ActorPlugin/Actor.h"
 
@@ -57,6 +58,9 @@ public:
 	// client data
 	virtual const std::map<std::string, std::string> GetClientData() const = 0;
 	virtual void UpdateClientData(const std::string& key, const std::string& value, int type) = 0;
+
+	// client type
+	virtual void SetClientType(EnumDefine::ClientType client_type) = 0;
 
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer() = 0;
 
