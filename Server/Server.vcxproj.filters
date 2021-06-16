@@ -50,6 +50,9 @@
     <ClInclude Include="ServerEnumDefine.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="HttpBuffer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">

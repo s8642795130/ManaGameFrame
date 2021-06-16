@@ -20,12 +20,14 @@ private:
 	std::string m_server_name;
 	// my server type
 	EnumDefine::ServerType m_server_type;
+	EnumDefine::ProtocolType m_connector_protocol_type;
 protected:
 	void AnalyseConfigStr(const std::vector<std::string>& config_str);
 	void AnalysePluginList();
 	bool ReadServerConfigFile();
 	void SetServerName(const std::string& server_name);
 	void SetServerType();
+	void SetProtocolType(EnumDefine::ProtocolType type);
 	const EnumDefine::ServerType StrTypeToEnumType(const std::string& server_type);
 public:
 	ConfigModule(std::shared_ptr<IPluginManager> ptr) : IConfigModule(ptr)
@@ -43,5 +45,6 @@ public:
 	virtual const std::vector<std::shared_ptr<PluginData>>& GetPluginsByServerName(const std::string& server_name);
 	virtual const EnumDefine::ServerType GetTypeByServerName(const std::string& server_name);
 	virtual const EnumDefine::ServerType GetServerType();
+	virtual const EnumDefine::ProtocolType GetProtocolType();
 };
 

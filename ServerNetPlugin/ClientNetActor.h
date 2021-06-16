@@ -20,7 +20,7 @@ protected:
 	const int m_timeout = 30;
 	time_t m_last_active;
 protected:
-	void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len);
+	virtual void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len);
 	void ProccessIO();
 public:
 	ClientNetActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr);

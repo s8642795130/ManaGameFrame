@@ -7,7 +7,8 @@ namespace EnumDefine
 		NONE,
 		FRONTEND,
 		BACKEND,
-		MASTER
+		MASTER,
+		LOGIN
 	};
 
 	enum class ClientType : int
@@ -30,5 +31,12 @@ namespace EnumDefine
 	{
 		MODIFY,
 		DEL
+	};
+
+	enum class ProtocolType : int
+	{
+		SOCKET,
+		HTTP,
+		WEBSOCKET
 	};
 }

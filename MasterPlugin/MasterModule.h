@@ -1,7 +1,6 @@
 #pragma once
 #include <memory>
 
-#include "../Server/IModule.h"
 #include "../ServerNetPlugin/IClientNetActor.h"
 #include "../ServerNetPlugin/INetCallbackModule.h"
 #include "../ActorPlugin/IThreadPoolModule.h"

@@ -91,6 +91,7 @@ void NetProccessModule::ProcessBackendIO(IClientNetActor& client)
 	else
 	{
 		// error...
+		std::perror("ProcessBackendIO: error");
 	}
 }
 
@@ -130,6 +131,7 @@ void NetProccessModule::ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor
 	else
 	{
 		// error...
+		std::perror("ProcessFrontendUnknowMsg: error");
 	}
 }
 
@@ -176,7 +178,7 @@ void NetProccessModule::ProcessServerBackendIO(IClientNetActor& client)
 	std::unique_ptr<ByteBuffer> buffer{ std::make_unique<ByteBuffer>() };
 
 	// call callback
-	auto map_callback = m_callback_module->GetBackendCallBackMap();
+	auto map_callback = m_callback_module->GetBackendCallbackMap();
 	if (map_callback.find(buffer->GetMajorId()) != std::cend(map_callback))
 	{
 		// create param
@@ -197,7 +199,7 @@ void NetProccessModule::ProcessRPCIO(IClientNetActor& client)
 	UnpackStructForEachField(rpc_data, client.GetBuffer());
 
 	// map callback
-	auto map_callback = m_callback_module->GetRPCCallBackMap();
+	auto map_callback = m_callback_module->GetRPCCallbackMap();
 
 	// find callback
 	if (map_callback.find(rpc_data.m_major_id) != std::cend(map_callback))
@@ -206,13 +208,11 @@ void NetProccessModule::ProcessRPCIO(IClientNetActor& client)
 	}
 }
 
-
-
 void NetProccessModule::ProcessMasterIO(IClientNetActor& client)
 {
 	// data
 	int majorId = client.GetBuffer()->GetMajorId();
-	auto map_callback = m_callback_module->GetReceiveCallBackMap();
+	auto map_callback = m_callback_module->GetReceiveCallbackMap();
 
 	// check
 	if (map_callback.find(majorId) != std::cend(map_callback))

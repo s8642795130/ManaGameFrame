@@ -10,6 +10,7 @@ void ServerObjModule::Init()
 	m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
 	m_config_module = m_ptr_manager->GetModule<IConfigModule>();
 	m_server_net_module = m_ptr_manager->GetModule<IServerNetModule>();
+	m_callback_module = m_ptr_manager->GetModule<INetCallbackModule>();
 }
 
 void ServerObjModule::AfterInit()
@@ -18,6 +19,10 @@ void ServerObjModule::AfterInit()
 	{
 		return;
 	}
+
+	// bind msg
+	std::function<void(IClientNetActor&)> call_func = std::bind(&ServerObjModule::OnServerOnlineCallback, this, std::placeholders::_1);
+	m_callback_module->AddReceiveCallback(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), call_func);
 
 	// create client obj
 	std::shared_ptr<IClientNetActor> ptr_client = m_client_net_module->CreateClientNet();

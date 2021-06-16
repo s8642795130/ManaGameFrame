@@ -201,6 +201,11 @@ void ClientNetActor::ProccessIO()
 		m_client_impl->m_proccess_module->ProcessMasterIO(*this);
 		break;
 	}
+	case EnumDefine::ServerType::LOGIN:
+	{
+		// m_client_impl->m_proccess_module->ProcessMasterIO(*this);
+		break;
+	}
 	default:
 		break;
 	}

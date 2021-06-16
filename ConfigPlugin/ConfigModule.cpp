@@ -13,6 +13,7 @@ void ConfigModule::Init()
 	SetServerName(m_ptr_manager->GetServerName());
 	ReadServerConfigFile();
 	SetServerType();
+	SetProtocolType(EnumDefine::ProtocolType::SOCKET); // need to code
 }
 
 /// <summary>
@@ -257,4 +258,14 @@ void ConfigModule::SetServerType()
 const EnumDefine::ServerType ConfigModule::GetServerType()
 {
 	return m_server_type;
+}
+
+void ConfigModule::SetProtocolType(EnumDefine::ProtocolType type)
+{
+	m_connector_protocol_type = type;
+}
+
+const EnumDefine::ProtocolType ConfigModule::GetProtocolType()
+{
+	return m_connector_protocol_type;
 }

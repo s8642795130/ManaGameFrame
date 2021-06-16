@@ -14,12 +14,14 @@ public:
 	// interface
 	virtual const std::map<int, std::string> GetGameMsgMap() = 0; // bug
 	//
-	virtual void AddReceiveCallBack(const int msgID, std::function<void(IClientNetActor&)> call_func) = 0;
-	virtual const std::map<int, std::function<void(IClientNetActor&)>>& GetReceiveCallBackMap() = 0;
-	virtual void AddBackendCallBack(const int msgID, std::function<void(BackendClient&)> call_func) = 0;
-	virtual const std::map<int, std::function<void(BackendClient&)>>& GetBackendCallBackMap() = 0;
+	virtual void AddReceiveCallback(const int msgID, std::function<void(IClientNetActor&)> call_func) = 0;
+	virtual const std::map<int, std::function<void(IClientNetActor&)>>& GetReceiveCallbackMap() = 0;
+	virtual void AddBackendCallback(const int msgID, std::function<void(BackendClient&)> call_func) = 0;
+	virtual const std::map<int, std::function<void(BackendClient&)>>& GetBackendCallbackMap() = 0;
 	virtual void AddRPCCallback(const int msg_id, std::function<void(const int, const int, std::vector<char>&)> callback) = 0;
-	virtual const std::map<int, std::function<void(const int, const int, std::vector<char>&)>>& GetRPCCallBackMap() = 0;
+	virtual const std::map<int, std::function<void(const int, const int, std::vector<char>&)>>& GetRPCCallbackMap() = 0;
+	virtual void AddHTTPCallback(const std::string& path, std::function<void(IClientNetActor&)> callback) = 0;
+	virtual const std::map<std::string, std::function<void(IClientNetActor&)>>& GetHTTPCallbackMap() = 0;
 	
 };
 
