@@ -4,6 +4,36 @@
 #include <array>
 
 #include "DefineHeader.h"
+#include "llhttp.h"
+
+int handle_on_message_complete(llhttp_t* ptr)
+{
+	std::cout << "handle_on_message_complete" << std::endl;
+	std::cout << ptr->header_state << std::endl;
+	std::cout << "content_length: " << ptr->content_length << std::endl;
+	std::cout << "status_code: " << ptr->status_code << std::endl;
+	// char* str = (char*)ptr->data;
+	// std::cout << strlen(str) << std::endl;
+
+	return 0;
+}
+
+int on_body(llhttp_t* ptr, const char* at, size_t length)
+{
+	std::cout << "length: " << length << std::endl;
+	std::cout << "at: " << at << std::endl;
+	return 0;
+}
+
+int on_header_value_complete(llhttp_t* ptr)
+{
+	std::cout << "on_header_value_complete" << std::endl;
+	std::cout << ptr->header_state << std::endl;
+	if (ptr->flags & F_CONTENT_LENGTH)
+	{
+		std::cout << "content_length: " << ptr->content_length << std::endl;
+	}
+}
 
 class HttpBuffer
 {
@@ -52,6 +82,30 @@ protected:
 
 	int ParsingHeader(std::vector<char> buffer)
 	{
+		llhttp_t parser;
+		llhttp_settings_t settings;
+
+		/* Initialize user callbacks and settings */
+		llhttp_settings_init(&settings);
+
+		/* Set user callback */
+		settings.on_message_complete = handle_on_message_complete;
+		settings.on_body = on_body;
+		settings.on_header_value_complete = on_header_value_complete;
+
+		enum llhttp_errno err = llhttp_execute(&parser, buffer.data(), buffer.size());
+		if (err == HPE_OK)
+		{
+			
+			/* Successfully parsed! */
+			std::cout << "Successfully parsed!" << parser.content_length << std::endl;
+		}
+		else
+		{
+			fprintf(stderr, "Parse error: %s %s\n", llhttp_errno_name(err), parser.reason);
+			std::cout << "Error" << std::endl;
+		}
+
 		return 10;
 	}
 public:

@@ -53,6 +53,9 @@
     <ClInclude Include="HttpBuffer.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="llhttp.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header">
