@@ -153,15 +153,15 @@ void ClientNetActor::ProccessIO()
 {
 	switch (m_client_impl->m_config_module->GetServerType())
 	{
-	case EnumDefine::ServerType::FRONTEND: // 主机是前端服务器
+	case EnumDefine::ServerType::FRONTEND:
 	{
 		switch (m_client_type)
 		{
-		case EnumDefine::ClientType::CLIENT: // 玩家发送的信息 直接处理
+		case EnumDefine::ClientType::CLIENT:
 			// frontend server
 			m_client_impl->m_proccess_module->ProcessFrontendIO(*this);
 			break;
-		case EnumDefine::ClientType::BACKEND: // 后端发来的数据 直接找到客户端 返回客户端 (maybe update client data)
+		case EnumDefine::ClientType::BACKEND: // (maybe update client data)
 			// backend server
 			m_client_impl->m_proccess_module->ProcessBackendIO(*this);
 			break;
@@ -176,7 +176,7 @@ void ClientNetActor::ProccessIO()
 		// exit
 		break;
 	}
-	case EnumDefine::ServerType::BACKEND: // 主机是后端服务器
+	case EnumDefine::ServerType::BACKEND:
 	{
 		switch (m_client_type)
 		{
