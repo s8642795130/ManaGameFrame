@@ -23,7 +23,7 @@ void MasterModule::AfterInit()
 
 	// bind msg
 	std::function<void(IClientNetActor&)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1);
-	m_callback_module->AddReceiveCallBack(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), call_func);
+	m_callback_module->AddReceiveCallback(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), call_func);
 }
 
 //
