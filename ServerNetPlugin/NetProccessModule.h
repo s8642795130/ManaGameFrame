@@ -5,6 +5,7 @@
 #include "IServerObjModule.h"
 #include "IClientNetModule.h"
 #include "../ConfigPlugin/IConfigModule.h"
+#include "../ActorPlugin/IThreadPoolModule.h"
 
 class NetProccessModule : public INetProccessModule
 {
@@ -14,6 +15,7 @@ private:
 	std::shared_ptr<IServerObjModule> m_server_obj_module;
 	std::shared_ptr<IConfigModule> m_config_module;
 	std::shared_ptr<IClientNetModule> m_client_net_module;
+	std::shared_ptr<IThreadPoolModule> m_thread_pool_module;
 public:
 	NetProccessModule(std::shared_ptr<IPluginManager> ptr) : INetProccessModule(ptr)
 	{

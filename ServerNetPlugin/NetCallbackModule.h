@@ -2,7 +2,6 @@
 #include "INetCallbackModule.h"
 #include "IClientNetActor.h"
 #include "BackendClient.h"
-#include "BindFunc.h"
 
 class NetCallbackModule : public INetCallbackModule
 {
@@ -24,7 +23,7 @@ public:
 	// virtual void AddReceiveCallback(const int msg_id, std::function<void(IClientNetActor&)> callback);
 	virtual void AddReceiveCallback(const int msg_id, std::shared_ptr<IBindFunc> bind_func);
 	// virtual const std::map<int, std::function<void(IClientNetActor&)>>& GetReceiveCallbackMap();
-	GetReceiveCallbackMap()
+	virtual const std::map<int, std::shared_ptr<IBindFunc>>& GetReceiveCallbackMap();
 	virtual void AddBackendCallback(const int msg_id, std::function<void(BackendClient&)> callback);
 	virtual const std::map<int, std::function<void(BackendClient&)>>& GetBackendCallbackMap();
 	virtual void AddRPCCallback(const int msg_id, std::function<void(const int, const int, std::vector<char>&)> callback);

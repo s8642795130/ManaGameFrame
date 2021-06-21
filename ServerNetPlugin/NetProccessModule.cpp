@@ -14,6 +14,7 @@ void NetProccessModule::Init()
 	m_server_obj_module = m_ptr_manager->GetModule<IServerObjModule>();
 	m_config_module = m_ptr_manager->GetModule<IConfigModule>();
 	m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
+	m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
 }
 
 void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
@@ -218,7 +219,8 @@ void NetProccessModule::ProcessMasterIO(IClientNetActor& client)
 	// check
 	if (map_callback.find(majorId) != std::cend(map_callback))
 	{
-		std::function<void(IClientNetActor&)> callback = map_callback[majorId];
-		callback(client);
+		map_callback[majorId]->Trigger(m_thread_pool_module, client);
+		//std::function<void(IClientNetActor&)> callback = 
+		//callback(client);
 	}
 }
