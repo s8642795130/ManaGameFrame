@@ -8,6 +8,8 @@
 #include <unistd.h>
 
 #include "../Server/ServerEnumDefine.h"
+#include "../Server/PackageNetMsg.h"
+#include "../ActorPlugin/ActorMsg.h"
 
 ClientNetActor::ClientNetActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr) :
 	IClientNetActor(ptr_manager),
@@ -214,6 +216,40 @@ void ClientNetActor::ProccessIO()
 	m_buffer = std::make_shared<ByteBuffer>();
 }
 
+void ClientNetActor::ProcessNextIO(FrontendMsg frontend_msg)
+{
+	m_queue_msg.push(frontend_msg);
+	if (m_is_process_work == false)
+	{
+		m_is_process_work = true;
+		NextIO();
+	}
+}
+
+void ClientNetActor::NextIO()
+{
+	// get queue front msg
+	if (m_queue_msg.empty())
+	{
+		m_is_process_work = false;
+	}
+	else
+	{
+		const FrontendMsg& frontend_msg = m_queue_msg.front();
+
+		// package msg
+		std::vector<char> package;
+		PackageStructForEachField(*frontend_msg.m_msg, package); // dereference
+
+		// send to backend server
+		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(GetUUID(), frontend_msg.m_uuid, &IClientNetActor::SendStream, std::move(package));
+		m_pimpl->SendMsgToActor(ptr);
+
+		// del msg
+		m_queue_msg.pop();
+	}
+}
+
 /// <summary>
 /// Parsing
 /// </summary>
@@ -322,4 +358,10 @@ void ClientNetActor::SendBuffer(std::shared_ptr<ByteBuffer> buffer)
 void ClientNetActor::SendStream(std::vector<char> stream)
 {
 	send(m_client_fd, stream.data(), stream.size(), 0);
+}
+
+void ClientNetActor::BackStream(std::vector<char> stream)
+{
+	SendStream(stream);
+	NextIO();
 }

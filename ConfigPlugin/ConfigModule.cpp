@@ -205,6 +205,10 @@ const EnumDefine::ServerType ConfigModule::StrTypeToEnumType(const std::string& 
 	{
 		type = EnumDefine::ServerType::BACKEND;
 	}
+	else if (server_type.compare("login") == 0)
+	{
+		type = EnumDefine::ServerType::LOGIN;
+	}
 	return type;
 }
 

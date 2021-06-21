@@ -11,6 +11,9 @@
     <ClCompile Include="ServerObjModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
     <ClCompile Include="ClientHttpActor.cpp" />
+    <ClCompile Include="llhttp.cpp">
+      <Filter>llhttp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientNetActor.h" />
@@ -49,6 +52,13 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="ClientHttpActor.h" />
+    <ClInclude Include="HttpBuffer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="IHttpBuffer.h" />
+    <ClInclude Include="llhttp.h">
+      <Filter>llhttp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interface">
@@ -56,6 +66,9 @@
     </Filter>
     <Filter Include="Header">
       <UniqueIdentifier>{0583989b-2c28-49b8-a581-11220488a7c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="llhttp">
+      <UniqueIdentifier>{cf7bdfba-00fa-43a2-b4bd-b028a33c4547}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
 
 #include "DataType.h"
 #include "StructSchema.h"

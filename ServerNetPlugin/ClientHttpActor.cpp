@@ -11,7 +11,7 @@ void ClientHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t 
 	{
 	case -1: // need more data, but length unkonw
 	{
-		m_http_buffer->PushData(buffer.data(), len);
+		m_http_buffer->PushData(buffer.data(), static_cast<int>(len));
 		less = 0;
 		m_http_buffer->DetectHeader();
 
@@ -29,7 +29,7 @@ void ClientHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t 
 	case 1: // need more data, by length
 	{
 		ssize_t push_length = m_http_buffer->GetRemainingLen() <= len ? m_http_buffer->GetRemainingLen() : len;
-		m_http_buffer->PushData(buffer.data(), push_length);
+		m_http_buffer->PushData(buffer.data(), static_cast<int>(push_length));
 		less -= push_length;
 		m_http_buffer->DetectHeader();
 

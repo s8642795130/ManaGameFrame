@@ -95,12 +95,10 @@
     <ClInclude Include="DynLib.h" />
     <ClInclude Include="GameMessage.h" />
     <ClInclude Include="BuiltInDataDefine.h" />
-    <ClInclude Include="HttpBuffer.h" />
     <ClInclude Include="IConfigFile.h" />
     <ClInclude Include="IModule.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IPluginManager.h" />
-    <ClInclude Include="llhttp.h" />
     <ClInclude Include="StringDefine.h" />
     <ClInclude Include="UnpackNetMsg.h" />
     <ClInclude Include="ServerEnumDefine.h" />

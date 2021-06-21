@@ -1,16 +1,48 @@
 #include "ClientNetModule.h"
 #include "ClientNetActor.h"
+#include "ClientHttpActor.h"
 
 void ClientNetModule::Init()
 {
 	m_client_pimpl = std::make_shared<ClientPimpl>();
 	m_client_pimpl->m_config_module = m_ptr_manager->GetModule<IConfigModule>();
 	m_client_pimpl->m_proccess_module = m_ptr_manager->GetModule<INetProccessModule>();
+	//
+	m_config_module = m_ptr_manager->GetModule<IConfigModule>();
+}
+
+void ClientNetModule::AfterInit()
+{
+	if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN)
+	{
+		m_create_net = [this]() -> std::shared_ptr<IClientNetActor>
+		{
+			return CreateHttpClientNet();
+		};
+	}
+	else
+	{
+		m_create_net = [this]() -> std::shared_ptr<IClientNetActor>
+		{
+			return CreateSocketClientNet();
+		};
+	}
 }
 
 // client interface
 
 std::shared_ptr<IClientNetActor> ClientNetModule::CreateClientNet()
+{
+	return m_create_net();
+}
+
+std::shared_ptr<IClientNetActor> ClientNetModule::CreateHttpClientNet()
+{
+	std::shared_ptr<IClientNetActor> client = std::make_shared<ClientHttpActor>(m_ptr_manager, m_client_pimpl);
+	return client;
+}
+
+std::shared_ptr<IClientNetActor> ClientNetModule::CreateSocketClientNet()
 {
 	std::shared_ptr<IClientNetActor> client = std::make_shared<ClientNetActor>(m_ptr_manager, m_client_pimpl);
 	return client;

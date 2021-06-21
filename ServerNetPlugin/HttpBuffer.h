@@ -1,17 +1,21 @@
 #pragma once
+
+#include <iostream>
 #include <string>
 #include <vector>
 #include <array>
+#include <memory>
 
-#include "DefineHeader.h"
-#include "ByteBuffer.h"
+#include "IHttpBuffer.h"
+#include "../Server/DefineHeader.h"
+#include "../Server/ByteBuffer.h"
 #include "llhttp.h"
 
-int handle_on_message_complete(llhttp_t* ptr);
-int on_body(llhttp_t* ptr, const char* at, size_t length);
-int on_header_value_complete(llhttp_t* ptr);
+extern int handle_on_message_complete(llhttp_t* ptr);
+extern int on_body(llhttp_t* ptr, const char* at, size_t length);
+extern int on_header_value_complete(llhttp_t* ptr);
 
-class HttpBuffer
+class HttpBuffer : public IHttpBuffer
 {
 private:
 	std::vector<char> m_buffer;
@@ -66,6 +70,8 @@ protected:
 
 	bool ParsingHeader(std::vector<char> buffer)
 	{
+		bool ret = true;
+
 		llhttp_t parser;
 		llhttp_settings_t settings;
 
@@ -89,7 +95,10 @@ protected:
 		else
 		{
 			fprintf(stderr, "Parse error: %s %s\n", llhttp_errno_name(err), parser.reason);
+			ret = false;
 		}
+
+		return ret;
 	}
 
 	bool ParsingBodyToBuffer()
@@ -132,7 +141,7 @@ public:
 			if (ParsingHeader(m_buffer))
 			{
 				// 3 condition
-				if (m_content_length == cur_body_len)
+				if (static_cast<int>(m_content_length) == cur_body_len)
 				{
 					//
 					ParsingBodyToBuffer();
@@ -141,20 +150,20 @@ public:
 					ret = 0;
 				}
 
-				if (m_content_length < cur_body_len) // sticky package
+				if (static_cast<int>(m_content_length) < cur_body_len) // sticky package
 				{
 					// more data
 					ParsingBodyToBuffer();
 					m_ready_to_execute = true;
-					m_more_data_length = cur_body_len - m_content_length;
+					m_more_data_length = cur_body_len - static_cast<int>(m_content_length);
 					m_data_state = 2;
 					ret = 2;
 				}
 
-				if (m_content_length > cur_body_len) // half package
+				if (static_cast<int>(m_content_length) > cur_body_len) // half package
 				{
 					// need more data
-					m_remaining_len = m_content_length - cur_body_len;
+					m_remaining_len = static_cast<int>(m_content_length) - cur_body_len;
 					m_data_state = 1;
 					ret = 1;
 				}
@@ -223,29 +232,3 @@ public:
 		return m_byte_buffer;
 	}
 };
-
-// Parsing function
-
-int handle_on_message_complete(llhttp_t* ptr)
-{
-	return 0;
-}
-
-int on_body(llhttp_t* ptr, const char* at, size_t length)
-{
-	// std::cout << "length: " << length << std::endl;
-	// std::cout << "at: " << at << std::endl;
-	return 0;
-}
-
-int on_header_value_complete(llhttp_t* ptr)
-{
-	if (ptr->flags & F_CONTENT_LENGTH)
-	{
-		std::cout << "content_length: " << ptr->content_length << std::endl;
-		HttpBuffer* p_buffer = reinterpret_cast<HttpBuffer*>(ptr->data);
-		p_buffer->SetContentLength(ptr->content_length);
-	}
-
-	return 0;
-}

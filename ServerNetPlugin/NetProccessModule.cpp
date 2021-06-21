@@ -39,20 +39,21 @@ void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
 	auto server_uuid = m_server_obj_module->GetServerUUIDByName(server_list[server_index]->m_server_name);
 
 	// create backend client struct
-	FrontendToBackendMsg backend_msg;
+	std::unique_ptr<FrontendToBackendMsg> backend_msg{ std::make_unique<FrontendToBackendMsg>() };
 	auto buffer = client.GetBuffer();
-	backend_msg.m_client_uid = client.GetUid();
-	backend_msg.m_client_data = client.GetClientData();
-	backend_msg.m_major_id = buffer->GetMajorId();
-	backend_msg.m_minor_id = buffer->GetMinorId();
-	backend_msg.m_stream = buffer->GetStream();
+	backend_msg->m_client_uid = client.GetUid();
+	backend_msg->m_client_data = client.GetClientData();
+	backend_msg->m_major_id = buffer->GetMajorId();
+	backend_msg->m_minor_id = buffer->GetMinorId();
+	backend_msg->m_stream = buffer->GetStream();
 
-	// package
-	std::vector<char> package;
-	PackageStructForEachField(backend_msg, package);
+	//
+	FrontendMsg frontend_msg;
+	frontend_msg.m_msg = std::move(backend_msg);
+	frontend_msg.m_uuid = server_uuid;
 
 	// send to backend server
-	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(client.GetUUID(), server_uuid, &IClientNetActor::SendStream, std::move(package));
+	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, FrontendMsg>>(client.GetUUID(), server_uuid, &IClientNetActor::ProcessNextIO, frontend_msg);
 	client.GetActorPimpl()->SendMsgToActor(ptr);
 }
 
@@ -71,7 +72,7 @@ void NetProccessModule::ProcessBackendIO(IClientNetActor& client)
 		if (ptr_client != nullptr)
 		{
 			// send to client
-			std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(client.GetUUID(), ptr_client->GetUUID(), &IClientNetActor::SendStream, std::move(backend_msg.m_buffer));
+			std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(client.GetUUID(), ptr_client->GetUUID(), &IClientNetActor::BackStream, std::move(backend_msg.m_buffer));
 			client.GetActorPimpl()->SendMsgToActor(ptr);
 		}
 	}

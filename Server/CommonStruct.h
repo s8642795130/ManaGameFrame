@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+#include <memory>
+
+#include "BuiltInDataDefine.h"
 
 struct ServerData
 {
@@ -13,4 +16,10 @@ struct PluginData
 {
 	std::string m_plugin;
 	std::string m_plugin_name;
+};
+
+struct FrontendMsg
+{
+	std::string m_uuid;
+	std::shared_ptr<FrontendToBackendMsg> m_msg;
 };

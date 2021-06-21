@@ -1,6 +1,6 @@
 #pragma once
 #include "ClientNetActor.h"
-#include "../Server/HttpBuffer.h"
+#include "HttpBuffer.h"
 
 class ClientHttpActor : public ClientNetActor
 {
@@ -9,6 +9,9 @@ protected:
 protected:
 	virtual void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len) override;
 public:
+	ClientHttpActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr) : ClientNetActor(ptr_manager, ptr) {}
+
+	// interface
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer();
 };
 

@@ -10,6 +10,8 @@
 
 #include "../Server/ServerEnumDefine.h"
 #include "../Server/ByteBuffer.h"
+#include "../Server/BuiltInDataDefine.h"
+#include "../Server/CommonStruct.h"
 #include "../ActorPlugin/Actor.h"
 
 /*
@@ -62,9 +64,14 @@ public:
 	// client type
 	virtual void SetClientType(EnumDefine::ClientType client_type) = 0;
 
+	// buffer
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer() = 0;
+
+	// io process
+	virtual void ProcessNextIO(FrontendMsg frontend_msg) = 0;
 
 	virtual void SendData(const int major, const int minor, std::vector<char> value) = 0;
 	// virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer) = 0;
 	virtual void SendStream(std::vector<char> stream) = 0;
+	virtual void BackStream(std::vector<char> stream) = 0;
 };
