@@ -13,7 +13,8 @@ void ClientNetModule::Init()
 
 void ClientNetModule::AfterInit()
 {
-	if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN)
+	if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN ||
+		(m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET))
 	{
 		m_create_net = [this]() -> std::shared_ptr<IClientNetActor>
 		{

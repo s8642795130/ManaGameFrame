@@ -5,12 +5,26 @@ const std::map<int, std::string> NetCallbackModule::GetGameMsgMap()
 	return m_map_game_msg;
 }
 
+/*
 void NetCallbackModule::AddReceiveCallback(const int msg_id, std::function<void(IClientNetActor&)> callback)
 {
 	m_receive_callback.emplace(msg_id, callback);
 }
+*/
 
+void NetCallbackModule::AddReceiveCallback(const int msg_id, std::shared_ptr<IBindFunc> bind_func)
+{
+	m_receive_callback.emplace(msg_id, bind_func);
+}
+
+/*
 const std::map<int, std::function<void(IClientNetActor&)>>& NetCallbackModule::GetReceiveCallbackMap()
+{
+	return m_receive_callback;
+}
+*/
+
+const std::map<int, std::shared_ptr<IBindFunc>>& NetCallbackModule::GetReceiveCallbackMap()
 {
 	return m_receive_callback;
 }

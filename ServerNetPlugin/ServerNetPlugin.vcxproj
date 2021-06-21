@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackendClient.h" />
+    <ClInclude Include="BindFunc.h" />
     <ClInclude Include="ClientHttpActor.h" />
     <ClInclude Include="ClientPimpl.h" />
     <ClInclude Include="ClientNetActor.h" />

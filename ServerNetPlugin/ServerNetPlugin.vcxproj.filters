@@ -59,6 +59,9 @@
     <ClInclude Include="llhttp.h">
       <Filter>llhttp</Filter>
     </ClInclude>
+    <ClInclude Include="BindFunc.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interface">
