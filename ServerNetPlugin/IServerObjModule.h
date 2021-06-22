@@ -4,6 +4,11 @@
 
 #include "../Server/IModule.h"
 
+// test
+#include "IClientNetActor.h"
+
+//class IClientNetActor;
+
 class IServerObjModule : public IModule
 {
 public:
@@ -18,4 +23,6 @@ public:
 	// interface
 	virtual const std::string GetServerUUIDByName(const std::string& server_name) = 0;
 	virtual void SaveServerToMap(const std::string& server_name, const std::string& uuid) = 0;
+	// callback
+	virtual void OnServerOnlineCallback(IClientNetActor& ptr_client) = 0;
 };

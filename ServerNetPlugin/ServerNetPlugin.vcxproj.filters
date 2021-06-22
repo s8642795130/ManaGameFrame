@@ -14,7 +14,6 @@
     <ClCompile Include="llhttp.cpp">
       <Filter>llhttp</Filter>
     </ClCompile>
-    <ClCompile Include="ServerObjActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientNetActor.h" />
@@ -63,7 +62,9 @@
     <ClInclude Include="BindFunc.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="ServerObjActor.h" />
+    <ClInclude Include="SyncBindFunc.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interface">

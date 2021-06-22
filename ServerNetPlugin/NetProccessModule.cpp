@@ -214,13 +214,12 @@ void NetProccessModule::ProcessMasterIO(IClientNetActor& client)
 {
 	// data
 	int majorId = client.GetBuffer()->GetMajorId();
-	auto map_callback = m_callback_module->GetReceiveCallbackMap();
+	auto map_callback = m_callback_module->GetMasterCallbackMap();
 
 	// check
 	if (map_callback.find(majorId) != std::cend(map_callback))
 	{
-		map_callback[majorId]->Trigger(m_thread_pool_module, client);
-		//std::function<void(IClientNetActor&)> callback = 
-		//callback(client);
+		auto callback = map_callback[majorId];
+		callback(client);
 	}
 }

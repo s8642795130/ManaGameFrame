@@ -89,7 +89,6 @@
     <ClCompile Include="NetProccessModule.cpp" />
     <ClCompile Include="ServerNetModule.cpp" />
     <ClCompile Include="ServerNetPlugin.cpp" />
-    <ClCompile Include="ServerObjActor.cpp" />
     <ClCompile Include="ServerObjModule.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -114,8 +113,8 @@
     <ClInclude Include="NetProccessModule.h" />
     <ClInclude Include="ServerNetModule.h" />
     <ClInclude Include="ServerNetPlugin.h" />
-    <ClInclude Include="ServerObjActor.h" />
     <ClInclude Include="ServerObjModule.h" />
+    <ClInclude Include="SyncBindFunc.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

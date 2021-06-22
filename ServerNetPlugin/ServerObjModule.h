@@ -2,7 +2,6 @@
 #include "IServerObjModule.h"
 #include "IClientNetModule.h"
 #include "IServerNetModule.h"
-#include "ServerObjActor.h"
 #include "../ConfigPlugin/IConfigModule.h"
 #include "../ServerNetPlugin/INetCallbackModule.h"
 
@@ -15,8 +14,6 @@ private:
 	std::shared_ptr<INetCallbackModule> m_callback_module;
 	//
 	std::map<std::string, std::string> m_map_server; // key: server_name, value: uuid
-	// actor
-	std::shared_ptr<ServerObjActor> m_server_obj_actor;
 public:
 	ServerObjModule(std::shared_ptr<IPluginManager> ptr) : IServerObjModule(ptr)
 	{
@@ -31,6 +28,6 @@ public:
 	virtual void SaveServerToMap(const std::string& server_name, const std::string& uuid);
 
 	// callback
-	void OnServerOnlineCallback(IClientNetActor& ptr_client);
+	virtual void OnServerOnlineCallback(IClientNetActor& ptr_client);
 };
 
