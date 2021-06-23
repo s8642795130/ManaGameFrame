@@ -5,18 +5,13 @@ void LoginModule::Init()
 {
 	// module
 	m_callback_module = m_ptr_manager->GetModule<INetCallbackModule>();
+	// actor
+	m_login_actor = std::make_shared<LoginActor>(m_ptr_manager);
 }
 
 void LoginModule::AfterInit()
 {
 	// bind msg
-	std::function<void(IClientNetActor&)> call_func = std::bind(&LoginModule::OnLoginOnlineCallback, this, std::placeholders::_1);
-	m_callback_module->AddHTTPCallback("/login", call_func);
-}
-
-//
-
-void LoginModule::OnLoginOnlineCallback(IClientNetActor& client)
-{
-
+	std::shared_ptr<IBindFunc> bind_func = std::make_shared<BindFunc<LoginActor>>(m_login_actor->GetUUID(), &LoginActor::OnLoginOnlineCallback);
+	m_callback_module->AddHTTPCallback("/login", bind_func);
 }

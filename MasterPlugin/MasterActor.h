@@ -15,11 +15,6 @@ public:
 
 	}
 
-	virtual ~MasterActor()
-	{
-
-	}
-
 	// interface
 	void OnServerOnlineCallback(IClientNetActor& client);
 };

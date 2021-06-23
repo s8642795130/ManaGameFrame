@@ -9,5 +9,14 @@
     <ClInclude Include="ILoginModule.h">
       <Filter>Interface</Filter>
     </ClInclude>
+    <ClInclude Include="LoginModule.h" />
+    <ClInclude Include="LoginPlugin.h" />
+    <ClInclude Include="LoginActor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="LoginModule.cpp" />
+    <ClCompile Include="LoginPlugin.cpp" />
+    <ClCompile Include="LoginActor.cpp" />
   </ItemGroup>
 </Project>

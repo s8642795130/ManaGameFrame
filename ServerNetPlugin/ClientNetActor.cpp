@@ -173,6 +173,7 @@ void ClientNetActor::ProccessIO()
 			m_client_impl->m_proccess_module->ProcessBackendIO(*this);
 			break;
 		case EnumDefine::ClientType::MASTER:
+			m_client_impl->m_proccess_module->ProcessMasterIO(*this);
 			break;
 		default:
 			// (login server_online)
@@ -195,6 +196,7 @@ void ClientNetActor::ProccessIO()
 			m_client_impl->m_proccess_module->ProcessRPCIO(*this);
 			break;
 		case EnumDefine::ClientType::MASTER:
+			m_client_impl->m_proccess_module->ProcessMasterIO(*this);
 			break;
 		default:
 			// (server_online)
@@ -205,12 +207,12 @@ void ClientNetActor::ProccessIO()
 	}
 	case EnumDefine::ServerType::MASTER:
 	{
-		m_client_impl->m_proccess_module->ProcessMasterIO(*this);
+		m_client_impl->m_proccess_module->ProcessTempIO(*this);
 		break;
 	}
 	case EnumDefine::ServerType::LOGIN:
 	{
-		// m_client_impl->m_proccess_module->ProcessMasterIO(*this);
+		m_client_impl->m_proccess_module->ProcessHttpIO(*this);
 		break;
 	}
 	default:
@@ -221,7 +223,7 @@ void ClientNetActor::ProccessIO()
 	m_buffer = std::make_shared<ByteBuffer>();
 }
 
-void ClientNetActor::ProcessNextIO(FrontendMsg& frontend_msg)
+void ClientNetActor::ProcessNextIO(FrontendMsg frontend_msg)
 {
 	m_queue_msg.push(frontend_msg);
 	if (m_is_process_work == false)

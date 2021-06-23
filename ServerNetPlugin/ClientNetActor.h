@@ -45,7 +45,7 @@ public:
 	virtual const std::map<std::string, std::string> GetClientData() const;
 	virtual void UpdateClientData(const std::string& key, const std::string& value, int type);
 	// io process
-	virtual void ProcessNextIO(FrontendMsg& frontend_msg);
+	virtual void ProcessNextIO(FrontendMsg frontend_msg);
 	// buffer
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer();
 	// uid

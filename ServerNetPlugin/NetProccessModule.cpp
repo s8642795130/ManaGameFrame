@@ -54,7 +54,7 @@ void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
 	frontend_msg.m_uuid = server_uuid;
 
 	// send to backend server
-	std::unique_ptr<IActorMsg> ptr = CreateActorMsg(client.GetUUID(), server_uuid, &IClientNetActor::ProcessNextIO, frontend_msg);
+	std::unique_ptr<IActorMsg> ptr = CreateActorMsg(client.GetUUID(), server_uuid, &IClientNetActor::ProcessNextIO, std::move(frontend_msg));
 	client.GetActorPimpl()->SendMsgToActor(ptr);
 }
 
@@ -222,4 +222,32 @@ void NetProccessModule::ProcessMasterIO(IClientNetActor& client)
 		auto callback = map_callback[majorId];
 		callback(client);
 	}
+}
+
+void NetProccessModule::ProcessTempIO(IClientNetActor& client)
+{
+	int majorId = client.GetBuffer()->GetMajorId();
+	auto map_callback = m_callback_module->GetReceiveCallbackMap();
+
+	// check
+	if (map_callback.find(majorId) != std::cend(map_callback))
+	{
+		auto callback = map_callback[majorId];
+		callback->Trigger(m_thread_pool_module, client);
+	}
+}
+
+void NetProccessModule::ProcessHttpIO(IClientNetActor& client)
+{
+	/*
+	int majorId = client.GetBuffer()->GetMajorId();
+	auto map_callback = m_callback_module->GetHTTPCallbackMap();
+
+	// check
+	if (map_callback.find(majorId) != std::cend(map_callback))
+	{
+		auto callback = map_callback[majorId];
+		callback->Trigger(m_thread_pool_module, client);
+	}
+	*/
 }

@@ -46,12 +46,12 @@ const std::map<int, std::function<void(const int, const int, std::vector<char>&)
 }
 
 //
-void NetCallbackModule::AddHTTPCallback(const std::string& path, std::function<void(IClientNetActor&)> callback)
+void NetCallbackModule::AddHTTPCallback(const std::string& path, std::shared_ptr<IBindFunc> bind_func)
 {
-	m_http_callback.emplace(path, callback);
+	m_http_callback.emplace(path, bind_func);
 }
 
-const std::map<std::string, std::function<void(IClientNetActor&)>>& NetCallbackModule::GetHTTPCallbackMap()
+const std::map<std::string, std::shared_ptr<IBindFunc>>& NetCallbackModule::GetHTTPCallbackMap()
 {
 	return m_http_callback;
 }

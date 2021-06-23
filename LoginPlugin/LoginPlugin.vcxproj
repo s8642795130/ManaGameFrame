@@ -77,11 +77,13 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="LoginActor.cpp" />
     <ClCompile Include="LoginModule.cpp" />
     <ClCompile Include="LoginPlugin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ILoginModule.h" />
+    <ClInclude Include="LoginActor.h" />
     <ClInclude Include="LoginModule.h" />
     <ClInclude Include="LoginPlugin.h" />
   </ItemGroup>

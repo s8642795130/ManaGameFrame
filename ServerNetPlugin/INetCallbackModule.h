@@ -23,7 +23,7 @@ public:
 	virtual const std::map<int, std::function<void(BackendClient&)>>& GetBackendCallbackMap() = 0;
 	virtual void AddRPCCallback(const int msg_id, std::function<void(const int, const int, std::vector<char>&)> callback) = 0;
 	virtual const std::map<int, std::function<void(const int, const int, std::vector<char>&)>>& GetRPCCallbackMap() = 0;
-	virtual void AddHTTPCallback(const std::string& path, std::function<void(IClientNetActor&)> callback) = 0;
-	virtual const std::map<std::string, std::function<void(IClientNetActor&)>>& GetHTTPCallbackMap() = 0;
+	virtual void AddHTTPCallback(const std::string& path, std::shared_ptr<IBindFunc> callback) = 0;
+	virtual const std::map<std::string, std::shared_ptr<IBindFunc>>& GetHTTPCallbackMap() = 0;
 };
 
