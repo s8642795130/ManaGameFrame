@@ -62,9 +62,6 @@
     <ClInclude Include="BindFunc.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="SyncBindFunc.h">
-      <Filter>Header</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interface">

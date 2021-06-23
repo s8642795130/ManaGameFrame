@@ -4,10 +4,7 @@
 
 #include "../Server/IModule.h"
 
-// test
-#include "IClientNetActor.h"
-
-//class IClientNetActor;
+class IClientNetActor;
 
 class IServerObjModule : public IModule
 {

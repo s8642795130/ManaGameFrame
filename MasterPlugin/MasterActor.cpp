@@ -6,6 +6,16 @@
 #include "../Server/BuiltInDataDefine.h"
 #include "../ActorPlugin/ActorMsg.h"
 #include "../ServerNetPlugin/IClientNetActor.h"
+#include "../Server/UnpackNetMsg.h"
+
+void MasterActor::OnServerOnlineCallback(IClientNetActor& client)
+{
+	// notify other servers that a server online
+	ConnectServerOnline connect_server_online;
+	UnpackStructForEachField(connect_server_online, client.GetBuffer());
+
+	ServerOnline(connect_server_online.m_server_name, client.GetUUID());
+}
 
 void MasterActor::ServerOnline(const std::string server_name, const std::string uuid)
 {
@@ -27,6 +37,6 @@ void MasterActor::ServerOnline(const std::string server_name, const std::string 
 	m_map_online_server.emplace(server_name, uuid);
 
 	// send online server struct to server
-	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(GetUUID(), uuid, &IClientNetActor::SendStream, std::move(buffer));
+	std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), uuid, &IClientNetActor::SendStream, std::move(buffer));
 	m_pimpl->SendMsgToActor(ptr);
 }

@@ -119,6 +119,11 @@ bool ClientNetActor::HeartBeat()
 	return true;
 }
 
+void ClientNetActor::ServerClose()
+{
+	std::cout << "server close" << std::endl;
+}
+
 void ClientNetActor::ClientClose()
 {
 	close(m_client_fd);
@@ -216,7 +221,7 @@ void ClientNetActor::ProccessIO()
 	m_buffer = std::make_shared<ByteBuffer>();
 }
 
-void ClientNetActor::ProcessNextIO(FrontendMsg frontend_msg)
+void ClientNetActor::ProcessNextIO(FrontendMsg& frontend_msg)
 {
 	m_queue_msg.push(frontend_msg);
 	if (m_is_process_work == false)
@@ -242,7 +247,7 @@ void ClientNetActor::NextIO()
 		PackageStructForEachField(*frontend_msg.m_msg, package); // dereference
 
 		// send to backend server
-		std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, IClientNetActor, std::vector<char>>>(GetUUID(), frontend_msg.m_uuid, &IClientNetActor::SendStream, std::move(package));
+		std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), frontend_msg.m_uuid, &IClientNetActor::SendStream, std::move(package));
 		m_pimpl->SendMsgToActor(ptr);
 
 		// del msg

@@ -114,7 +114,6 @@
     <ClInclude Include="ServerNetModule.h" />
     <ClInclude Include="ServerNetPlugin.h" />
     <ClInclude Include="ServerObjModule.h" />
-    <ClInclude Include="SyncBindFunc.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

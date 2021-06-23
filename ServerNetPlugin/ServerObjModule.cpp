@@ -4,7 +4,6 @@
 #include "../Server/BuiltInMsgDefine.h"
 #include "../Server/PackageNetMsg.h"
 #include "../Server/UnpackNetMsg.h"
-#include "SyncBindFunc.h"
 
 void ServerObjModule::Init()
 {

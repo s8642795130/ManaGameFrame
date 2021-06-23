@@ -19,7 +19,7 @@ namespace helper
 	struct gen_seq<0, Is...> : index<Is...> {};
 }
 
-template <typename Return, typename BaseClass, typename... Params>
+template <typename BaseClass, typename Return, typename... Params>
 class ActorMsg : public IActorMsg
 {
 private:
@@ -72,3 +72,9 @@ public:
 		return m_receiver_actor_uuid;
 	}
 };
+
+template <typename T, typename R, typename... Params, typename... Args>
+std::unique_ptr<IActorMsg> CreateActorMsg(const std::string& sender_actor_uuid, const std::string& receiver_actor_uuid, R(T::* fn)(Params...), Args&&... args)
+{
+	return std::make_unique<ActorMsg<T, R, Args...>>(sender_actor_uuid, receiver_actor_uuid, fn, args...); // actor_msg(fn, args...);
+}

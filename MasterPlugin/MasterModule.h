@@ -24,7 +24,4 @@ public:
 	// life cycle
 	virtual void Init();
 	virtual void AfterInit();
-
-	// callback
-	void OnServerOnlineCallback(IClientNetActor& client);
 };

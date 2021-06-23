@@ -36,19 +36,19 @@ public:
 	virtual bool ConnectServer(const std::string& ip, const int port) = 0;
 
 	//called when a client fd becomes available for writing
-	virtual bool ReadReady() { throw std::runtime_error("ReadReady() not implemented"); }
+	virtual bool ReadReady() = 0;// { throw std::runtime_error("ReadReady() not implemented"); }
 
 	//called when a client fd becomes available for reading
-	virtual bool WriteReady() { throw std::runtime_error("WriteReady() not implemented"); }
+	virtual bool WriteReady() = 0; // { throw std::runtime_error("WriteReady() not implemented"); }
 
 	//called periodically to check if fd is still alive (used to implement timeout)
-	virtual bool HeartBeat() { throw std::runtime_error("HeartBeat() not implemented"); }
+	virtual bool HeartBeat() = 0;// { throw std::runtime_error("HeartBeat() not implemented"); }
 
 	//called when the server is done with the client and the fd should be closed
-	virtual void ServerClose() { throw std::runtime_error("ServerClose() not implemented"); }
+	virtual void ServerClose() = 0;// { throw std::runtime_error("ServerClose() not implemented"); }
 
 	//called if the connection was forcibly closed by the client
-	virtual void ClientClose() { throw std::runtime_error("ClientClose() not implemented"); }
+	virtual void ClientClose() = 0;// { throw std::runtime_error("ClientClose() not implemented"); }
 
 	//client's unique id
 	const int GetSid() { return m_client_fd; }
@@ -68,7 +68,7 @@ public:
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer() = 0;
 
 	// io process
-	virtual void ProcessNextIO(FrontendMsg frontend_msg) = 0;
+	virtual void ProcessNextIO(FrontendMsg& frontend_msg) = 0;
 
 	virtual void SendData(const int major, const int minor, std::vector<char> value) = 0;
 	// virtual void SendBuffer(std::shared_ptr<ByteBuffer> buffer) = 0;

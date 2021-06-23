@@ -3,7 +3,6 @@
 #include "MasterModule.h"
 #include "../Server/BuiltInMsgDefine.h"
 #include "../Server/BuiltInDataDefine.h"
-#include "../Server/UnpackNetMsg.h"
 #include "../ActorPlugin/ActorMsg.h"
 
 void MasterModule::Init()
@@ -22,18 +21,6 @@ void MasterModule::AfterInit()
 	m_thread_pool_module->AddActorToThreadCell(m_master_actor);
 
 	// bind msg
-	std::function<void(IClientNetActor&)> call_func = std::bind(&MasterModule::OnServerOnlineCallback, this, std::placeholders::_1);
-	m_callback_module->AddReceiveCallback(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), call_func);
-}
-
-//
-
-void MasterModule::OnServerOnlineCallback(IClientNetActor& client)
-{
-	// notify other servers that a server online
-	ConnectServerOnline connect_server_online;
-	UnpackStructForEachField(connect_server_online, client.GetBuffer());
-
-	std::unique_ptr<IActorMsg> ptr = std::make_unique<ActorMsg<void, MasterActor, const std::string, const std::string>>("", m_master_actor->GetUUID(), &MasterActor::ServerOnline, connect_server_online.m_server_name, client.GetUUID());
-	m_thread_pool_module->AddActorMsgToThreadCell(ptr);
+	std::shared_ptr<IBindFunc> bind_func = std::make_shared<BindFunc<MasterActor>>(m_master_actor->GetUUID(), &MasterActor::OnServerOnlineCallback);
+	m_callback_module->AddReceiveCallback(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), bind_func);
 }

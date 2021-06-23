@@ -2,7 +2,6 @@
 #include "../Server/IModule.h"
 #include "IClientNetActor.h"
 #include "BindFunc.h"
-#include "SyncBindFunc.h"
 
 class BackendClient;
 
