@@ -1,6 +1,6 @@
 #include "LoginActor.h"
 
-void LoginActor::OnLoginOnlineCallback(IClientNetActor& client)
+void LoginActor::OnLoginOnlineCallback(std::shared_ptr<IClientNetActor> ptr_client)
 {
 
 }

@@ -28,6 +28,6 @@ public:
 	virtual void SaveServerToMap(const std::string& server_name, const std::string& uuid);
 
 	// callback
-	virtual void OnServerOnlineCallback(IClientNetActor& ptr_client);
+	virtual void OnServerOnlineCallback(IClientNetActor& client);
 };
 

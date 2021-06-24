@@ -32,7 +32,7 @@ public:
 	virtual void ProcessBackendUnknowMsg(IClientNetActor& client);
 	virtual void ProcessRPCIO(IClientNetActor& client);
 	virtual void ProcessMasterIO(IClientNetActor& client);
-	virtual void ProcessTempIO(IClientNetActor& client);
+	virtual void ProcessTempIO(std::shared_ptr<IClientNetActor> client);
 	virtual void ProcessHttpIO(IClientNetActor& client);
 };
 

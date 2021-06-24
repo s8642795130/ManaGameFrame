@@ -224,9 +224,9 @@ void NetProccessModule::ProcessMasterIO(IClientNetActor& client)
 	}
 }
 
-void NetProccessModule::ProcessTempIO(IClientNetActor& client)
+void NetProccessModule::ProcessTempIO(std::shared_ptr<IClientNetActor> client)
 {
-	int majorId = client.GetBuffer()->GetMajorId();
+	int majorId = client->GetBuffer()->GetMajorId();
 	auto map_callback = m_callback_module->GetReceiveCallbackMap();
 
 	// check

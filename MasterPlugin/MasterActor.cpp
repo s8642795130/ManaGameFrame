@@ -8,13 +8,13 @@
 #include "../ServerNetPlugin/IClientNetActor.h"
 #include "../Server/UnpackNetMsg.h"
 
-void MasterActor::OnServerOnlineCallback(IClientNetActor& client)
+void MasterActor::OnServerOnlineCallback(std::shared_ptr<IClientNetActor> ptr_client)
 {
 	// notify other servers that a server online
 	ConnectServerOnline connect_server_online;
-	UnpackStructForEachField(connect_server_online, client.GetBuffer());
+	UnpackStructForEachField(connect_server_online, ptr_client->GetBuffer());
 
-	ServerOnline(connect_server_online.m_server_name, client.GetUUID());
+	ServerOnline(connect_server_online.m_server_name, ptr_client->GetUUID());
 }
 
 void MasterActor::ServerOnline(const std::string server_name, const std::string uuid)

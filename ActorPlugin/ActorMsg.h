@@ -74,7 +74,7 @@ public:
 };
 
 template <typename T, typename R, typename... Params, typename... Args>
-std::unique_ptr<IActorMsg> CreateActorMsg(const std::string& sender_actor_uuid, const std::string& receiver_actor_uuid, R(T::* fn)(Params...), Args&&... args)
+std::unique_ptr<IActorMsg> CreateActorMsg(const std::string& sender_actor_uuid, const std::string& receiver_actor_uuid, R(T::* fn)(Params...), Args... args)
 {
-	return std::make_unique<ActorMsg<T, R, Args...>>(sender_actor_uuid, receiver_actor_uuid, fn, std::forward<Args>(args)...); // actor_msg(fn, args...);
+	return std::make_unique<ActorMsg<T, R, Args...>>(sender_actor_uuid, receiver_actor_uuid, fn, args...); // actor_msg(fn, args...);
 }

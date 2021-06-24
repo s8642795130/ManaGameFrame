@@ -83,10 +83,10 @@ const std::string ServerObjModule::GetServerUUIDByName(const std::string& server
 
 // callback
 
-void ServerObjModule::OnServerOnlineCallback(IClientNetActor& ptr_client)
+void ServerObjModule::OnServerOnlineCallback(IClientNetActor& client)
 {
 	// buffer
-	auto buffer = ptr_client.GetBuffer();
+	auto buffer = client.GetBuffer();
 
 	// unpack
 	ServerOnlineInfo server_online_info;

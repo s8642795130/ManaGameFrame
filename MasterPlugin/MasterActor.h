@@ -16,6 +16,6 @@ public:
 	}
 
 	// interface
-	void OnServerOnlineCallback(IClientNetActor& client);
+	void OnServerOnlineCallback(std::shared_ptr<IClientNetActor> ptr_client);
 };
 

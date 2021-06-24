@@ -207,7 +207,7 @@ void ClientNetActor::ProccessIO()
 	}
 	case EnumDefine::ServerType::MASTER:
 	{
-		m_client_impl->m_proccess_module->ProcessTempIO(*this);
+		m_client_impl->m_proccess_module->ProcessTempIO(shared_from_this());
 		break;
 	}
 	case EnumDefine::ServerType::LOGIN:
