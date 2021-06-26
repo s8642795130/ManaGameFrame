@@ -4,6 +4,7 @@
 #include "../Server/BuiltInMsgDefine.h"
 #include "../Server/PackageNetMsg.h"
 #include "../Server/UnpackNetMsg.h"
+#include "../Server/StringDefine.h"
 
 void ServerObjModule::Init()
 {
@@ -28,7 +29,7 @@ void ServerObjModule::AfterInit()
 	std::shared_ptr<IClientNetActor> ptr_client = m_client_net_module->CreateClientNet();
 
 	// get master config
-	auto vec_server_name = m_config_module->GetServersByType("master");
+	auto vec_server_name = m_config_module->GetServersByType(STR_MASTER);
 	auto server_data = m_config_module->GetServerDataByName(vec_server_name[0]->m_server_name);
 
 	// save this server obj
@@ -44,6 +45,7 @@ void ServerObjModule::AfterInit()
 		// connect master
 		if (false == ptr_client->ConnectServer(server_data->m_server_ip, server_data->m_port))
 		{
+			std::perror(CAN_NOT_CONNECT_MASTER);
 			break;
 		}
 
@@ -100,7 +102,7 @@ void ServerObjModule::OnServerOnlineCallback(IClientNetActor& client)
 			// get server data
 			auto server_data = m_config_module->GetServerDataByName(item.m_server_name);
 
-			if (!(server_data->m_server_type.compare("connector") && m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND))
+			if (!(server_data->m_server_type.compare(STR_CONNECTOR) && m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND))
 			{
 				// connect server
 				ptr_client->ConnectServer(server_data->m_server_ip, server_data->m_port);

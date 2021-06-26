@@ -1,12 +1,34 @@
 #include <functional>
 #include <iostream>
+#include <unistd.h>
 
 #include "PluginManager.h"
 #include "IModule.h"
 #include "CommonStruct.h"
+#include "DefineHeader.h"
+#include "StringDefine.h"
+
+void PluginManager::GetRealPath()
+{
+	std::array<char, MAX_PATH> abs_path_buff;
+	auto cnt = readlink("/proc/self/exe", abs_path_buff.data(), MAX_PATH);
+	if (cnt < 0 || cnt >= MAX_PATH)
+	{
+		std::perror(CANNOT_GET_REAL_PATH);
+		std::terminate();
+	}
+	else
+	{
+		std::string temp_path{ abs_path_buff.data() };
+		auto pos = temp_path.rfind('/');
+		m_real_path = temp_path.substr(0, pos);
+	}
+}
 
 void PluginManager::LoadAllPluginLibrary(std::vector<std::shared_ptr<PluginData>> vec_plugin)
 {
+	GetRealPath();
+
 	for (const auto& item : vec_plugin)
 	{
 		LoadPluginLibrary(item->m_plugin);
@@ -21,7 +43,7 @@ bool PluginManager::LoadPluginLibrary(const std::string& plugin_dll_name)
 	using MyFunc = std::shared_ptr<IPlugin>(*)(std::shared_ptr<IPluginManager>);
 
 	//
-	std::shared_ptr<DynLib> ptr_dll{ std::make_shared<DynLib>("lib" + plugin_dll_name) };
+	std::shared_ptr<DynLib> ptr_dll{ std::make_shared<DynLib>(m_real_path + "/lib" + plugin_dll_name + ".so") };
 	ptr_dll->LoadLib();
 
 	//

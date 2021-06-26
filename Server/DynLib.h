@@ -4,7 +4,7 @@
 class DynLib
 {
 private:
-	std::string m_lib_name;
+	std::string m_lib_path_name;
 	void* m_instance = nullptr;
 public:
 	DynLib(const std::string& name);

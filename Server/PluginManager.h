@@ -13,10 +13,12 @@ class PluginManager : public IPluginManager
 {
 private:
 	std::string m_server_name;
+	std::string m_real_path;
 protected:
 	bool LoadPluginLibrary(const std::string& pluginDLLName);
 	void RegisterAll();
 public:
+	void GetRealPath();
 	void LoadAllPluginLibrary(std::vector<std::shared_ptr<PluginData>> vec_plugin);
 
 	// config

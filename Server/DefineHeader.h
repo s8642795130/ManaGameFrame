@@ -5,3 +5,5 @@
 #define MAJOR_LENGTH (4) // ByteBuffer
 #define MINOR_LENGTH (4) // ByteBuffer
 #define INT_LENGTH (4) // ByteBuffer
+// path
+#define MAX_PATH (4096)

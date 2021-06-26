@@ -1,10 +1,12 @@
 #include "ClientHttpActor.h"
+#include "../Server/StringDefine.h"
 
 void ClientHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
 {
 	auto state = m_http_buffer->GetDataState();
 
 	// local
+	bool pass_by = true;
 	ssize_t less = len;
 
 	switch (state)
@@ -46,11 +48,25 @@ void ClientHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t 
 		// exit
 		break;
 	}
+	case 3:
+	{
+		std::perror(HTTP_PACKAGE_ERROR);
+		ClientClose();
+		pass_by = false;
+		break;
+	}
+	case 4:
+	{
+		std::perror(HTTP_PACKAGE_ERROR);
+		ClientClose();
+		pass_by = false;
+		break;
+	}
 	default:
 		break;
 	}
 
-	if (less != 0 || m_http_buffer->ReadyToExecute())
+	if (pass_by && (less != 0 || m_http_buffer->ReadyToExecute()))
 	{
 		std::array<char, DEFAULT_BUFLEN> next_buffer;
 		std::memcpy(next_buffer.data(), buffer.data() + (len - less), less);

@@ -20,7 +20,7 @@ class HttpBuffer : public IHttpBuffer
 private:
 	std::vector<char> m_buffer;
 	bool m_is_first_recv = true;
-	int m_data_state = -1;
+	int m_data_state = -1; // 
 	int m_remaining_len = 0;
 	//
 	uint64_t m_content_length = 0;
@@ -38,7 +38,7 @@ protected:
 		bool ret = true;
 		for (std::size_t i = 0; i < vec2.size(); ++i)
 		{
-			if (vec1[pos] != vec2[i])
+			if (vec1[pos + i] != vec2[i])
 			{
 				ret = false;
 				break;
@@ -55,7 +55,7 @@ protected:
 		int pos = -1;
 		if (for_times > 0)
 		{
-			for (std::size_t i = 0; i < for_times; ++i)
+			for (std::size_t i = 0; i <= for_times; ++i)
 			{
 				if (CompareVec(vec1, vec2, i))
 				{
@@ -68,7 +68,7 @@ protected:
 		return pos;
 	}
 
-	bool ParsingHeader(std::vector<char> buffer)
+	bool ParsingHeader(const std::vector<char>& buffer)
 	{
 		bool ret = true;
 
@@ -83,16 +83,15 @@ protected:
 		settings.on_body = on_body;
 		settings.on_header_value_complete = on_header_value_complete;
 
+		// init parser
+		llhttp_init(&parser, HTTP_REQUEST, &settings);
+
 		// set data
 		parser.data = this;
 
+		// parser
 		enum llhttp_errno err = llhttp_execute(&parser, buffer.data(), buffer.size());
-		if (err == HPE_OK)
-		{
-			// Successfully parsed
-			std::cout << "Successfully parsed!" << parser.content_length << std::endl;
-		}
-		else
+		if (err != HPE_OK)
 		{
 			fprintf(stderr, "Parse error: %s %s\n", llhttp_errno_name(err), parser.reason);
 			ret = false;
@@ -143,21 +142,37 @@ public:
 				// 3 condition
 				if (static_cast<int>(m_content_length) == cur_body_len)
 				{
-					//
-					ParsingBodyToBuffer();
 					m_ready_to_execute = true;
-					m_data_state = 0;
-					ret = 0;
+					//
+					if (ParsingBodyToBuffer())
+					{
+						m_data_state = 0;
+						ret = 0;
+					}
+					else
+					{
+						// http body error
+						m_data_state = 3;
+						ret = 3;
+					}
 				}
 
 				if (static_cast<int>(m_content_length) < cur_body_len) // sticky package
 				{
-					// more data
-					ParsingBodyToBuffer();
 					m_ready_to_execute = true;
-					m_more_data_length = cur_body_len - static_cast<int>(m_content_length);
-					m_data_state = 2;
-					ret = 2;
+					// more data
+					if (ParsingBodyToBuffer())
+					{
+						m_more_data_length = cur_body_len - static_cast<int>(m_content_length);
+						m_data_state = 2;
+						ret = 2;
+					}
+					else
+					{
+						// http body error
+						m_data_state = 3;
+						ret = 3;
+					}
 				}
 
 				if (static_cast<int>(m_content_length) > cur_body_len) // half package
@@ -167,6 +182,13 @@ public:
 					m_data_state = 1;
 					ret = 1;
 				}
+			}
+			else
+			{
+				m_ready_to_execute = true;
+				// http data error
+				m_data_state = 4;
+				ret = 4;
 			}
 		}
 		else
@@ -202,10 +224,21 @@ public:
 		}
 	}
 
-	void SetContentLength(uint64_t content_length)
+	virtual void SetContentLength(uint64_t content_length)
 	{
 		m_b_content_length = true;
 		m_content_length = content_length;
+	}
+
+	virtual uint64_t GetContentLength()
+	{
+		return m_content_length;
+	}
+
+	virtual void PushBodyStream(const char* stream, size_t length)
+	{
+		m_stream.reserve(length);
+		std::memcpy(m_stream.data(), stream, length);
 	}
 
 	bool ReadyToExecute()

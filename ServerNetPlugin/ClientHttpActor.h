@@ -9,7 +9,10 @@ protected:
 protected:
 	virtual void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len) override;
 public:
-	ClientHttpActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr) : ClientNetActor(ptr_manager, ptr) {}
+	ClientHttpActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr) : ClientNetActor(ptr_manager, ptr)
+	{
+		m_http_buffer = std::make_shared<HttpBuffer>();
+	}
 
 	// interface
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer();

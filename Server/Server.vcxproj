@@ -116,6 +116,8 @@
       <AdditionalDependencies>-lpthread;-ldl;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
       <LibraryDependencies>llhttp;%(LibraryDependencies)</LibraryDependencies>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
