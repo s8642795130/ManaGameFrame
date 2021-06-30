@@ -62,6 +62,12 @@
     <ClInclude Include="BindFunc.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="INetActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="IFrontendActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interface">
@@ -72,6 +78,9 @@
     </Filter>
     <Filter Include="llhttp">
       <UniqueIdentifier>{cf7bdfba-00fa-43a2-b4bd-b028a33c4547}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Actor">
+      <UniqueIdentifier>{80da42b6-b9a5-4b63-8dcb-499f021f9e98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

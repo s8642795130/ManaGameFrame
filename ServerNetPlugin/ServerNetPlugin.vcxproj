@@ -101,8 +101,10 @@
     <ClInclude Include="HttpBuffer.h" />
     <ClInclude Include="IClientNetActor.h" />
     <ClInclude Include="IClientNetModule.h" />
+    <ClInclude Include="IFrontendActor.h" />
     <ClInclude Include="IHttpBuffer.h" />
     <ClInclude Include="IMsgRouterModule.h" />
+    <ClInclude Include="INetActor.h" />
     <ClInclude Include="INetCallbackModule.h" />
     <ClInclude Include="INetProccessModule.h" />
     <ClInclude Include="IServerNetModule.h" />
@@ -127,6 +129,14 @@
     <Link>
       <LibraryDependencies>llhttp;%(LibraryDependencies)</LibraryDependencies>
     </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Link>
+      <LibraryDependencies>llhttp;%(LibraryDependencies)</LibraryDependencies>
+    </Link>
+    <ClCompile>
+      <CppLanguageStandard>c++17</CppLanguageStandard>
+    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

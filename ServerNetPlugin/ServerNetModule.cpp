@@ -85,7 +85,7 @@ void ServerNetModule::StartNetwork(uint16_t listen_port, uint32_t timeout_secs)
 	CreateEpoll();
 
 	epoll_event e_event;
-	e_event.events = EPOLLIN;
+	e_event.events = EPOLLIN | EPOLLET | EPOLLRDHUP;
 	e_event.data.fd = m_listen_fd;
 
 	if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, m_listen_fd, &e_event) == -1)
@@ -115,7 +115,7 @@ bool ServerNetModule::AddFD(std::shared_ptr<IClientNetActor> ptr_client)
 	// ev.events = EPOLLIN | EPOLLRDHUP | EPOLLET;	// client events will be handled in edge-triggered mode
 	ev.data.fd = ptr_client->m_client_fd;
 	// ev.data.ptr = reinterpret_cast<void*>(ptr_client.get()); // we will pass client descriptor with every event
-	ev.events = EPOLLIN | EPOLLET;
+	ev.events = EPOLLIN | EPOLLET| EPOLLRDHUP;
 
 	if (epoll_ctl(m_epoll_fd, EPOLL_CTL_ADD, ptr_client->m_client_fd, &ev) == -1)
 	{
