@@ -1,15 +1,13 @@
 #pragma once
 #include <queue>
 
+#include "../Server/PackageNetMsg.h"
 #include "INetActor.h"
-#include "ClientPimpl.h"
+#include "IBackendActor.h"
 
 class IFrontendActor : public INetActor
 {
 protected:
-	// impl
-	std::shared_ptr<ClientPimpl> m_client_impl;
-
 	// client data
 	std::string m_uid;
 	std::map<std::string, std::string> m_client_data;
@@ -19,29 +17,33 @@ protected:
 	std::queue<FrontendMsg> m_queue_msg;
 	
 protected:
+	IFrontendActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl) :
+		INetActor(ptr_manager, ptr_impl)
+	{
+	}
+
 	virtual void ProccessIO()
 	{
-		const auto major_id = client.GetBuffer()->GetMajorId();
-		auto map_msg = m_callback_module->GetGameMsgMap();
+		const auto major_id = m_buffer->GetMajorId();
+		auto map_msg = m_client_impl->m_callback_module->GetGameMsgMap();
 		auto plugin_name = map_msg[major_id];
 
 		// get all the servers that the plugin exists
-		const auto server_list = m_config_module->GetServersByPluginName(plugin_name);
+		const auto server_list = m_client_impl->m_config_module->GetServersByPluginName(plugin_name);
 
 		// router
-		const auto server_index = m_router_module->GetMsgRouterByClient(plugin_name, static_cast<int>(server_list.size()), client);
+		const auto server_index = m_client_impl->m_router_module->GetMsgRouterByClient(plugin_name, static_cast<int>(server_list.size()), *this);
 
 		// get server uuid
-		auto server_uuid = m_server_obj_module->GetServerUUIDByName(server_list[server_index]->m_server_name);
+		auto server_uuid = m_client_impl->m_server_obj_module->GetServerUUIDByName(server_list[server_index]->m_server_name);
 
 		// create backend client struct
 		std::unique_ptr<FrontendToBackendMsg> backend_msg{ std::make_unique<FrontendToBackendMsg>() };
-		auto buffer = client.GetBuffer();
-		backend_msg->m_client_uid = client.GetUid();
-		backend_msg->m_client_data = client.GetClientData();
-		backend_msg->m_major_id = buffer->GetMajorId();
-		backend_msg->m_minor_id = buffer->GetMinorId();
-		backend_msg->m_stream = buffer->GetStream();
+		backend_msg->m_client_uid = m_uid;
+		backend_msg->m_client_data = m_client_data;
+		backend_msg->m_major_id = m_buffer->GetMajorId();
+		backend_msg->m_minor_id = m_buffer->GetMinorId();
+		backend_msg->m_stream = m_buffer->GetStream();
 
 		//
 		FrontendMsg frontend_msg;
@@ -49,8 +51,8 @@ protected:
 		frontend_msg.m_uuid = server_uuid;
 
 		// send to backend server
-		std::unique_ptr<IActorMsg> ptr = CreateActorMsg(client.GetUUID(), server_uuid, &IClientNetActor::ProcessNextIO, std::move(frontend_msg));
-		client.GetActorPimpl()->SendMsgToActor(ptr);
+		std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), server_uuid, &IFrontendActor::ProcessNextIO, std::move(frontend_msg));
+		GetActorPimpl()->SendMsgToActor(ptr);
 	}
 
 	void ProcessNextIO(FrontendMsg frontend_msg)
@@ -79,7 +81,7 @@ protected:
 			PackageStructForEachField(*frontend_msg.m_msg, package); // dereference
 
 			// send to backend server
-			std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), frontend_msg.m_uuid, &IClientNetActor::SendStream, std::move(package));
+			std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), frontend_msg.m_uuid, &IBackendActor::SendStream, std::move(package));
 			m_pimpl->SendMsgToActor(ptr);
 
 			// del msg
@@ -87,8 +89,21 @@ protected:
 		}
 	}
 public:
+	void SetUid(const std::string& uid)
+	{
+		m_uid = uid;
+	}
+
+	const std::string& GetUid() const
+	{
+		return m_uid;
+	}
+
 	// client data
-	virtual const std::map<std::string, std::string> GetClientData() const;
+	const std::map<std::string, std::string> GetClientData() const
+	{
+		return m_client_data;
+	}
 
 	void UpdateClientData(const std::string& key, const std::string& value, int type)
 	{
@@ -101,4 +116,6 @@ public:
 			m_client_data.erase(key);
 		}
 	}
+
+	virtual void BackStream(std::vector<char> stream) = 0;
 };

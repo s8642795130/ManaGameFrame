@@ -25,7 +25,6 @@ public:
 	virtual void Init();
 
 	// interface
-	virtual void ProcessFrontendIO(IClientNetActor& client);
 	virtual void ProcessBackendIO(IClientNetActor& client);
 	virtual void ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor> client);
 	virtual void ProcessServerBackendIO(IClientNetActor& client);

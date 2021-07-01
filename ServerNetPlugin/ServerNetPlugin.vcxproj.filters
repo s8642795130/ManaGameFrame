@@ -10,9 +10,17 @@
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="ServerObjModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
-    <ClCompile Include="ClientHttpActor.cpp" />
     <ClCompile Include="llhttp.cpp">
       <Filter>llhttp</Filter>
+    </ClCompile>
+    <ClCompile Include="FrontendSocketActor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="FrontendHttpActor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="BackendServerActor.cpp">
+      <Filter>Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,11 +59,9 @@
     <ClInclude Include="BackendClient.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="ClientHttpActor.h" />
     <ClInclude Include="HttpBuffer.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="IHttpBuffer.h" />
     <ClInclude Include="llhttp.h">
       <Filter>llhttp</Filter>
     </ClInclude>
@@ -66,6 +72,21 @@
       <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="IFrontendActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="FrontendSocketActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="FrontendHttpActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="IBackendActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="IHttpBuffer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="BackendServerActor.h">
       <Filter>Actor</Filter>
     </ClInclude>
   </ItemGroup>

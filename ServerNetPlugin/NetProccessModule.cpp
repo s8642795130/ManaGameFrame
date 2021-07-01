@@ -17,47 +17,6 @@ void NetProccessModule::Init()
 	m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
 }
 
-void NetProccessModule::ProcessFrontendIO(IClientNetActor& client)
-{
-	// send to backend
-	//if (!m_is_login)
-	//{
-		//return;
-	//}
-
-	// get msg corresponding to plugin
-	const auto major_id = client.GetBuffer()->GetMajorId();
-	auto map_msg = m_callback_module->GetGameMsgMap();
-	auto plugin_name = map_msg[major_id];
-
-	// get all the servers that the plugin exists
-	const auto server_list = m_config_module->GetServersByPluginName(plugin_name);
-
-	// router
-	const auto server_index = m_router_module->GetMsgRouterByClient(plugin_name, static_cast<int>(server_list.size()), client);
-
-	// get server uuid
-	auto server_uuid = m_server_obj_module->GetServerUUIDByName(server_list[server_index]->m_server_name);
-
-	// create backend client struct
-	std::unique_ptr<FrontendToBackendMsg> backend_msg{ std::make_unique<FrontendToBackendMsg>() };
-	auto buffer = client.GetBuffer();
-	backend_msg->m_client_uid = client.GetUid();
-	backend_msg->m_client_data = client.GetClientData();
-	backend_msg->m_major_id = buffer->GetMajorId();
-	backend_msg->m_minor_id = buffer->GetMinorId();
-	backend_msg->m_stream = buffer->GetStream();
-
-	//
-	FrontendMsg frontend_msg;
-	frontend_msg.m_msg = std::move(backend_msg);
-	frontend_msg.m_uuid = server_uuid;
-
-	// send to backend server
-	std::unique_ptr<IActorMsg> ptr = CreateActorMsg(client.GetUUID(), server_uuid, &IClientNetActor::ProcessNextIO, std::move(frontend_msg));
-	client.GetActorPimpl()->SendMsgToActor(ptr);
-}
-
 void NetProccessModule::ProcessBackendIO(IClientNetActor& client)
 {
 	// there is two situations, case 1: back msg to client; case 2: change client data

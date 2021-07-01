@@ -6,37 +6,24 @@
 
 #include "../ActorPlugin/Actor.h"
 #include "../Server/ByteBuffer.h"
+#include "ClientPimpl.h"
 
 class INetActor : public Actor
 {
 protected:
 	int m_client_fd = 0;
 	sockaddr_in m_client_sin = { 0 };
+
+	// impl
+	std::shared_ptr<ClientPimpl> m_client_impl;
+	//
 	std::shared_ptr<ByteBuffer> m_buffer;
 public:
-	// interface
-	bool ConnectServer(const std::string& ip, const int port)
+	INetActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl) :
+		Actor(ptr_manager),
+		m_client_impl(ptr_impl),
+		m_buffer(std::make_shared<ByteBuffer>())
 	{
-		bool ret = true;
-
-		m_client_fd = socket(AF_INET, SOCK_STREAM, 0);
-
-		// test code
-		int on = 1;
-		setsockopt(m_client_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
-
-		// sockaddr_in
-		m_client_sin.sin_family = AF_INET;
-		m_client_sin.sin_port = htons(static_cast<uint16_t>(port));
-		m_client_sin.sin_addr.s_addr = inet_addr(ip.c_str());
-
-		if (connect(m_client_fd, (struct sockaddr*)&m_client_sin, sizeof(m_client_sin)) < 0)
-		{
-			fprintf(stderr, "socket connect error = %d ( %s )\n", errno, strerror(errno));
-			ret = false;
-		}
-
-		return ret;
 	}
 	
 	void ClientClose()
@@ -70,7 +57,7 @@ public:
 				break;
 			}
 
-			OnParsing(buffer, bytes_read);
+			Parsing(buffer, bytes_read);
 			// data_buffer.append(buffer, bytes_read);
 		}
 
@@ -110,6 +97,74 @@ public:
 		std::cout << "[-] server close " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by client" << std::endl;
 	}
 
-	virtual void OnParsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len) = 0;
+	virtual void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
+	{
+		auto buf_remain_len = len;
+		if (m_buffer->GetHeaderStatus() == false)
+		{
+			// is not read length
+			auto remain_len = m_buffer->GetRemainingLen();
+			auto len_buf = remain_len < len ? remain_len : len;
+
+			//
+			m_buffer->RecvHeader(buffer.data(), len_buf);
+			buf_remain_len -= len_buf;
+
+			//
+			if (m_buffer->GetRemainingLen() == 0)
+			{
+				if (m_buffer->ResetHeader() == false)
+				{
+					return;
+				}
+
+				if (m_buffer->GetRemainingLen() == 0)
+				{
+					// io actor
+					ProcessIO();
+
+					// reset msg data
+					m_buffer->ResetData();
+					if (buf_remain_len != 0)
+					{
+						std::array<char, DEFAULT_BUFLEN> buf;
+						std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
+						Parsing(buf, buf_remain_len);
+						return;
+					}
+				}
+			}
+		}
+
+		if (buf_remain_len != 0)
+		{
+			//
+			auto unreceived_len = m_buffer->GetRemainingLen();
+			auto push_data_len = unreceived_len < buf_remain_len ? unreceived_len : buf_remain_len;
+			m_buffer->PushData(buffer.data() + (len - buf_remain_len), push_data_len);
+			buf_remain_len -= push_data_len;
+		}
+
+		if (m_buffer->GetRemainingLen() == 0)
+		{
+			// io
+			ProcessIO();
+
+			// reset msg data
+			m_buffer->ResetData();
+			if (buf_remain_len != 0)
+			{
+				std::array<char, DEFAULT_BUFLEN> buf;
+				std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
+				Parsing(buf, buf_remain_len);
+			}
+		}
+	}
+
 	virtual void ProcessIO() = 0;
+
+	virtual void SendStream(std::vector<char> stream) final
+	{
+		send(m_client_fd, stream.data(), stream.size(), 0);
+	}
 };

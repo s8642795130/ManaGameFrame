@@ -10,7 +10,6 @@ public:
 	}
 
 	// interface
-	virtual void ProcessFrontendIO(IClientNetActor& client) = 0;
 	virtual void ProcessBackendIO(IClientNetActor& client) = 0;
 	virtual void ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor> client) = 0;
 	virtual void ProcessServerBackendIO(IClientNetActor& client) = 0;

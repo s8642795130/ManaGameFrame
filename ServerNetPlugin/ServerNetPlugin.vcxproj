@@ -79,10 +79,12 @@
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\..\..\..\..\out\</OutDir>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="ClientHttpActor.cpp" />
+    <ClCompile Include="BackendServerActor.cpp" />
     <ClCompile Include="ClientNetActor.cpp" />
     <ClCompile Include="ClientNetModule.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="FrontendHttpActor.cpp" />
+    <ClCompile Include="FrontendSocketActor.cpp" />
     <ClCompile Include="llhttp.cpp" />
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
@@ -93,12 +95,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackendClient.h" />
+    <ClInclude Include="BackendServerActor.h" />
     <ClInclude Include="BindFunc.h" />
-    <ClInclude Include="ClientHttpActor.h" />
     <ClInclude Include="ClientPimpl.h" />
     <ClInclude Include="ClientNetActor.h" />
     <ClInclude Include="ClientNetModule.h" />
+    <ClInclude Include="FrontendHttpActor.h" />
+    <ClInclude Include="FrontendSocketActor.h" />
     <ClInclude Include="HttpBuffer.h" />
+    <ClInclude Include="IBackendActor.h" />
     <ClInclude Include="IClientNetActor.h" />
     <ClInclude Include="IClientNetModule.h" />
     <ClInclude Include="IFrontendActor.h" />

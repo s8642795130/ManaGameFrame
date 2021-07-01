@@ -1,7 +1,7 @@
-#include "ClientHttpActor.h"
+#include "FrontendHttpActor.h"
 #include "../Server/StringDefine.h"
 
-void ClientHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
+void FrontendHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
 {
 	auto state = m_http_buffer->GetDataState();
 
@@ -74,7 +74,7 @@ void ClientHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t 
 	}
 }
 
-std::shared_ptr<ByteBuffer>& ClientHttpActor::GetBuffer()
+void FrontendHttpActor::ProcessIO()
 {
-	return m_http_buffer->GetBuffer();
+
 }

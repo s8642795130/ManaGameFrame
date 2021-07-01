@@ -7,7 +7,7 @@ void MsgRouterModule::Init()
 
 void MsgRouterModule::initRouterFunc()
 {
-	m_router_func.emplace("hallPlugin", [](const int server_count, const IClientNetActor& client) -> int
+	m_router_func.emplace("hallPlugin", [](const int server_count, const IFrontendActor& client) -> int
 		{
 			auto str_uid = client.GetUid();
 			auto uid = std::stoi(str_uid);
@@ -16,7 +16,7 @@ void MsgRouterModule::initRouterFunc()
 	);
 }
 
-int MsgRouterModule::DefaultRouter(const int server_count, const IClientNetActor& client)
+int MsgRouterModule::DefaultRouter(const int server_count, const IFrontendActor& client)
 {
 	auto str_uid = client.GetUid();
 	auto uid = std::stoi(str_uid);
@@ -29,7 +29,7 @@ int MsgRouterModule::GetConnectorIndexByClient(const int server_count, const std
 	return (temp_uid % server_count);
 }
 
-int MsgRouterModule::GetMsgRouterByClient(const std::string plugin_name, const int server_count, const IClientNetActor& client)
+int MsgRouterModule::GetMsgRouterByClient(const std::string plugin_name, const int server_count, const IFrontendActor& client)
 {
 	int ret = 0;
 

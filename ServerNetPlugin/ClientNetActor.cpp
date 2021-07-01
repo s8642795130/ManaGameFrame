@@ -166,7 +166,7 @@ void ClientNetActor::ProccessIO()
 		{
 		case EnumDefine::ClientType::CLIENT:
 			// frontend server
-			m_client_impl->m_proccess_module->ProcessFrontendIO(*this);
+			// m_client_impl->m_proccess_module->ProcessFrontendIO(*this);
 			break;
 		case EnumDefine::ClientType::BACKEND: // (maybe update client data)
 			// backend server
