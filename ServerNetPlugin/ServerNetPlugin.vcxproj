@@ -114,6 +114,7 @@
     <ClInclude Include="INetProccessModule.h" />
     <ClInclude Include="IServerNetModule.h" />
     <ClInclude Include="IServerObjModule.h" />
+    <ClInclude Include="ITcpServer.h" />
     <ClInclude Include="llhttp.h" />
     <ClInclude Include="MsgRouterModule.h" />
     <ClInclude Include="NetCallbackModule.h" />
