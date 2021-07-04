@@ -1,4 +1,5 @@
 #pragma once
+#include <sys/epoll.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
@@ -8,14 +9,35 @@
 #include <unistd.h>
 #include <time.h>
 
+#include <array>
+#include <memory>
+
+#include "INetActor.h"
+#include "../Server/DefineHeader.h"
+#include "../Server/IPluginManager.h"
+#include "IClientNetModule.h"
+
 class ITcpServer
 {
 private:
+	// manager
+	std::shared_ptr<IPluginManager> m_ptr_manager;
+	// module
+	std::shared_ptr<IThreadPoolModule> m_thread_pool_module;
+	std::shared_ptr<IClientNetModule> m_client_net_module;
+
+	//
 	const int m_worker_max_events = WORKER_MAX_EVENTS;
 	int m_listen_fd = -1;
 	int m_epoll_fd = -1;
 	std::array<epoll_event, WORKER_MAX_EVENTS> m_arr_events;
 public:
+	ITcpServer(std::shared_ptr<IPluginManager> ptr) : m_ptr_manager(ptr)
+	{
+		m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
+		m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
+	}
+
 	void StartNetwork(uint16_t listen_port, uint32_t timeout_secs)
 	{
 		// test code
@@ -71,7 +93,7 @@ public:
 		}
 	}
 
-	bool AddFD(std::shared_ptr<IClientNetActor> ptr_client)
+	bool AddFD(std::shared_ptr<INetActor> ptr_client)
 	{
 		if (!SetNonblocking(ptr_client->m_client_fd))
 		{
@@ -169,7 +191,7 @@ public:
 	bool HandleAccept()
 	{
 		// allocate and initialize a new descriptor for the client
-		std::shared_ptr<IClientNetActor> ptr_client = m_client_net_module->CreateClientNet();
+		std::shared_ptr<INetActor> ptr_client = CreateClientNet();
 
 		// get sin struct size
 		socklen_t sin_size = sizeof(ptr_client->m_client_sin);
@@ -194,14 +216,14 @@ public:
 		// retrieve client descriptor address from the data parameter (test code)
 		// IClientNetActor* client = reinterpret_cast<IClientNetActor*>(ev.data.ptr);
 		//
-		std::shared_ptr<IClientNetActor> ptr_client = m_client_net_module->GetClientNet(ev.data.fd);
+		std::shared_ptr<INetActor> ptr_client = m_client_net_module->GetClientNet(ev.data.fd);
 
 		//we got some data from the client
 		if (ev.events & EPOLLIN)
 		{
-			if (!ptr_client->ReadReady())
+			if (!ptr_client->OnReadReady())
 			{
-				ptr_client->ServerClose();
+				ptr_client->OnServerClose();
 				RemoveClient(ptr_client);
 				// delete client;
 
@@ -212,7 +234,7 @@ public:
 		//the client closed the connection (should be after EPOLLIN as client can send data then close)
 		if (ev.events & EPOLLRDHUP)
 		{
-			ptr_client->ServerClose();
+			ptr_client->OnServerClose();
 			RemoveClient(ptr_client);
 			// delete client;
 
@@ -222,9 +244,9 @@ public:
 		//fd is ready to be written
 		if (ev.events & EPOLLOUT)
 		{
-			if (!ptr_client->WriteReady())
+			if (!ptr_client->OnWriteReady())
 			{
-				ptr_client->ServerClose();
+				ptr_client->OnServerClose();
 				RemoveClient(ptr_client);
 				// delete client;
 				return false;
@@ -233,4 +255,13 @@ public:
 
 		return true;
 	}
+
+	void RemoveClient(std::shared_ptr<INetActor>& ptr_client)
+	{
+		m_client_net_module->RemoveClientFromMap(ptr_client->GetSid());
+		m_client_net_module->RemoveLoginClientFromMap(ptr_client->GetUid());
+		m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
+	}
+
+	virtual std::shared_ptr<INetActor> CreateClientNet() = 0;
 };

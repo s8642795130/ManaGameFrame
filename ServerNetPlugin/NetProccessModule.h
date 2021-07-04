@@ -25,6 +25,7 @@ public:
 	virtual void Init();
 
 	// interface
+	/*
 	virtual void ProcessBackendIO(IClientNetActor& client);
 	virtual void ProcessFrontendUnknowMsg(std::shared_ptr<IClientNetActor> client);
 	virtual void ProcessServerBackendIO(IClientNetActor& client);
@@ -33,5 +34,6 @@ public:
 	virtual void ProcessMasterIO(IClientNetActor& client);
 	virtual void ProcessTempIO(std::shared_ptr<IClientNetActor> client);
 	virtual void ProcessHttpIO(IClientNetActor& client);
+	*/
 };
 

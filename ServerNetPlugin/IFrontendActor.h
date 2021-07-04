@@ -22,7 +22,7 @@ protected:
 	{
 	}
 
-	virtual void ProccessIO()
+	virtual void ProcessIO()
 	{
 		const auto major_id = m_buffer->GetMajorId();
 		auto map_msg = m_client_impl->m_callback_module->GetGameMsgMap();
@@ -94,7 +94,7 @@ public:
 		m_uid = uid;
 	}
 
-	const std::string& GetUid() const
+	virtual const std::string& GetUid() const
 	{
 		return m_uid;
 	}

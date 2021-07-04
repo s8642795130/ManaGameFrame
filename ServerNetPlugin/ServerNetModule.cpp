@@ -15,24 +15,8 @@
 #include "ServerNetModule.h"
 
 ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
-	IServerNetModule(ptr),
-	m_listen_fd(-1),
-	m_epoll_fd(-1)
-	//last_socket_check_(0)
+	IServerNetModule(ptr)
 {
-}
-
-ServerNetModule::~ServerNetModule()
-{
-	if (m_listen_fd != -1)
-	{
-		close(m_listen_fd);
-	}
-
-	if (m_epoll_fd != -1)
-	{
-		close(m_epoll_fd);
-	}
 }
 
 void ServerNetModule::Init()
@@ -44,10 +28,11 @@ void ServerNetModule::Init()
 
 void ServerNetModule::AfterInit()
 {
-	auto port = m_config_module->GetMyServerInfo()->m_port;
-	StartNetwork(static_cast<uint16_t>(port), 30);
+	// auto port = m_config_module->GetMyServerInfo()->m_port;
+	// StartNetwork(static_cast<uint16_t>(port), 30);
 }
 
+/*
 void ServerNetModule::StartNetwork(uint16_t listen_port, uint32_t timeout_secs)
 {
 	// test code
@@ -175,7 +160,6 @@ void ServerNetModule::EventLoop()
 
 			last_socket_check_ = time(0);
 		}
-		*/
 	}
 }
 
@@ -271,4 +255,10 @@ void ServerNetModule::RemoveClient(std::shared_ptr<IClientNetActor>& ptr_client)
 	m_client_net_module->RemoveClientFromMap(ptr_client->GetSid());
 	m_client_net_module->RemoveLoginClientFromMap(ptr_client->GetUid());
 	m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
+}
+*/
+
+void ServerNetModule::EventLoop()
+{
+
 }

@@ -7,7 +7,6 @@
 #include "../ConfigPlugin/IConfigModule.h"
 #include "../ServerNetPlugin/IServerObjModule.h"
 #include "../ServerNetPlugin/INetCallbackModule.h"
-#include "../ServerNetPlugin/IClientNetActor.h"
 #include "../ActorPlugin/ActorMsg.h"
 #include "../Server/BuiltInDataDefine.h"
 #include "../Server/BuiltInMsgDefine.h"
@@ -39,7 +38,7 @@ protected:
 		PackageStructForEachField(backend_msg, package);
 
 		// router
-		auto connector_server = m_config_module->GetServersByType(CONNECTOR);
+		auto connector_server = m_config_module->GetServersByType(STR_CONNECTOR);
 		auto index = m_router_module->GetConnectorIndexByClient(static_cast<int>(connector_server.size()), uid);
 
 		// get frontend uuid
@@ -133,7 +132,7 @@ public:
 		PackageStructForEachField(update_client, package);
 
 		// router
-		auto connector_server = m_config_module->GetServersByType(CONNECTOR);
+		auto connector_server = m_config_module->GetServersByType(STR_CONNECTOR);
 		auto index = m_router_module->GetConnectorIndexByClient(static_cast<int>(connector_server.size()), uid);
 
 		// get frontend uuid

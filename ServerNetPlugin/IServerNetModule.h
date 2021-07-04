@@ -11,7 +11,6 @@ public:
 	}
 
 	// interface
-	virtual bool AddFD(std::shared_ptr<IClientNetActor> ptr_client) = 0;
 	virtual void EventLoop() = 0;
 };
 

@@ -22,7 +22,7 @@ void FrontendHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_
 	}
 	case 0: // process io
 	{
-		ProccessIO();
+		ProcessIO();
 		m_http_buffer->Reset();
 
 		// exit
@@ -42,7 +42,7 @@ void FrontendHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_
 	{
 		auto more_len = m_http_buffer->GetMoreDataLength();
 		less = more_len;
-		ProccessIO();
+		ProcessIO();
 		m_http_buffer->Reset();
 
 		// exit
@@ -75,6 +75,11 @@ void FrontendHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_
 }
 
 void FrontendHttpActor::ProcessIO()
+{
+
+}
+
+void FrontendHttpActor::BackStream(std::vector<char> stream)
 {
 
 }

@@ -80,7 +80,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="BackendServerActor.cpp" />
-    <ClCompile Include="ClientNetActor.cpp" />
     <ClCompile Include="ClientNetModule.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FrontendHttpActor.cpp" />
@@ -98,7 +97,6 @@
     <ClInclude Include="BackendServerActor.h" />
     <ClInclude Include="BindFunc.h" />
     <ClInclude Include="ClientPimpl.h" />
-    <ClInclude Include="ClientNetActor.h" />
     <ClInclude Include="ClientNetModule.h" />
     <ClInclude Include="FrontendHttpActor.h" />
     <ClInclude Include="FrontendSocketActor.h" />

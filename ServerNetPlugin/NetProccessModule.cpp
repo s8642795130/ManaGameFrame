@@ -17,6 +17,7 @@ void NetProccessModule::Init()
 	m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
 }
 
+/*
 void NetProccessModule::ProcessBackendIO(IClientNetActor& client)
 {
 	// there is two situations, case 1: back msg to client; case 2: change client data
@@ -198,7 +199,6 @@ void NetProccessModule::ProcessTempIO(std::shared_ptr<IClientNetActor> client)
 
 void NetProccessModule::ProcessHttpIO(IClientNetActor& client)
 {
-	/*
 	int majorId = client.GetBuffer()->GetMajorId();
 	auto map_callback = m_callback_module->GetHTTPCallbackMap();
 
@@ -208,5 +208,5 @@ void NetProccessModule::ProcessHttpIO(IClientNetActor& client)
 		auto callback = map_callback[majorId];
 		callback->Trigger(m_thread_pool_module, client);
 	}
-	*/
 }
+*/

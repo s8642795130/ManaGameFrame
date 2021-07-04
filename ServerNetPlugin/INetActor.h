@@ -11,19 +11,27 @@
 class INetActor : public Actor
 {
 protected:
-	int m_client_fd = 0;
-	sockaddr_in m_client_sin = { 0 };
 
 	// impl
 	std::shared_ptr<ClientPimpl> m_client_impl;
 	//
 	std::shared_ptr<ByteBuffer> m_buffer;
 public:
+
+	int m_client_fd = 0;
+	sockaddr_in m_client_sin = { 0 };
+
 	INetActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl) :
 		Actor(ptr_manager),
 		m_client_impl(ptr_impl),
 		m_buffer(std::make_shared<ByteBuffer>())
 	{
+	}
+
+	//client's unique id
+	const int GetSid()
+	{
+		return m_client_fd;
 	}
 	
 	void ClientClose()
@@ -161,10 +169,11 @@ public:
 		}
 	}
 
-	virtual void ProcessIO() = 0;
-
 	virtual void SendStream(std::vector<char> stream) final
 	{
 		send(m_client_fd, stream.data(), stream.size(), 0);
 	}
+
+	virtual const std::string& GetUid() const = 0;
+	virtual void ProcessIO() = 0;
 };
