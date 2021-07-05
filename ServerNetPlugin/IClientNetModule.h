@@ -2,6 +2,7 @@
 #include "../Server/IModule.h"
 
 class INetActor;
+class ITcpServer;
 
 class IClientNetModule : public IModule
 {
@@ -10,8 +11,8 @@ public:
 	{
 	}
 
-	virtual std::shared_ptr<INetActor> CreateHttpClientNet() = 0;
-	virtual std::shared_ptr<INetActor> CreateSocketClientNet() = 0;
+	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender) = 0;
+	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender) = 0;
 	virtual void AddClientToMap(std::shared_ptr<INetActor>& ptr) = 0;
 	virtual std::shared_ptr<INetActor> GetClientNet(const int& fd) = 0;
 	virtual void RemoveClientFromMap(const int& fd) = 0;

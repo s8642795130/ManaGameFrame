@@ -7,112 +7,51 @@
 #include "../ActorPlugin/Actor.h"
 #include "../Server/ByteBuffer.h"
 #include "ClientPimpl.h"
+#include "HPSocket.h"
 
 class INetActor : public Actor
 {
 protected:
-
+	ITcpServer* m_ptr_sender = nullptr;
 	// impl
 	std::shared_ptr<ClientPimpl> m_client_impl;
 	//
 	std::shared_ptr<ByteBuffer> m_buffer;
 public:
 
-	int m_client_fd = 0;
-	sockaddr_in m_client_sin = { 0 };
+	unsigned long m_conn_id;
 
-	INetActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl) :
+	INetActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, ITcpServer* ptr_sender) :
 		Actor(ptr_manager),
+		m_ptr_sender(ptr_sender),
 		m_client_impl(ptr_impl),
 		m_buffer(std::make_shared<ByteBuffer>())
 	{
 	}
 
 	//client's unique id
-	const int GetSid()
+	const unsigned long GetSid() const
 	{
-		return m_client_fd;
+		return m_conn_id;
 	}
 	
 	void ClientClose()
 	{
-		close(m_client_fd);
+		m_ptr_sender->Disconnect(m_conn_id);
 
-		std::cout << "[-] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by client" << std::endl;
+		std::cout << "[-] connection " << std::endl;
 	}
 
-	virtual bool OnReadReady()
+	virtual bool PushData(const BYTE* ptr_data, int length)
 	{
-		bool ret = true;
+		// auto buf_remain_len = length;
 
-		std::array<char, DEFAULT_BUFLEN> buffer;
-		ssize_t bytes_read = 0;
-
-		//we must drain the entire read buffer as we won't get another event until client sends more data
-		while (true)
-		{
-			// bytes_read = recv(m_fd, buffer.data(), DEFAULT_BUFLEN, 0);
-			bytes_read = read(m_client_fd, buffer.data(), DEFAULT_BUFLEN);
-
-			// if (bytes_read == -1)
-			if (bytes_read <= 0)
-			{
-				if (errno != EAGAIN)
-				{
-					std::perror("read error");
-					ret = false;
-				}
-				break;
-			}
-
-			Parsing(buffer, bytes_read);
-			// data_buffer.append(buffer, bytes_read);
-		}
-
-		// client triggered EPOLLIN but sent no data (usually due to remote socket being closed)
-
-		// std::cout << "[i] client %s:%d said: %s\n", inet_ntoa(client_addr_), client_port_, data_buffer.c_str());
-
-		// update last active time to prevent timeout
-		// m_last_active = time(0);
-
-		return ret;
-	}
-
-	virtual bool OnWriteReady()
-	{
 		/*
-		during heavy network I/O fds can become unwritable and subsequent calls to write() / send() will fail,
-		in this case the data which failed to send should be stored in a buffer and the operation should be
-		retried when WriteReady() is called to signal the fd is writable again (this is up to you to implement).
-		*/
-		std::cout << "WriteReady()" << std::endl;
-		return true;
-	}
-	virtual bool OnHeartBeat()
-	{
-		// if no operations occurred during timeout period return false to signal server to close socket
-		//if (static_cast<time_t>(m_last_active + m_timeout) < time(0))
-		//{
-			//std::cout << "[i] connection " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " has timed out" << std::endl;
-			//return false;
-		//}
-
-		return true;
-	}
-	virtual void OnServerClose()
-	{
-		std::cout << "[-] server close " << inet_ntoa(m_client_sin.sin_addr) << ":" << ntohs(m_client_sin.sin_port) << " closed by client" << std::endl;
-	}
-
-	virtual void Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
-	{
-		auto buf_remain_len = len;
 		if (m_buffer->GetHeaderStatus() == false)
 		{
 			// is not read length
 			auto remain_len = m_buffer->GetRemainingLen();
-			auto len_buf = remain_len < len ? remain_len : len;
+			auto len_buf = remain_len < length ? remain_len : length;
 
 			//
 			m_buffer->RecvHeader(buffer.data(), len_buf);
@@ -137,7 +76,7 @@ public:
 					{
 						std::array<char, DEFAULT_BUFLEN> buf;
 						std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
-						Parsing(buf, buf_remain_len);
+						PushData(buf, buf_remain_len);
 						return;
 					}
 				}
@@ -149,7 +88,7 @@ public:
 			//
 			auto unreceived_len = m_buffer->GetRemainingLen();
 			auto push_data_len = unreceived_len < buf_remain_len ? unreceived_len : buf_remain_len;
-			m_buffer->PushData(buffer.data() + (len - buf_remain_len), push_data_len);
+			m_buffer->PushData(buffer.data() + (length - buf_remain_len), push_data_len);
 			buf_remain_len -= push_data_len;
 		}
 
@@ -163,15 +102,18 @@ public:
 			if (buf_remain_len != 0)
 			{
 				std::array<char, DEFAULT_BUFLEN> buf;
-				std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
-				Parsing(buf, buf_remain_len);
+				std::memcpy(buf.data(), buffer.data() + (length - buf_remain_len), buf_remain_len);
+				PushData(buf, buf_remain_len);
 			}
 		}
+		*/
+
+		return true;
 	}
 
-	virtual void SendStream(std::vector<char> stream) final
+	virtual void SendStream(const std::vector<BYTE> stream) final
 	{
-		send(m_client_fd, stream.data(), stream.size(), 0);
+		m_ptr_sender->Send(m_conn_id, stream.data(), static_cast<int>(stream.size()));
 	}
 
 	virtual const std::string& GetUid() const = 0;

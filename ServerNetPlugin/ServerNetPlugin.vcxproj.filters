@@ -88,7 +88,25 @@
       <Filter>Actor</Filter>
     </ClInclude>
     <ClInclude Include="ITcpServer.h">
-      <Filter>Server</Filter>
+      <Filter>ListenerImpl</Filter>
+    </ClInclude>
+    <ClInclude Include="HPSocket.h">
+      <Filter>HPSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalDef.h">
+      <Filter>HPSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketInterface.h">
+      <Filter>HPSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketListenerImpl.h">
+      <Filter>ListenerImpl</Filter>
+    </ClInclude>
+    <ClInclude Include="HPTypeDef.h">
+      <Filter>HPSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="FrontendListenerImpl.h">
+      <Filter>ListenerImpl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -104,7 +122,10 @@
     <Filter Include="Actor">
       <UniqueIdentifier>{80da42b6-b9a5-4b63-8dcb-499f021f9e98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Server">
+    <Filter Include="HPSocket">
+      <UniqueIdentifier>{6f5258b5-62d2-4eb9-a308-8f12cb67efec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ListenerImpl">
       <UniqueIdentifier>{ff050c18-af3b-451d-b898-91bc8c8e99aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

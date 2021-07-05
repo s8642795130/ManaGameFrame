@@ -99,7 +99,11 @@
     <ClInclude Include="ClientPimpl.h" />
     <ClInclude Include="ClientNetModule.h" />
     <ClInclude Include="FrontendHttpActor.h" />
+    <ClInclude Include="FrontendListenerImpl.h" />
     <ClInclude Include="FrontendSocketActor.h" />
+    <ClInclude Include="GlobalDef.h" />
+    <ClInclude Include="HPSocket.h" />
+    <ClInclude Include="HPTypeDef.h" />
     <ClInclude Include="HttpBuffer.h" />
     <ClInclude Include="IBackendActor.h" />
     <ClInclude Include="IClientNetActor.h" />
@@ -120,6 +124,8 @@
     <ClInclude Include="ServerNetModule.h" />
     <ClInclude Include="ServerNetPlugin.h" />
     <ClInclude Include="ServerObjModule.h" />
+    <ClInclude Include="SocketInterface.h" />
+    <ClInclude Include="SocketListenerImpl.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -131,7 +137,7 @@
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
     <Link>
-      <LibraryDependencies>llhttp;%(LibraryDependencies)</LibraryDependencies>
+      <LibraryDependencies>llhttp;hpsocket;%(LibraryDependencies)</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">

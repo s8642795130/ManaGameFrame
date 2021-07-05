@@ -1,8 +1,9 @@
 #include "FrontendHttpActor.h"
 #include "../Server/StringDefine.h"
 
-void FrontendHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_t len)
+bool FrontendHttpActor::PushData(const BYTE* ptr_data, int length)
 {
+	/*
 	auto state = m_http_buffer->GetDataState();
 
 	// local
@@ -72,6 +73,8 @@ void FrontendHttpActor::Parsing(std::array<char, DEFAULT_BUFLEN>& buffer, ssize_
 		std::memcpy(next_buffer.data(), buffer.data() + (len - less), less);
 		Parsing(next_buffer, less);
 	}
+	*/
+	return true;
 }
 
 void FrontendHttpActor::ProcessIO()
@@ -79,7 +82,7 @@ void FrontendHttpActor::ProcessIO()
 
 }
 
-void FrontendHttpActor::BackStream(std::vector<char> stream)
+void FrontendHttpActor::BackStream(const std::vector<BYTE> stream)
 {
 
 }

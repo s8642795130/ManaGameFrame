@@ -20,7 +20,7 @@ void ServerObjModule::AfterInit()
 	{
 		return;
 	}
-
+	/*
 	// bind msg
 	auto callback = [this](IClientNetActor& client) -> void { OnServerOnlineCallback(client); };
 	m_callback_module->AddMasterCallback(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), callback);
@@ -64,6 +64,7 @@ void ServerObjModule::AfterInit()
 		// exit while
 		break;
 	}
+	*/
 }
 
 void ServerObjModule::SaveServerToMap(const std::string& server_name, const std::string& uuid)
@@ -93,7 +94,7 @@ void ServerObjModule::OnServerOnlineCallback(IClientNetActor& client)
 	// unpack
 	ServerOnlineInfo server_online_info;
 	UnpackStructForEachField(server_online_info, buffer);
-
+	/*
 	std::for_each(std::cbegin(server_online_info.m_vec_server), std::cend(server_online_info.m_vec_server), [this](const ServerOnlineData& item) -> void
 		{
 			std::shared_ptr<IClientNetActor> ptr_client = m_client_net_module->CreateClientNet();
@@ -118,4 +119,5 @@ void ServerObjModule::OnServerOnlineCallback(IClientNetActor& client)
 			}
 		}
 	);
+	*/
 }

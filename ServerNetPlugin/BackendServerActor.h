@@ -10,8 +10,8 @@ protected:
 	void ProcessRPCIO();
 
 public:
-	BackendServerActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl) :
-		IBackendActor(ptr_manager, ptr_impl)
+	BackendServerActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, ITcpServer* ptr_sender) :
+		IBackendActor(ptr_manager, ptr_impl, ptr_sender)
 	{
 	}
 

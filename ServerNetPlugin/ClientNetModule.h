@@ -23,8 +23,8 @@ public:
 	virtual void AfterInit();
 
 	// interface
-	virtual std::shared_ptr<INetActor> CreateHttpClientNet();
-	virtual std::shared_ptr<INetActor> CreateSocketClientNet();
+	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender);
+	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender);
 	virtual void AddClientToMap(std::shared_ptr<INetActor>& ptr);
 	virtual std::shared_ptr<INetActor> GetClientNet(const int& fd);
 	virtual void RemoveClientFromMap(const int& fd);

@@ -1,6 +1,7 @@
 #include "ClientNetModule.h"
 #include "FrontendHttpActor.h"
 #include "FrontendSocketActor.h"
+#include "HPSocket.h"
 
 void ClientNetModule::Init()
 {
@@ -24,15 +25,15 @@ void ClientNetModule::AfterInit()
 
 // client interface
 
-std::shared_ptr<INetActor> ClientNetModule::CreateHttpClientNet()
+std::shared_ptr<INetActor> ClientNetModule::CreateHttpClientNet(ITcpServer* ptr_sender)
 {
-	std::shared_ptr<INetActor> client = std::make_shared<FrontendHttpActor>(m_ptr_manager, m_client_pimpl);
+	std::shared_ptr<INetActor> client = std::make_shared<FrontendHttpActor>(m_ptr_manager, m_client_pimpl, ptr_sender);
 	return client;
 }
 
-std::shared_ptr<INetActor> ClientNetModule::CreateSocketClientNet()
+std::shared_ptr<INetActor> ClientNetModule::CreateSocketClientNet(ITcpServer* ptr_sender)
 {
-	std::shared_ptr<INetActor> client = std::make_shared<FrontendSocketActor>(m_ptr_manager, m_client_pimpl);
+	std::shared_ptr<INetActor> client = std::make_shared<FrontendSocketActor>(m_ptr_manager, m_client_pimpl, ptr_sender);
 	return client;
 }
 

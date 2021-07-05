@@ -10,9 +10,9 @@
 
 void PluginManager::GetRealPath()
 {
-	std::array<char, MAX_PATH> abs_path_buff;
-	auto cnt = readlink("/proc/self/exe", abs_path_buff.data(), MAX_PATH);
-	if (cnt < 0 || cnt >= MAX_PATH)
+	std::array<char, MAX_REAL_PATH> abs_path_buff;
+	auto cnt = readlink("/proc/self/exe", abs_path_buff.data(), MAX_REAL_PATH);
+	if (cnt < 0 || cnt >= MAX_REAL_PATH)
 	{
 		std::perror(CANNOT_GET_REAL_PATH);
 		std::terminate();

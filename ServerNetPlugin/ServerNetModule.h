@@ -8,6 +8,8 @@
 #include "../ActorPlugin/IThreadPoolModule.h"
 #include "../Server/DefineHeader.h"
 
+#include "FrontendListenerImpl.h"
+
 class ServerNetModule : public IServerNetModule
 {
 private:
@@ -15,6 +17,10 @@ private:
 	std::shared_ptr<IConfigModule> m_config_module;
 	std::shared_ptr<IThreadPoolModule> m_thread_pool_module;
 	std::shared_ptr<IClientNetModule> m_client_net_module;
+
+	// listener
+	CFrontendListenerImpl m_frontend_listener;
+	std::shared_ptr<CTcpServerPtr> m_server;
 protected:
 	/*
 	void CreateEpoll();
@@ -26,6 +32,7 @@ protected:
 	*/
 public:
 	ServerNetModule(std::shared_ptr<IPluginManager> ptr);
+	virtual ~ServerNetModule();
 
 	// life cycle function
 	virtual void Init();

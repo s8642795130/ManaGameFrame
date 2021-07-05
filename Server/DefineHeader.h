@@ -6,4 +6,4 @@
 #define MINOR_LENGTH (4) // ByteBuffer
 #define INT_LENGTH (4) // ByteBuffer
 // path
-#define MAX_PATH (4096)
+#define MAX_REAL_PATH (4096)

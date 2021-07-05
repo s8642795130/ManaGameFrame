@@ -13,10 +13,17 @@
 #include <iostream>
 
 #include "ServerNetModule.h"
+#include "HPSocket.h"
+#include "FrontendListenerImpl.h"
 
 ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 	IServerNetModule(ptr)
 {
+}
+
+ServerNetModule::~ServerNetModule()
+{
+	m_server->Get()->Stop();
 }
 
 void ServerNetModule::Init()
@@ -30,6 +37,11 @@ void ServerNetModule::AfterInit()
 {
 	// auto port = m_config_module->GetMyServerInfo()->m_port;
 	// StartNetwork(static_cast<uint16_t>(port), 30);
+
+	// network
+	m_server = std::make_shared<CTcpServerPtr>(&m_frontend_listener);
+	auto port = m_config_module->GetMyServerInfo()->m_port;
+	m_server->Get()->Start("0.0.0.0", static_cast<USHORT>(port));
 }
 
 /*
@@ -138,7 +150,7 @@ void ServerNetModule::EventLoop()
 		}
 
 		//perform cleanup every second and remove timed-out sockets
-		/*
+
 		if ((last_socket_check_ + 1) < time(0) && m_map_clients.size() > 0)
 		{
 			std::map<int, ClientDescriptor*>::iterator it = m_map_clients.begin();

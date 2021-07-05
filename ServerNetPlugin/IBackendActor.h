@@ -4,8 +4,8 @@
 class IBackendActor : public INetActor
 {
 public:
-	IBackendActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl) :
-		INetActor(ptr_manager, ptr_impl)
+	IBackendActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, ITcpServer* ptr_sender) :
+		INetActor(ptr_manager, ptr_impl, ptr_sender)
 	{
 	}
 
@@ -13,7 +13,7 @@ public:
 	bool ConnectServer(const std::string& ip, const int port)
 	{
 		bool ret = true;
-
+		/*
 		m_client_fd = socket(AF_INET, SOCK_STREAM, 0);
 
 		// test code
@@ -30,6 +30,7 @@ public:
 			fprintf(stderr, "socket connect error = %d ( %s )\n", errno, strerror(errno));
 			ret = false;
 		}
+		*/
 
 		return ret;
 	}

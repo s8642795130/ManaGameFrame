@@ -17,8 +17,8 @@ protected:
 	std::queue<FrontendMsg> m_queue_msg;
 	
 protected:
-	IFrontendActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl) :
-		INetActor(ptr_manager, ptr_impl)
+	IFrontendActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, ITcpServer* ptr_sender) :
+		INetActor(ptr_manager, ptr_impl, ptr_sender)
 	{
 	}
 
@@ -81,8 +81,8 @@ protected:
 			PackageStructForEachField(*frontend_msg.m_msg, package); // dereference
 
 			// send to backend server
-			std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), frontend_msg.m_uuid, &IBackendActor::SendStream, std::move(package));
-			m_pimpl->SendMsgToActor(ptr);
+			// std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), frontend_msg.m_uuid, &IBackendActor::SendStream, std::move(package));
+			// m_pimpl->SendMsgToActor(ptr);
 
 			// del msg
 			m_queue_msg.pop();
@@ -117,5 +117,5 @@ public:
 		}
 	}
 
-	virtual void BackStream(std::vector<char> stream) = 0;
+	virtual void BackStream(const std::vector<BYTE> stream) = 0;
 };
