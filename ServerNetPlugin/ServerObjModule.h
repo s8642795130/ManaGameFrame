@@ -2,6 +2,7 @@
 #include "IServerObjModule.h"
 #include "IClientNetModule.h"
 #include "IServerNetModule.h"
+#include "INetActor.h"
 #include "../ConfigPlugin/IConfigModule.h"
 #include "../ServerNetPlugin/INetCallbackModule.h"
 
@@ -28,6 +29,6 @@ public:
 	virtual void SaveServerToMap(const std::string& server_name, const std::string& uuid);
 
 	// callback
-	virtual void OnServerOnlineCallback(IClientNetActor& client);
+	virtual void OnServerOnlineCallback(INetActor& client);
 };
 

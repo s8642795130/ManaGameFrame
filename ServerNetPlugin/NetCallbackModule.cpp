@@ -15,12 +15,12 @@ const std::map<int, std::shared_ptr<IBindFunc>>& NetCallbackModule::GetReceiveCa
 	return m_receive_callback;
 }
 
-void NetCallbackModule::AddMasterCallback(const int msg_id, std::function<void(IClientNetActor&)> callback)
+void NetCallbackModule::AddMasterCallback(const int msg_id, std::function<void(INetActor&)> callback)
 {
 	m_master_callback.emplace(msg_id, callback);
 }
 
-const std::map<int, std::function<void(IClientNetActor&)>>& NetCallbackModule::GetMasterCallbackMap()
+const std::map<int, std::function<void(INetActor&)>>& NetCallbackModule::GetMasterCallbackMap()
 {
 	return m_master_callback;
 }

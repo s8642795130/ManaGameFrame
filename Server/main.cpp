@@ -39,7 +39,6 @@ int main(int argc, char* argv[])
 	// dladdr, dlclose, dlerror, dlopen, dlsym, dlvsym
 	// va_list, va_start, va_arg, va_end
 	// int getopt(int argc, char * const argv[], const char * optstring);
-	std::cout << "hello world" << std::endl;
 
 	// get server name from main param
 	const auto server_name = GetServerNameFromParam(argc, argv);

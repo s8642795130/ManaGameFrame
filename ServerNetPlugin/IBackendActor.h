@@ -1,11 +1,11 @@
 #pragma once
-#include "INetActor.h"
+#include "NetActor.h"
 
-class IBackendActor : public INetActor
+class IBackendActor : public NetActor
 {
 public:
 	IBackendActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, ITcpServer* ptr_sender) :
-		INetActor(ptr_manager, ptr_impl, ptr_sender)
+		NetActor(ptr_manager, ptr_impl, ptr_sender)
 	{
 	}
 

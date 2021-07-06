@@ -84,7 +84,6 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FrontendHttpActor.cpp" />
     <ClCompile Include="FrontendSocketActor.cpp" />
-    <ClCompile Include="llhttp.cpp" />
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
     <ClCompile Include="NetProccessModule.cpp" />
@@ -104,9 +103,7 @@
     <ClInclude Include="GlobalDef.h" />
     <ClInclude Include="HPSocket.h" />
     <ClInclude Include="HPTypeDef.h" />
-    <ClInclude Include="HttpBuffer.h" />
     <ClInclude Include="IBackendActor.h" />
-    <ClInclude Include="IClientNetActor.h" />
     <ClInclude Include="IClientNetModule.h" />
     <ClInclude Include="IFrontendActor.h" />
     <ClInclude Include="IHttpBuffer.h" />
@@ -116,9 +113,8 @@
     <ClInclude Include="INetProccessModule.h" />
     <ClInclude Include="IServerNetModule.h" />
     <ClInclude Include="IServerObjModule.h" />
-    <ClInclude Include="ITcpServer.h" />
-    <ClInclude Include="llhttp.h" />
     <ClInclude Include="MsgRouterModule.h" />
+    <ClInclude Include="NetActor.h" />
     <ClInclude Include="NetCallbackModule.h" />
     <ClInclude Include="NetProccessModule.h" />
     <ClInclude Include="ServerNetModule.h" />
@@ -137,7 +133,7 @@
       <CppLanguageStandard>c++17</CppLanguageStandard>
     </ClCompile>
     <Link>
-      <LibraryDependencies>llhttp;hpsocket;%(LibraryDependencies)</LibraryDependencies>
+      <LibraryDependencies>hpsocket;%(LibraryDependencies)</LibraryDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">

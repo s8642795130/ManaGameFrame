@@ -18,7 +18,13 @@ protected:
 	std::shared_ptr<IClientNetModule> m_client_net_module;
 
 public:
-	CListenerImpl()
+
+	void SetManagerPtr(std::shared_ptr<IPluginManager> ptr)
+	{
+		m_ptr_manager = ptr;
+	}
+
+	void Init()
 	{
 		m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
 		m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();

@@ -82,7 +82,7 @@ void FrontendHttpActor::ProcessIO()
 
 }
 
-void FrontendHttpActor::BackStream(const std::vector<BYTE> stream)
+void FrontendHttpActor::BackStream(const std::vector<char> stream)
 {
 
 }

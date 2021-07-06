@@ -2,7 +2,6 @@
 #include <sys/epoll.h>
 
 #include "IServerNetModule.h"
-#include "IClientNetActor.h"
 #include "IClientNetModule.h"
 #include "../ConfigPlugin/IConfigModule.h"
 #include "../ActorPlugin/IThreadPoolModule.h"

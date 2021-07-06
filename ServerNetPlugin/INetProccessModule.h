@@ -1,6 +1,5 @@
 #pragma once
 #include "../Server/IModule.h"
-#include "IClientNetActor.h"
 
 class INetProccessModule : public IModule
 {

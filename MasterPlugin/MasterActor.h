@@ -1,7 +1,7 @@
 #pragma once
 #include <map>
 #include "../ActorPlugin/Actor.h"
-#include "../ServerNetPlugin/IClientNetActor.h"
+#include "../ServerNetPlugin/INetActor.h"
 
 class MasterActor : public Actor
 {
@@ -16,6 +16,6 @@ public:
 	}
 
 	// interface
-	void OnServerOnlineCallback(std::shared_ptr<IClientNetActor> ptr_client);
+	void OnServerOnlineCallback(std::shared_ptr<INetActor> ptr_client);
 };
 

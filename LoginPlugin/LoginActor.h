@@ -1,5 +1,6 @@
 #pragma once
 #include "../ActorPlugin/Actor.h"
+#include "../ServerNetPlugin/INetActor.h"
 
 class IClientNetActor;
 
@@ -11,6 +12,6 @@ public:
 
 	}
 
-	void OnLoginOnlineCallback(std::shared_ptr<IClientNetActor> ptr_client);
+	void OnLoginOnlineCallback(std::shared_ptr<INetActor> ptr_client);
 };
 

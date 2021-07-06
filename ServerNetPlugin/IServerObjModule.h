@@ -4,7 +4,7 @@
 
 #include "../Server/IModule.h"
 
-class IClientNetActor;
+class INetActor;
 
 class IServerObjModule : public IModule
 {
@@ -21,5 +21,5 @@ public:
 	virtual const std::string GetServerUUIDByName(const std::string& server_name) = 0;
 	virtual void SaveServerToMap(const std::string& server_name, const std::string& uuid) = 0;
 	// callback
-	virtual void OnServerOnlineCallback(IClientNetActor& client) = 0;
+	virtual void OnServerOnlineCallback(INetActor& client) = 0;
 };

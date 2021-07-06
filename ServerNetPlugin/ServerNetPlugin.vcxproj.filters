@@ -9,9 +9,6 @@
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="ServerObjModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
-    <ClCompile Include="llhttp.cpp">
-      <Filter>llhttp</Filter>
-    </ClCompile>
     <ClCompile Include="FrontendSocketActor.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
@@ -47,21 +44,12 @@
     <ClInclude Include="ClientPimpl.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="IClientNetActor.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="NetCallbackModule.h" />
     <ClInclude Include="INetCallbackModule.h">
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="BackendClient.h">
       <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="HttpBuffer.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="llhttp.h">
-      <Filter>llhttp</Filter>
     </ClInclude>
     <ClInclude Include="BindFunc.h">
       <Filter>Header</Filter>
@@ -87,9 +75,6 @@
     <ClInclude Include="BackendServerActor.h">
       <Filter>Actor</Filter>
     </ClInclude>
-    <ClInclude Include="ITcpServer.h">
-      <Filter>ListenerImpl</Filter>
-    </ClInclude>
     <ClInclude Include="HPSocket.h">
       <Filter>HPSocket</Filter>
     </ClInclude>
@@ -108,6 +93,9 @@
     <ClInclude Include="FrontendListenerImpl.h">
       <Filter>ListenerImpl</Filter>
     </ClInclude>
+    <ClInclude Include="NetActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interface">
@@ -115,9 +103,6 @@
     </Filter>
     <Filter Include="Header">
       <UniqueIdentifier>{0583989b-2c28-49b8-a581-11220488a7c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="llhttp">
-      <UniqueIdentifier>{cf7bdfba-00fa-43a2-b4bd-b028a33c4547}</UniqueIdentifier>
     </Filter>
     <Filter Include="Actor">
       <UniqueIdentifier>{80da42b6-b9a5-4b63-8dcb-499f021f9e98}</UniqueIdentifier>

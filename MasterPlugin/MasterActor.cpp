@@ -5,10 +5,9 @@
 #include "../Server/IConfigFile.h"
 #include "../Server/BuiltInDataDefine.h"
 #include "../ActorPlugin/ActorMsg.h"
-#include "../ServerNetPlugin/IClientNetActor.h"
 #include "../Server/UnpackNetMsg.h"
 
-void MasterActor::OnServerOnlineCallback(std::shared_ptr<IClientNetActor> ptr_client)
+void MasterActor::OnServerOnlineCallback(std::shared_ptr<INetActor> ptr_client)
 {
 	// notify other servers that a server online
 	ConnectServerOnline connect_server_online;

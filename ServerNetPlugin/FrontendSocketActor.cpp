@@ -6,7 +6,7 @@ FrontendSocketActor::FrontendSocketActor(std::shared_ptr<IPluginManager> ptr_man
 
 }
 
-void FrontendSocketActor::BackStream(const std::vector<BYTE> stream)
+void FrontendSocketActor::BackStream(const std::vector<char> stream)
 {
 	SendStream(stream);
 	NextIO();

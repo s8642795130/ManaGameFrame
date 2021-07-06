@@ -140,7 +140,7 @@ public:
 	{
 		// copy buffer
 		std::vector<char> value(length + 1);
-		std::strncpy(value.data(), m_buf_ptr.data() + m_cur_pos, length);
+		std::strncpy(value.data(), reinterpret_cast<const char*>(m_buf_ptr.data()) + m_cur_pos, length);
 		value[length] = '\0';
 		
 		//

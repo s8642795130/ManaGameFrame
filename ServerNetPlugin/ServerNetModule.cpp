@@ -28,6 +28,11 @@ ServerNetModule::~ServerNetModule()
 
 void ServerNetModule::Init()
 {
+	// server
+	m_frontend_listener.SetManagerPtr(m_ptr_manager);
+	m_frontend_listener.Init();
+
+	// init
 	m_config_module = m_ptr_manager->GetModule<IConfigModule>();
 	m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
 	m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
