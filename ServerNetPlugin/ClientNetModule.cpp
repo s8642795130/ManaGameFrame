@@ -58,15 +58,15 @@ void ClientNetModule::RemoveClientFromMap(const int& fd)
 
 // login client interface
 
-void ClientNetModule::AddLoginClientToMap(std::shared_ptr<INetActor>& ptr)
+void ClientNetModule::AddLoginClientToMap(std::string& uid, std::string& uuid)
 {
-	m_logged_in_clients.emplace(ptr->GetUid(), ptr);
+	m_map_login_clients.Emplace(uid, uuid);
 }
 
-std::shared_ptr<INetActor> ClientNetModule::GetLoginClient(const std::string& uid)
+const std::string ClientNetModule::GetLoginClient(const std::string& uid)
 {
-	std::shared_ptr<INetActor> ptr = nullptr;
-	if (m_logged_in_clients.find(uid) != std::cend(m_logged_in_clients))
+	std::string uuid("");
+	if (m_map_login_clients.find(uid) != std::cend(m_logged_in_clients))
 	{
 		ptr = m_logged_in_clients[uid];
 	}
