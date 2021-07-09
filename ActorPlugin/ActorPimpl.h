@@ -45,7 +45,7 @@ protected:
 		auto frontend_uuid = m_server_obj_module->GetServerUUIDByName(connector_server[index]->m_server_name);
 
 		// send to frontend
-		std::unique_ptr<IActorMsg> actor_msg = CreateActorMsg("", frontend_uuid, &IClientNetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::RETURN_CLIENT_MSG), 0, std::move(package));
+		std::unique_ptr<IActorMsg> actor_msg = CreateActorMsg("", frontend_uuid, &INetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::RETURN_CLIENT_MSG), 0, std::move(package));
 		m_thread_pool_module->AddActorMsgToThreadCell(actor_msg);
 	}
 public:
@@ -96,7 +96,7 @@ public:
 			PackageStructForEachField(rpc_data, package);
 
 			// send to backend server
-			std::unique_ptr<IActorMsg> ptr_actor_msg = CreateActorMsg("", server_uuid, &IClientNetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::PRC_MSG), 0, std::move(package));
+			std::unique_ptr<IActorMsg> ptr_actor_msg = CreateActorMsg("", server_uuid, &INetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::PRC_MSG), 0, std::move(package));
 			m_thread_pool_module->AddActorMsgToThreadCell(ptr_actor_msg);
 		}
 	}
@@ -139,7 +139,7 @@ public:
 		auto frontend_uuid = m_server_obj_module->GetServerUUIDByName(connector_server[index]->m_server_name);
 
 		// send to frontend
-		std::unique_ptr<IActorMsg> actor_msg = CreateActorMsg("", frontend_uuid, &IClientNetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::UPDATE_CLIENT_DATA), 0, std::move(package));
+		std::unique_ptr<IActorMsg> actor_msg = CreateActorMsg("", frontend_uuid, &INetActor::SendData, static_cast<int>(BuiltInMsg::ServerMsg::UPDATE_CLIENT_DATA), 0, std::move(package));
 		m_thread_pool_module->AddActorMsgToThreadCell(actor_msg);
 	}
 };

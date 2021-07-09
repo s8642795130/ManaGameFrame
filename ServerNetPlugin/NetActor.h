@@ -107,6 +107,23 @@ public:
 		m_ptr_sender->Send(m_conn_id, reinterpret_cast<const BYTE*>(stream.data()), static_cast<int>(stream.size()));
 	}
 
+	virtual void SendData(const int major, const int minor, std::vector<char> value) override
+	{
+		// get length
+		int length = static_cast<int>(value.size());
+
+		//
+		std::vector<char> temp_data(HEADER_LENGTH + length);
+		std::memcpy(temp_data.data(), &major, sizeof(MAJOR_LENGTH)); // copy major
+		std::memcpy(temp_data.data() + MAJOR_LENGTH, &minor, sizeof(MINOR_LENGTH)); // copy minor
+		std::memcpy(temp_data.data() + MAJOR_LENGTH + MINOR_LENGTH, &length, sizeof(INT_LENGTH)); // copy length
+		if (length != 0)
+		{
+			std::memcpy(temp_data.data() + HEADER_LENGTH, value.data(), length);
+		}
+		m_ptr_sender->Send(m_conn_id, reinterpret_cast<const BYTE*>(temp_data.data()), HEADER_LENGTH + length);
+	}
+
 	virtual void ClientClose() override
 	{
 		m_ptr_sender->Disconnect(m_conn_id);

@@ -79,6 +79,7 @@
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\..\..\..\..\out\</OutDir>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="BackendPollActor.cpp" />
     <ClCompile Include="BackendServerActor.cpp" />
     <ClCompile Include="ClientNetModule.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -87,12 +88,14 @@
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
     <ClCompile Include="NetProccessModule.cpp" />
+    <ClCompile Include="PollModule.cpp" />
     <ClCompile Include="ServerNetModule.cpp" />
     <ClCompile Include="ServerNetPlugin.cpp" />
     <ClCompile Include="ServerObjModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackendClient.h" />
+    <ClInclude Include="BackendPollActor.h" />
     <ClInclude Include="BackendServerActor.h" />
     <ClInclude Include="BindFunc.h" />
     <ClInclude Include="ClientPimpl.h" />
@@ -111,12 +114,14 @@
     <ClInclude Include="INetActor.h" />
     <ClInclude Include="INetCallbackModule.h" />
     <ClInclude Include="INetProccessModule.h" />
+    <ClInclude Include="IPollModule.h" />
     <ClInclude Include="IServerNetModule.h" />
     <ClInclude Include="IServerObjModule.h" />
     <ClInclude Include="MsgRouterModule.h" />
     <ClInclude Include="NetActor.h" />
     <ClInclude Include="NetCallbackModule.h" />
     <ClInclude Include="NetProccessModule.h" />
+    <ClInclude Include="PollModule.h" />
     <ClInclude Include="ServerNetModule.h" />
     <ClInclude Include="ServerNetPlugin.h" />
     <ClInclude Include="ServerObjModule.h" />

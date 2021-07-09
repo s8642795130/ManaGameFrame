@@ -5,6 +5,7 @@
 #include "HPSocket.h"
 #include "../Server/IPluginManager.h"
 #include "../ActorPlugin/IThreadPoolModule.h"
+#include "IClientNetModule.h"
 #include "INetActor.h"
 
 class CListenerImpl : public CTcpServerListener

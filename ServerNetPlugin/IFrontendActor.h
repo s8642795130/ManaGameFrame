@@ -2,6 +2,7 @@
 #include <queue>
 
 #include "../Server/PackageNetMsg.h"
+#include "../Server/BuiltInMsgDefine.h"
 #include "NetActor.h"
 #include "IBackendActor.h"
 
@@ -13,6 +14,7 @@ protected:
 	std::map<std::string, std::string> m_client_data;
 
 	// client msg list
+	bool m_is_login = false;
 	bool m_is_process_work = false;
 	std::queue<FrontendMsg> m_queue_msg;
 	
@@ -22,37 +24,63 @@ protected:
 	{
 	}
 
+	bool CheckClientIsLogin()
+	{
+		bool ret = false;
+		if (m_is_login)
+		{
+			ret = true;
+		}
+		else if (m_buffer->GetMajorId() == static_cast<int>(BuiltInMsg::ServerMsg::LOGIN_MSG)) // LOGIN_MSG
+		{
+			// check
+			SetUid("");
+			m_client_impl->m_client_net_module->AddLoginClientToMap(m_uid, GetUUID());
+			ret = true;
+		}
+
+		return ret;
+	}
+
 	virtual void ProcessIO()
 	{
-		const auto major_id = m_buffer->GetMajorId();
-		auto map_msg = m_client_impl->m_callback_module->GetGameMsgMap();
-		auto plugin_name = map_msg[major_id];
+		if (CheckClientIsLogin())
+		{
+			const auto major_id = m_buffer->GetMajorId();
+			auto map_msg = m_client_impl->m_callback_module->GetGameMsgMap();
+			auto plugin_name = map_msg[major_id];
 
-		// get all the servers that the plugin exists
-		const auto server_list = m_client_impl->m_config_module->GetServersByPluginName(plugin_name);
+			// get all the servers that the plugin exists
+			const auto server_list = m_client_impl->m_config_module->GetServersByPluginName(plugin_name);
 
-		// router
-		const auto server_index = m_client_impl->m_router_module->GetMsgRouterByClient(plugin_name, static_cast<int>(server_list.size()), *this);
+			// router
+			const auto server_index = m_client_impl->m_router_module->GetMsgRouterByClient(plugin_name, static_cast<int>(server_list.size()), *this);
 
-		// get server uuid
-		auto server_uuid = m_client_impl->m_server_obj_module->GetServerUUIDByName(server_list[server_index]->m_server_name);
+			// get server uuid
+			auto server_uuid = m_client_impl->m_server_obj_module->GetServerUUIDByName(server_list[server_index]->m_server_name);
 
-		// create backend client struct
-		std::unique_ptr<FrontendToBackendMsg> backend_msg{ std::make_unique<FrontendToBackendMsg>() };
-		backend_msg->m_client_uid = m_uid;
-		backend_msg->m_client_data = m_client_data;
-		backend_msg->m_major_id = m_buffer->GetMajorId();
-		backend_msg->m_minor_id = m_buffer->GetMinorId();
-		backend_msg->m_stream = m_buffer->GetStream();
+			// create backend client struct
+			std::unique_ptr<FrontendToBackendMsg> backend_msg{ std::make_unique<FrontendToBackendMsg>() };
+			backend_msg->m_client_uid = m_uid;
+			backend_msg->m_client_data = m_client_data;
+			backend_msg->m_major_id = m_buffer->GetMajorId();
+			backend_msg->m_minor_id = m_buffer->GetMinorId();
+			backend_msg->m_stream = m_buffer->GetStream();
 
-		//
-		FrontendMsg frontend_msg;
-		frontend_msg.m_msg = std::move(backend_msg);
-		frontend_msg.m_uuid = server_uuid;
+			//
+			FrontendMsg frontend_msg;
+			frontend_msg.m_msg = std::move(backend_msg);
+			frontend_msg.m_uuid = server_uuid;
 
-		// send to backend server
-		std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), server_uuid, &IFrontendActor::ProcessNextIO, std::move(frontend_msg));
-		GetActorPimpl()->SendMsgToActor(ptr);
+			// send to backend server
+			std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), server_uuid, &IFrontendActor::ProcessNextIO, std::move(frontend_msg));
+			GetActorPimpl()->SendMsgToActor(ptr);
+		}
+		else
+		{
+			// you need login
+			ClientClose();
+		}
 	}
 
 	void ProcessNextIO(FrontendMsg frontend_msg)

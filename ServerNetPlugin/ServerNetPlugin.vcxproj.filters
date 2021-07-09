@@ -18,6 +18,10 @@
     <ClCompile Include="BackendServerActor.cpp">
       <Filter>Actor</Filter>
     </ClCompile>
+    <ClCompile Include="PollModule.cpp" />
+    <ClCompile Include="BackendPollActor.cpp">
+      <Filter>Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientNetModule.h" />
@@ -94,6 +98,13 @@
       <Filter>ListenerImpl</Filter>
     </ClInclude>
     <ClInclude Include="NetActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="PollModule.h" />
+    <ClInclude Include="IPollModule.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="BackendPollActor.h">
       <Filter>Actor</Filter>
     </ClInclude>
   </ItemGroup>

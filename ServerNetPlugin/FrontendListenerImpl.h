@@ -23,4 +23,25 @@ public:
 
 		return HR_OK; // HR_ERROR
 	}
+
+	virtual EnHandleResult OnClose(ITcpServer* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode) override
+	{
+		INetActor* ptr_client = nullptr;
+		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
+		{
+			m_client_net_module->RemoveLoginClientFromMap(ptr_client->GetUUID());
+			m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
+		}
+
+		if (iErrorCode == SE_OK)
+		{
+			// close
+		}
+		else
+		{
+			// ::PostOnError(dwConnID, enOperation, iErrorCode);
+		}
+
+		return HR_OK;
+	}
 };

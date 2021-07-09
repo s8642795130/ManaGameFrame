@@ -5,7 +5,6 @@
     <ClCompile Include="DynLib.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PluginManager.cpp" />
-    <ClCompile Include="PollNet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConfigFile.h" />
@@ -16,7 +15,6 @@
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IPluginManager.h" />
     <ClInclude Include="PluginManager.h" />
-    <ClInclude Include="PollNet.h" />
     <ClInclude Include="CommonStruct.h">
       <Filter>Header</Filter>
     </ClInclude>

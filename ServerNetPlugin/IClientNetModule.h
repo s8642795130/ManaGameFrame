@@ -13,12 +13,9 @@ public:
 
 	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender) = 0;
 	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender) = 0;
-	virtual void AddClientToMap(std::shared_ptr<INetActor>& ptr) = 0;
-	virtual std::shared_ptr<INetActor> GetClientNet(const int& fd) = 0;
-	virtual void RemoveClientFromMap(const int& fd) = 0;
 	// login client interface
-	virtual void AddLoginClientToMap(std::shared_ptr<INetActor>& ptr) = 0;
-	virtual std::shared_ptr<INetActor> GetLoginClient(const std::string& uid) = 0;
+	virtual void AddLoginClientToMap(const std::string& uid, const std::string& uuid) = 0;
+	virtual const std::string GetLoginClient(const std::string& uid) = 0;
 	virtual void RemoveLoginClientFromMap(const std::string& uid) = 0;
 };
 
