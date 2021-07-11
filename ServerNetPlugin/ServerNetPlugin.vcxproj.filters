@@ -19,8 +19,11 @@
       <Filter>Actor</Filter>
     </ClCompile>
     <ClCompile Include="PollModule.cpp" />
-    <ClCompile Include="BackendPollActor.cpp">
-      <Filter>Actor</Filter>
+    <ClCompile Include="PollClient.cpp">
+      <Filter>PollClient</Filter>
+    </ClCompile>
+    <ClCompile Include="PollMasterClient.cpp">
+      <Filter>PollClient</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,8 +107,14 @@
     <ClInclude Include="IPollModule.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="BackendPollActor.h">
-      <Filter>Actor</Filter>
+    <ClInclude Include="IPollClient.h">
+      <Filter>PollClient</Filter>
+    </ClInclude>
+    <ClInclude Include="PollClient.h">
+      <Filter>PollClient</Filter>
+    </ClInclude>
+    <ClInclude Include="PollMasterClient.h">
+      <Filter>PollClient</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +132,9 @@
     </Filter>
     <Filter Include="ListenerImpl">
       <UniqueIdentifier>{ff050c18-af3b-451d-b898-91bc8c8e99aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PollClient">
+      <UniqueIdentifier>{9ee8cdc3-d502-4184-86cd-67862cf51ecf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

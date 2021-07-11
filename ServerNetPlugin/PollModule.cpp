@@ -4,8 +4,6 @@
 #include <algorithm>
 #include <cstring>
 
-#include "BackendPollActor.h"
-
 void PollModule::Init()
 {
 	// module
@@ -16,6 +14,11 @@ void PollModule::Init()
 	InitFD();
 }
 
+void PollModule::AfterInit()
+{
+	ConnectMasterServer();
+}
+
 void PollModule::InitFD()
 {
 	std::for_each(std::begin(m_arr_poll_fd), std::end(m_arr_poll_fd), [](struct pollfd& item) -> void
@@ -23,6 +26,18 @@ void PollModule::InitFD()
 			item.fd = -1;
 		}
 	);
+}
+
+bool PollModule::ConnectMasterServer(const std::string& ip, int port)
+{
+	if (m_master_client_actor.ConnectMaster(ip, port))
+	{
+		AddSocket(m_master_client_actor->m_fd);
+	}
+	else
+	{
+		std::cerr << "const master err" << std::endl;
+	}
 }
 
 bool PollModule::ConnectServer(const std::string& ip, const int port, const std::string& server_name)
@@ -85,8 +100,8 @@ void PollModule::AddActorToMap(int fd, const std::string& server_name)
 
 void PollModule::StartPoll()
 {
-	int ret = 0;
-	int timeout = -1;
+	auto ret = 0;
+	auto timeout = -1;
 
 	while (true)
 	{
@@ -100,19 +115,14 @@ void PollModule::StartPoll()
 			break;
 		default:
 		{
-			for (int i = 1; i < m_nfds; i++)
+			auto temp_count = 0;
+			while (temp_count == ret)
 			{
-				if (m_arr_poll_fd[i].revents & POLLIN)
+				if (m_arr_poll_fd[temp_count].fd != -1 && m_arr_poll_fd[temp_count].revents & POLLIN)
 				{
-					HandleRead(m_arr_poll_fd[i]);
+					HandleRead(m_arr_poll_fd[temp_count]);
 				}
-
-				if (m_arr_poll_fd[i].revents & POLLOUT)
-				{
-					// char* msg = "duanzhihong";
-					// write(m_arr_poll_fd[i].fd, msg, strlen(msg));
-					// m_arr_poll_fd[i].events = POLLIN;
-				}
+				++temp_count;
 			}
 		}
 		break;
@@ -136,4 +146,11 @@ bool PollModule::HandleRead(struct pollfd& poll_fd)
 		poll_fd.fd = -1;
 	}
 	return true;
+}
+
+// interface
+
+void PollModule::SendBufferByServerName(std::vector<char> buffer, const std::string& server_name)
+{
+	m_map_client_net[server_name]->SendData();
 }

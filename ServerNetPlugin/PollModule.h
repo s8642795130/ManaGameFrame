@@ -12,6 +12,8 @@
 
 #include "IClientNetModule.h"
 #include "IServerObjModule.h"
+#include "MasterClientActor.h"
+#include "IPollClient.h"
 
 class PollModule : public IPollModule
 {
@@ -23,6 +25,10 @@ private:
 	// module
 	std::shared_ptr<IClientNetModule> m_client_net_module;
 	std::shared_ptr<IServerObjModule> m_server_obj_module;
+	// actor
+	std::shared_ptr<MasterClientActor> m_master_client_actor;
+	// map 
+	std::map<std::string, std::shared_ptr<IPollClient>> m_map_client_net;
 protected:
 	void InitFD();
 	bool ConnectServer(const std::string& ip, const int port, const std::string& server_name);
@@ -39,5 +45,6 @@ public:
 
 	// interface
 	virtual void StartPoll();
+	virtual void SendBufferByServerName(std::vector<char> buffer, const std::string& server_name);
 };
 
