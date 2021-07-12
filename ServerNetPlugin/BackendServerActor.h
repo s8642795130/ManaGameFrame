@@ -8,6 +8,7 @@ protected:
 
 	void ProcessServerBackendIO();
 	void ProcessRPCIO();
+	void ProcessServerOnline();
 
 public:
 	BackendServerActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, ITcpServer* ptr_sender) :

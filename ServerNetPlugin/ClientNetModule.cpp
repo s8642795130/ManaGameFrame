@@ -1,6 +1,7 @@
 #include "ClientNetModule.h"
 #include "FrontendHttpActor.h"
 #include "FrontendSocketActor.h"
+#include "PollMasterClient.h"
 #include "HPSocket.h"
 
 void ClientNetModule::Init()
@@ -36,6 +37,18 @@ std::shared_ptr<INetActor> ClientNetModule::CreateHttpClientNet(ITcpServer* ptr_
 std::shared_ptr<INetActor> ClientNetModule::CreateSocketClientNet(ITcpServer* ptr_sender)
 {
 	std::shared_ptr<INetActor> client = std::make_shared<FrontendSocketActor>(m_ptr_manager, m_client_pimpl, ptr_sender);
+	return client;
+}
+
+std::shared_ptr<IPollClient> ClientNetModule::CreatePollMasterClient()
+{
+	std::shared_ptr<IPollClient> client = std::make_shared<PollMasterClient>(m_client_pimpl);
+	return client;
+}
+
+std::shared_ptr<IPollClient> ClientNetModule::CreatePollClient()
+{
+	std::shared_ptr<IPollClient> client{ std::make_shared<PollClient>(m_client_pimpl) };
 	return client;
 }
 

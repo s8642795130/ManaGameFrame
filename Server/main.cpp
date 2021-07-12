@@ -7,7 +7,7 @@
 
 #include "ConfigFile.h"
 #include "PluginManager.h"
-#include "../ServerNetPlugin/IServerNetModule.h"
+#include "../ServerNetPlugin/IPollModule.h"
 
 const std::string GetServerNameFromParam(int argc, char* argv[])
 {
@@ -65,8 +65,8 @@ int main(int argc, char* argv[])
 	manager->Execute();
 
 	// start network loop
-	auto server_net_module = manager->GetModule<IServerNetModule>();
-	server_net_module->EventLoop();
+	auto poll_module = manager->GetModule<IPollModule>();
+	poll_module->EventLoop();
 
 	return 0;
 }

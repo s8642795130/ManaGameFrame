@@ -1,8 +1,6 @@
 #pragma once
 #include "../Server/IModule.h"
 
-class IClientNetActor;
-
 class IServerNetModule : public IModule
 {
 public:

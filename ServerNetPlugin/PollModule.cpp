@@ -4,11 +4,18 @@
 #include <algorithm>
 #include <cstring>
 
+#include "PollMasterClient.h"
+#include "../Server/ByteBuffer.h"
+#include "../Server/StringDefine.h"
+#include "../Server/PackageNetMsg.h"
+#include "../Server/BuiltInMsgDefine.h"
+
 void PollModule::Init()
 {
 	// module
 	m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
 	m_server_obj_module = m_ptr_manager->GetModule<IServerObjModule>();
+	m_config_module = m_ptr_manager->GetModule<IConfigModule>();
 
 	// init fd
 	InitFD();
@@ -28,25 +35,58 @@ void PollModule::InitFD()
 	);
 }
 
-bool PollModule::ConnectMasterServer(const std::string& ip, int port)
+bool PollModule::ConnectMasterServer()
 {
-	if (m_master_client_actor.ConnectMaster(ip, port))
+	// ret
+	bool ret = true;
+
+	auto vec_server_name = m_config_module->GetServersByType(STR_MASTER);
+	auto server_data = m_config_module->GetServerDataByName(vec_server_name[0]->m_server_name);
+
+	// connect server and send SERVER_ONLINE
+	ServerOnlineInfo server_online_info;
+	std::shared_ptr<ByteBuffer> buffer;
+
+	//
+	while (true)
 	{
-		AddSocket(m_master_client_actor->m_fd);
+		// create master client
+		auto ptr_client{ m_client_net_module->CreatePollMasterClient() };
+
+		// connect master
+		if (false == ConnectServer(server_data->m_server_ip, server_data->m_port, ptr_client->m_fd))
+		{
+			ret = false;
+			std::perror(CAN_NOT_CONNECT_MASTER);
+			break;
+		}
+
+		// add map
+		AddClientToMap(vec_server_name[0]->m_server_name, ptr_client);
+
+		// send this server is online
+		ConnectServerOnline connect_server_online;
+		connect_server_online.m_server_name = m_config_module->GetMyServerInfo()->m_server_name;
+
+		// package
+		std::vector<char> msg_buffer;
+		PackageStructForEachField(connect_server_online, msg_buffer);
+		ptr_client->SendData(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), 0, msg_buffer);
+
+		// exit while
+		break;
 	}
-	else
-	{
-		std::cerr << "const master err" << std::endl;
-	}
+
+	return ret;
 }
 
-bool PollModule::ConnectServer(const std::string& ip, const int port, const std::string& server_name)
+bool PollModule::ConnectServer(const std::string& ip, const int port, int& fd)
 {
 	// return
 	bool ret = true;
 
 	// socket
-	int fd = socket(AF_INET, SOCK_STREAM, 0);
+	fd = socket(AF_INET, SOCK_STREAM, 0);
 
 	// test code
 	int on = 1;
@@ -66,7 +106,6 @@ bool PollModule::ConnectServer(const std::string& ip, const int port, const std:
 	else
 	{
 		AddSocket(fd);
-		AddActorToMap(fd, server_name);
 	}
 
 	return ret;
@@ -74,60 +113,23 @@ bool PollModule::ConnectServer(const std::string& ip, const int port, const std:
 
 void PollModule::AddSocket(int fd)
 {
-	for (int j = 1; j < m_max_poll_count; j++)
+	for (auto item : m_arr_poll_fd)
 	{
-		if (m_arr_poll_fd[j].fd < 0)
+		if (item.fd < 0)
 		{
-			m_arr_poll_fd[j].fd = fd;
-			m_arr_poll_fd[j].events = POLLIN | POLLRDHUP | POLLERR;
-			if (j + 1 > m_nfds)
-			{
-				m_nfds = j + 1;
-			}
+			item.fd = fd;
+			item.events = POLLIN | POLLRDHUP | POLLERR;
+			++m_nfds;
+
+			// exit
 			break;
 		}
 	}
 }
 
-void PollModule::AddActorToMap(int fd, const std::string& server_name)
+void PollModule::AddClientToMap(const std::string& server_name, std::shared_ptr<IPollClient> ptr_client)
 {
-	std::shared_ptr<BackendPollActor> backend_actor{ std::make_shared<BackendPollActor>() };
-	backend_actor->m_conn_id = fd;
-
-	// add
-	m_server_obj_module->SaveServerToMap(server_name, backend_actor->GetUUID());
-}
-
-void PollModule::StartPoll()
-{
-	auto ret = 0;
-	auto timeout = -1;
-
-	while (true)
-	{
-		switch (ret = poll(m_arr_poll_fd.data(), m_nfds, timeout))
-		{
-		case 0:
-			std::cout << "timeout..." << std::endl;
-			break;
-		case -1:
-			std::cout << "poll error" << std::endl;
-			break;
-		default:
-		{
-			auto temp_count = 0;
-			while (temp_count == ret)
-			{
-				if (m_arr_poll_fd[temp_count].fd != -1 && m_arr_poll_fd[temp_count].revents & POLLIN)
-				{
-					HandleRead(m_arr_poll_fd[temp_count]);
-				}
-				++temp_count;
-			}
-		}
-		break;
-		}
-	}
+	m_map_client_net.emplace(server_name, ptr_client);
 }
 
 bool PollModule::HandleRead(struct pollfd& poll_fd)
@@ -150,7 +152,70 @@ bool PollModule::HandleRead(struct pollfd& poll_fd)
 
 // interface
 
-void PollModule::SendBufferByServerName(std::vector<char> buffer, const std::string& server_name)
+void PollModule::EventLoop()
 {
-	m_map_client_net[server_name]->SendData();
+	auto ret = 0;
+	auto timeout = -1;
+
+	while (true)
+	{
+		switch (ret = poll(m_arr_poll_fd.data(), m_nfds, timeout))
+		{
+		case 0:
+			std::cerr << "timeout..." << std::endl;
+			break;
+		case -1:
+			std::cerr << "poll error" << std::endl;
+			break;
+		default:
+		{
+			auto temp_count = 0;
+			while (temp_count == ret)
+			{
+				if (m_arr_poll_fd[temp_count].fd != -1 && m_arr_poll_fd[temp_count].revents & POLLIN)
+				{
+					HandleRead(m_arr_poll_fd[temp_count]);
+				}
+				++temp_count;
+			}
+		}
+		break;
+		}
+	}
+}
+
+bool PollModule::ConnectServerWithServerName(const std::string& ip, const int port, const std::string& server_name)
+{
+	bool ret = true;
+
+	//
+	auto vec_server_name = m_config_module->GetServersByType(STR_MASTER);
+	auto server_data = m_config_module->GetServerDataByName(vec_server_name[0]->m_server_name);
+
+	// create master client
+	auto ptr_client{ m_client_net_module->CreatePollClient() };
+
+	// connect master
+	if (false == ConnectServer(server_data->m_server_ip, server_data->m_port, ptr_client->m_fd))
+	{
+		ret = false;
+		std::perror(CAN_NOT_CONNECT_MASTER);
+	}
+	else
+	{
+		// add map
+		AddClientToMap(vec_server_name[0]->m_server_name, ptr_client);
+	}
+
+	return ret;
+}
+
+std::shared_ptr<IPollClient> PollModule::GetClientByServerName(const std::string& server_name)
+{
+	std::shared_ptr<IPollClient> ptr_client{ nullptr };
+	if (m_map_client_net.find(server_name) != std::cend(m_map_client_net))
+	{
+		ptr_client = m_map_client_net[server_name];
+	}
+	return ptr_client;
 }

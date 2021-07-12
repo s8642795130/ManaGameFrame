@@ -3,6 +3,7 @@
 
 class INetActor;
 class ITcpServer;
+class IPollClient;
 
 class IClientNetModule : public IModule
 {
@@ -13,6 +14,8 @@ public:
 
 	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender) = 0;
 	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender) = 0;
+	virtual std::shared_ptr<IPollClient> CreatePollMasterClient() = 0;
+	virtual std::shared_ptr<IPollClient> CreatePollClient() = 0;
 	// login client interface
 	virtual void AddLoginClientToMap(const std::string& uid, const std::string& uuid) = 0;
 	virtual const std::string GetLoginClient(const std::string& uid) = 0;

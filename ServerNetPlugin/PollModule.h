@@ -12,29 +12,31 @@
 
 #include "IClientNetModule.h"
 #include "IServerObjModule.h"
-#include "MasterClientActor.h"
 #include "IPollClient.h"
+#include "../ConfigPlugin/IConfigModule.h"
 
 class PollModule : public IPollModule
 {
 private:
 	const int m_max_poll_count = 1024;
 	int m_listen_socket = 0;
-	int m_nfds = 1; // begin
+	int m_nfds = 0; // begin
 	std::array<struct pollfd, 1024> m_arr_poll_fd;
+
 	// module
 	std::shared_ptr<IClientNetModule> m_client_net_module;
 	std::shared_ptr<IServerObjModule> m_server_obj_module;
-	// actor
-	std::shared_ptr<MasterClientActor> m_master_client_actor;
+	std::shared_ptr<IConfigModule> m_config_module;
+
 	// map 
 	std::map<std::string, std::shared_ptr<IPollClient>> m_map_client_net;
 protected:
 	void InitFD();
-	bool ConnectServer(const std::string& ip, const int port, const std::string& server_name);
+	bool ConnectMasterServer();
+	bool ConnectServer(const std::string& ip, const int port, int& fd);
 	void AddSocket(int fd);
-	void AddActorToMap(int fd, const std::string& server_name);
 	bool HandleRead(struct pollfd& poll_fd);
+	void AddClientToMap(const std::string& server_name, std::shared_ptr<IPollClient> ptr_client);
 public:
 	PollModule(std::shared_ptr<IPluginManager> ptr) : IPollModule(ptr)
 	{
@@ -42,9 +44,11 @@ public:
 
 	// life cycle function
 	virtual void Init() override;
+	virtual void AfterInit() override;
 
 	// interface
-	virtual void StartPoll();
-	virtual void SendBufferByServerName(std::vector<char> buffer, const std::string& server_name);
+	virtual void EventLoop() override;
+	virtual bool ConnectServerWithServerName(const std::string& ip, const int port, const std::string& server_name) override;
+	virtual std::shared_ptr<IPollClient> GetClientByServerName(const std::string& server_name) override;
 };
 

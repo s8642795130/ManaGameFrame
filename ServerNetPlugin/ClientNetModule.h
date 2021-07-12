@@ -24,8 +24,10 @@ public:
 	virtual void AfterInit();
 
 	// interface
-	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender);
-	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender);
+	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender) override;
+	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender) override;
+	virtual std::shared_ptr<IPollClient> CreatePollMasterClient() override;
+	virtual std::shared_ptr<IPollClient> CreatePollClient() override;
 	// login client interface
 	virtual void AddLoginClientToMap(const std::string& uid, const std::string& uuid);
 	virtual const std::string GetLoginClient(const std::string& uid);
