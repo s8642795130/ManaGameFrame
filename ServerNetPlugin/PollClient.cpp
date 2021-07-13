@@ -56,7 +56,7 @@ void PollClient::ProcessBackendIO()
 		{
 			// send to client
 			std::unique_ptr<IActorMsg> ptr = CreateActorMsg("", client_uuid, &IFrontendActor::BackStream, std::move(backend_msg.m_buffer));
-			m_thread_pool_module->AddActorMsgToThreadCell(ptr);
+			m_client_impl->m_thread_pool_module->AddActorMsgToThreadCell(ptr);
 		}
 	}
 	else if (m_buffer->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::UPDATE_CLIENT_DATA))
@@ -69,7 +69,8 @@ void PollClient::ProcessBackendIO()
 		auto client_uuid = m_client_impl->m_client_net_module->GetLoginClient(update_client.m_client_uid);
 		if (client_uuid != "")
 		{
-			ptr_client->UpdateClientData(update_client.m_data_key, update_client.m_data_value, update_client.m_update_type);
+			std::unique_ptr<IActorMsg> ptr = CreateActorMsg("", client_uuid, &IFrontendActor::UpdateClientData, std::move(update_client.m_data_key), std::move(update_client.m_data_value), update_client.m_update_type);
+			// m_client_impl->m_thread_pool_module->AddActorMsgToThreadCell(ptr);
 		}
 	}
 	else

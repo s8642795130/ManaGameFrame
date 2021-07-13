@@ -133,7 +133,7 @@ public:
 		return m_client_data;
 	}
 
-	void UpdateClientData(const std::string& key, const std::string& value, int type)
+	void UpdateClientData(const std::string key, const std::string value, int type)
 	{
 		if (type == static_cast<int>(EnumDefine::UpdateClientDataType::MODIFY))
 		{

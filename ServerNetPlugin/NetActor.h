@@ -33,11 +33,10 @@ public:
 		return m_buffer;
 	}
 
-	virtual bool PushData(const BYTE* ptr_data, int length) override
+	virtual void PushData(const BYTE* ptr_data, int length) override
 	{
-		// auto buf_remain_len = length;
+		auto buf_remain_len = length;
 
-		/*
 		if (m_buffer->GetHeaderStatus() == false)
 		{
 			// is not read length
@@ -45,8 +44,8 @@ public:
 			auto len_buf = remain_len < length ? remain_len : length;
 
 			//
-			m_buffer->RecvHeader(buffer.data(), len_buf);
-			buf_remain_len -= len_buf;
+			m_buffer->RecvHeader((char*)ptr_data, len_buf);
+			buf_remain_len -= static_cast<int>(len_buf);
 
 			//
 			if (m_buffer->GetRemainingLen() == 0)
@@ -65,9 +64,7 @@ public:
 					m_buffer->ResetData();
 					if (buf_remain_len != 0)
 					{
-						std::array<char, DEFAULT_BUFLEN> buf;
-						std::memcpy(buf.data(), buffer.data() + (len - buf_remain_len), buf_remain_len);
-						PushData(buf, buf_remain_len);
+						PushData(ptr_data + (length - buf_remain_len), buf_remain_len);
 						return;
 					}
 				}
@@ -79,8 +76,8 @@ public:
 			//
 			auto unreceived_len = m_buffer->GetRemainingLen();
 			auto push_data_len = unreceived_len < buf_remain_len ? unreceived_len : buf_remain_len;
-			m_buffer->PushData(buffer.data() + (length - buf_remain_len), push_data_len);
-			buf_remain_len -= push_data_len;
+			m_buffer->PushData((char*)ptr_data + (length - buf_remain_len), push_data_len);
+			buf_remain_len -= static_cast<int>(push_data_len);
 		}
 
 		if (m_buffer->GetRemainingLen() == 0)
@@ -92,14 +89,11 @@ public:
 			m_buffer->ResetData();
 			if (buf_remain_len != 0)
 			{
-				std::array<char, DEFAULT_BUFLEN> buf;
-				std::memcpy(buf.data(), buffer.data() + (length - buf_remain_len), buf_remain_len);
-				PushData(buf, buf_remain_len);
+				PushData(ptr_data + (length - buf_remain_len), buf_remain_len);
 			}
 		}
-		*/
 
-		return true;
+		return;
 	}
 
 	virtual void SendStream(const std::vector<char> stream) override

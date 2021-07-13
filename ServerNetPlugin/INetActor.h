@@ -20,7 +20,7 @@ public:
 	
 	virtual void ClientClose() = 0;
 
-	virtual bool PushData(const BYTE* ptr_data, int length) = 0;
+	virtual void PushData(const BYTE* ptr_data, int length) = 0;
 
 	virtual std::shared_ptr<ByteBuffer>& GetBuffer() = 0;
 

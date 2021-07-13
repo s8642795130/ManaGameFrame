@@ -1,7 +1,7 @@
 #include "FrontendHttpActor.h"
 #include "../Server/StringDefine.h"
 
-bool FrontendHttpActor::PushData(const BYTE* ptr_data, int length)
+void FrontendHttpActor::PushData(const BYTE* ptr_data, int length)
 {
 	/*
 	auto state = m_http_buffer->GetDataState();
@@ -74,7 +74,7 @@ bool FrontendHttpActor::PushData(const BYTE* ptr_data, int length)
 		Parsing(next_buffer, less);
 	}
 	*/
-	return true;
+	return;
 }
 
 void FrontendHttpActor::ProcessIO()
