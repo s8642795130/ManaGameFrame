@@ -93,13 +93,13 @@ public:
 		return m_remaining_len;
 	}
 
-	void RecvHeader(char* buf, std::size_t len)
+	void RecvHeader(const char* buf, std::size_t len)
 	{
 		std::memcpy(m_msg_header.data() + (HEADER_LENGTH - m_remaining_len), buf, len);
 		m_remaining_len -= len;
 	}
 
-	void PushData(char* buf, std::size_t len)
+	void PushData(const char* buf, std::size_t len)
 	{
 		std::memcpy(m_buf_ptr.data(), buf, len);
 		m_remaining_len -= len;

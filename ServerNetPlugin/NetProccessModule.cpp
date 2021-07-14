@@ -18,19 +18,6 @@ void NetProccessModule::Init()
 
 /*
 
-void NetProccessModule::ProcessTempIO(std::shared_ptr<IClientNetActor> client)
-{
-	int majorId = client->GetBuffer()->GetMajorId();
-	auto map_callback = m_callback_module->GetReceiveCallbackMap();
-
-	// check
-	if (map_callback.find(majorId) != std::cend(map_callback))
-	{
-		auto callback = map_callback[majorId];
-		callback->Trigger(m_thread_pool_module, client);
-	}
-}
-
 void NetProccessModule::ProcessHttpIO(IClientNetActor& client)
 {
 	int majorId = client.GetBuffer()->GetMajorId();

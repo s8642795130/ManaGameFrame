@@ -43,10 +43,6 @@ bool PollModule::ConnectMasterServer()
 	auto vec_server_name = m_config_module->GetServersByType(STR_MASTER);
 	auto server_data = m_config_module->GetServerDataByName(vec_server_name[0]->m_server_name);
 
-	// connect server and send SERVER_ONLINE
-	ServerOnlineInfo server_online_info;
-	std::shared_ptr<ByteBuffer> buffer;
-
 	//
 	while (true)
 	{
@@ -127,6 +123,29 @@ void PollModule::AddSocket(int fd)
 	}
 }
 
+void PollModule::AddClientToMapByFD(const int fd, std::shared_ptr<IPollClient> ptr_client)
+{
+	m_map_client_fd.emplace(fd, ptr_client);
+}
+
+std::shared_ptr<IPollClient> PollModule::GetClientFromMapByDF(const int fd)
+{
+	std::shared_ptr<IPollClient> ptr_client = nullptr;
+
+	if (m_map_client_fd.find(fd) != std::cend(m_map_client_fd))
+	{
+		ptr_client = m_map_client_fd[fd];
+	}
+
+	return ptr_client;
+}
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="server_name"></param>
+/// <param name="ptr_client"></param>
+
 void PollModule::AddClientToMap(const std::string& server_name, std::shared_ptr<IPollClient> ptr_client)
 {
 	m_map_client_net.emplace(server_name, ptr_client);
@@ -134,19 +153,25 @@ void PollModule::AddClientToMap(const std::string& server_name, std::shared_ptr<
 
 bool PollModule::HandleRead(struct pollfd& poll_fd)
 {
-	char buf[1024];
-	ssize_t s = read(poll_fd.fd, buf, sizeof(buf) - 1);
+	std::array<char, DEFAULT_BUFLEN> buf;
+	ssize_t s = read(poll_fd.fd, buf.data(), DEFAULT_BUFLEN);
 	if (s > 0)
 	{
-		buf[s] = 0;
-		fflush(stdout);
-		poll_fd.events = POLLOUT;
+		auto ptr_client = GetClientFromMapByDF(poll_fd.fd);
+		if (ptr_client != nullptr)
+		{
+			ptr_client->PushData(buf.data(), s);
+		}
+
+		// fflush(stdout);
+		// poll_fd.events = POLLOUT;
 	}
 	else
 	{
 		close(poll_fd.fd);
 		poll_fd.fd = -1;
 	}
+
 	return true;
 }
 

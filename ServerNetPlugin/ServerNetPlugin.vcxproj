@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackendClient.h" />
+    <ClInclude Include="BackendMasterActor.h" />
     <ClInclude Include="BackendServerActor.h" />
     <ClInclude Include="BindFunc.h" />
     <ClInclude Include="ClientPimpl.h" />
@@ -118,6 +119,7 @@
     <ClInclude Include="IPollModule.h" />
     <ClInclude Include="IServerNetModule.h" />
     <ClInclude Include="IServerObjModule.h" />
+    <ClInclude Include="MasterListenerImpl.h" />
     <ClInclude Include="MsgRouterModule.h" />
     <ClInclude Include="NetActor.h" />
     <ClInclude Include="NetCallbackModule.h" />

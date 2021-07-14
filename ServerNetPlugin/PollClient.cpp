@@ -26,21 +26,68 @@ void PollClient::SendData(const int major, const int minor, std::vector<char> va
 	send(m_fd, temp_data.data(), HEADER_LENGTH + length, 0);
 }
 
-void PollClient::ProcessIO()
+void PollClient::PushData(const char* ptr_data, ssize_t length)
 {
-	switch (m_client_type)
+	auto buf_remain_len = length;
+
+	if (m_buffer->GetHeaderStatus() == false)
 	{
-	case EnumDefine::ClientType::FRONTEND:
-		ProcessBackendIO();
-		break;
-	case EnumDefine::ClientType::BACKEND:
-		break;
-	default:
-		break;
+		// is not read length
+		auto remain_len = m_buffer->GetRemainingLen();
+		auto len_buf = remain_len < length ? remain_len : length;
+
+		//
+		m_buffer->RecvHeader(ptr_data, len_buf);
+		buf_remain_len -= static_cast<int>(len_buf);
+
+		//
+		if (m_buffer->GetRemainingLen() == 0)
+		{
+			if (m_buffer->ResetHeader() == false)
+			{
+				return;
+			}
+
+			if (m_buffer->GetRemainingLen() == 0)
+			{
+				// io actor
+				ProcessIO();
+
+				// reset msg data
+				m_buffer->ResetData();
+				if (buf_remain_len != 0)
+				{
+					PushData(ptr_data + (length - buf_remain_len), buf_remain_len);
+					return;
+				}
+			}
+		}
+	}
+
+	if (buf_remain_len != 0)
+	{
+		//
+		auto unreceived_len = m_buffer->GetRemainingLen();
+		auto push_data_len = unreceived_len < buf_remain_len ? unreceived_len : buf_remain_len;
+		m_buffer->PushData(ptr_data + (length - buf_remain_len), push_data_len);
+		buf_remain_len -= static_cast<int>(push_data_len);
+	}
+
+	if (m_buffer->GetRemainingLen() == 0)
+	{
+		// io
+		ProcessIO();
+
+		// reset msg data
+		m_buffer->ResetData();
+		if (buf_remain_len != 0)
+		{
+			PushData(ptr_data + (length - buf_remain_len), buf_remain_len);
+		}
 	}
 }
 
-void PollClient::ProcessBackendIO()
+void PollClient::ProcessIO()
 {
 	// there is two situations, case 1: back msg to client; case 2: change client data
 	if (m_buffer->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::RETURN_CLIENT_MSG))
@@ -70,7 +117,7 @@ void PollClient::ProcessBackendIO()
 		if (client_uuid != "")
 		{
 			std::unique_ptr<IActorMsg> ptr = CreateActorMsg("", client_uuid, &IFrontendActor::UpdateClientData, std::move(update_client.m_data_key), std::move(update_client.m_data_value), update_client.m_update_type);
-			// m_client_impl->m_thread_pool_module->AddActorMsgToThreadCell(ptr);
+			m_client_impl->m_thread_pool_module->AddActorMsgToThreadCell(ptr);
 		}
 	}
 	else

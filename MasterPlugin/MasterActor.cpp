@@ -36,6 +36,6 @@ void MasterActor::ServerOnline(const std::string server_name, const std::string 
 	m_map_online_server.emplace(server_name, uuid);
 
 	// send online server struct to server
-	std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), uuid, &IClientNetActor::SendStream, std::move(buffer));
+	std::unique_ptr<IActorMsg> ptr = CreateActorMsg(GetUUID(), uuid, &INetActor::SendStream, std::move(buffer));
 	m_pimpl->SendMsgToActor(ptr);
 }

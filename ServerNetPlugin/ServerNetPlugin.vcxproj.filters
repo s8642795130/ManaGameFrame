@@ -116,6 +116,12 @@
     <ClInclude Include="PollMasterClient.h">
       <Filter>PollClient</Filter>
     </ClInclude>
+    <ClInclude Include="MasterListenerImpl.h">
+      <Filter>ListenerImpl</Filter>
+    </ClInclude>
+    <ClInclude Include="BackendMasterActor.h">
+      <Filter>Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interface">

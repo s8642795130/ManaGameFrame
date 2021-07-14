@@ -92,8 +92,6 @@ public:
 				PushData(ptr_data + (length - buf_remain_len), buf_remain_len);
 			}
 		}
-
-		return;
 	}
 
 	virtual void SendStream(const std::vector<char> stream) override

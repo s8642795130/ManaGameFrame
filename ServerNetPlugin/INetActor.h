@@ -27,6 +27,5 @@ public:
 	virtual void SendStream(const std::vector<char> stream) = 0;
 	virtual void SendData(const int major, const int minor, std::vector<char> value) = 0;
 
-	virtual const std::string& GetUid() const = 0;
 	virtual void ProcessIO() = 0;
 };

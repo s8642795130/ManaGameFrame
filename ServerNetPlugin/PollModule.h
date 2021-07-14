@@ -29,7 +29,11 @@ private:
 	std::shared_ptr<IConfigModule> m_config_module;
 
 	// map 
-	std::map<std::string, std::shared_ptr<IPollClient>> m_map_client_net;
+	std::map<std::string, std::shared_ptr<IPollClient>> m_map_client_net; // key: server_name value: poll_client
+	std::map<int, std::shared_ptr<IPollClient>> m_map_client_fd; // key: fd
+protected:
+	void AddClientToMapByFD(const int fd, std::shared_ptr<IPollClient> ptr_client);
+	std::shared_ptr<IPollClient> GetClientFromMapByDF(const int fd);
 protected:
 	void InitFD();
 	bool ConnectMasterServer();
