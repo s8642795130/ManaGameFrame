@@ -111,6 +111,7 @@
     <ClInclude Include="IClientNetModule.h" />
     <ClInclude Include="IFrontendActor.h" />
     <ClInclude Include="IHttpBuffer.h" />
+    <ClInclude Include="IListenerImpl.h" />
     <ClInclude Include="IMsgRouterModule.h" />
     <ClInclude Include="INetActor.h" />
     <ClInclude Include="INetCallbackModule.h" />

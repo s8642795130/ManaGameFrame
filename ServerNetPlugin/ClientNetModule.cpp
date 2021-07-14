@@ -22,10 +22,7 @@ void ClientNetModule::Init()
 
 void ClientNetModule::AfterInit()
 {
-	if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN ||
-		(m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET))
-	{
-	}
+	
 }
 
 // client interface

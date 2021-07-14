@@ -1,9 +1,8 @@
 #pragma once
 
-#include "SocketListenerImpl.h"
-#include "INetActor.h"
+#include "IListenerImpl.h"
 
-class CFrontendListenerImpl : public CListenerImpl
+class CFrontendListenerImpl : public IListenerImpl
 {
 public:
 

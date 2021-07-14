@@ -8,7 +8,7 @@ public:
 	{
 	}
 
-	// interface
-	virtual void EventLoop() = 0;
+	virtual void Init() = 0;
+	virtual void AfterInit() = 0;
 };
 
