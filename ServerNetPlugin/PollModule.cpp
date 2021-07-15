@@ -23,7 +23,10 @@ void PollModule::Init()
 
 void PollModule::AfterInit()
 {
-	ConnectMasterServer();
+	if (m_config_module->GetServerType() != EnumDefine::ServerType::MASTER)
+	{
+		ConnectMasterServer();
+	}
 }
 
 void PollModule::InitFD()
@@ -224,7 +227,7 @@ bool PollModule::ConnectServerWithServerName(const std::string& ip, const int po
 	if (false == ConnectServer(server_data->m_server_ip, server_data->m_port, ptr_client->m_fd))
 	{
 		ret = false;
-		std::perror(CAN_NOT_CONNECT_MASTER);
+		std::perror(CAN_NOT_CONNECT_OTHER_SERVER);
 	}
 	else
 	{

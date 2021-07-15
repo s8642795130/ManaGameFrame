@@ -15,7 +15,7 @@ public:
 		ptr_sender->GetRemoteAddress(dwConnID, szAddress.data(), iAddressLen, usPort);
 
 		//
-		auto ptr_client = m_client_net_module->CreateSocketClientNet(ptr_sender);
+		auto ptr_client = m_client_net_module->CreateMasterNet(ptr_sender);
 		ptr_sender->SetConnectionExtra(dwConnID, ptr_client.get());
 		m_thread_pool_module->AddActorToThreadCell(ptr_client);
 		//

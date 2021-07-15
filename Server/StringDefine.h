@@ -24,6 +24,7 @@
 
 // net
 #define CAN_NOT_CONNECT_MASTER ("cannot connect to master server")
+#define CAN_NOT_CONNECT_OTHER_SERVER ("cannot connect to other server")
 
 // package
 #define HTTP_PACKAGE_ERROR ("http package error")
