@@ -25,6 +25,7 @@ void PollModule::AfterInit()
 {
 	if (m_config_module->GetServerType() != EnumDefine::ServerType::MASTER)
 	{
+		std::cout << CONNECT_TO_MASTER_SERVER << std::endl;
 		ConnectMasterServer();
 	}
 }
@@ -214,6 +215,9 @@ void PollModule::EventLoop()
 
 bool PollModule::ConnectServerWithServerName(const std::string& ip, const int port, const std::string& server_name)
 {
+	// log
+	std::cout << CONNECT_SERVER << server_name << std::endl;
+
 	bool ret = true;
 
 	//

@@ -1,5 +1,6 @@
 #include "BackendServerActor.h"
 #include "BackendClient.h"
+#include "../Server/StringDefine.h"
 #include "../Server/UnpackNetMsg.h"
 #include "../Server/BuiltInMsgDefine.h"
 
@@ -95,5 +96,6 @@ void BackendServerActor::ProcessServerOnline()
 	else
 	{
 		// error...
+		std::cout << BACKEND_PROCESS_ERROR << std::endl;
 	}
 }

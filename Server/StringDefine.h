@@ -31,3 +31,10 @@
 
 // path
 #define CANNOT_GET_REAL_PATH ("cannot get real path")
+
+// server log
+#define IS_RUNNING (" is running")
+#define IS_ONLINE (" is online")
+#define CONNECT_TO_MASTER_SERVER ("connect to master server")
+#define CONNECT_SERVER ("connect server: ")
+#define BACKEND_PROCESS_ERROR ("backend process error")

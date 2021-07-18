@@ -5,9 +5,23 @@
 
 #include <unistd.h>
 
+#include "StringDefine.h"
 #include "ConfigFile.h"
 #include "PluginManager.h"
 #include "../ServerNetPlugin/IPollModule.h"
+
+void PrintLogo()
+{
+	// SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+
+	std::cout << "\n" << std::endl;
+	std::cout << "************************************************" << std::endl;
+	std::cout << "*                                              *" << std::endl;
+	std::cout << "*                 ManaFrame                    *" << std::endl;
+	std::cout << "*                                              *" << std::endl;
+	std::cout << "************************************************" << std::endl;
+	std::cout << "\n" << std::endl;
+}
 
 const std::string GetServerNameFromParam(int argc, char* argv[])
 {
@@ -28,7 +42,7 @@ const std::string GetServerNameFromParam(int argc, char* argv[])
 	}
 	else
 	{
-		server_name = "master-1";
+		server_name = "master";
 	}
 
 	return server_name;
@@ -39,9 +53,13 @@ int main(int argc, char* argv[])
 	// dladdr, dlclose, dlerror, dlopen, dlsym, dlvsym
 	// va_list, va_start, va_arg, va_end
 	// int getopt(int argc, char * const argv[], const char * optstring);
+	PrintLogo();
 
 	// get server name from main param
 	const auto server_name = GetServerNameFromParam(argc, argv);
+
+	// server log
+	std::cout << server_name << IS_RUNNING << std::endl;
 
 	// config
 	std::shared_ptr<ConfigFile> config_file{ std::make_shared<ConfigFile>() };

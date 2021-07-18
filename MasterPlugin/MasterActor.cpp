@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "../Server/StringDefine.h"
 #include "MasterActor.h"
 #include "../Server/PackageNetMsg.h"
 #include "../Server/IConfigFile.h"
@@ -12,6 +13,8 @@ void MasterActor::OnServerOnlineCallback(std::shared_ptr<INetActor> ptr_client)
 	// notify other servers that a server online
 	ConnectServerOnline connect_server_online;
 	UnpackStructForEachField(connect_server_online, ptr_client->GetBuffer());
+
+	std::cout << connect_server_online.m_server_name << IS_ONLINE << std::endl;
 
 	ServerOnline(connect_server_online.m_server_name, ptr_client->GetUUID());
 }
