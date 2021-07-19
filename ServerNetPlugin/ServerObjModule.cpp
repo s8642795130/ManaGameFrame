@@ -23,8 +23,11 @@ void ServerObjModule::AfterInit()
 	}
 
 	// bind msg
-	auto callback = [this](IPollClient& client) -> void { OnServerOnlineCallback(client); };
-	m_callback_module->AddMasterCallback(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), callback);
+	auto current_online_list_callback = [this](IPollClient& client) -> void { OnCurrentOnlineListCallback(client); };
+	m_callback_module->AddMasterCallback(static_cast<int>(BuiltInMsg::ServerMsg::CURRENT_ONLINE_LIST), current_online_list_callback);
+
+	auto server_online_callback = [this](IPollClient& client) -> void { OnServerOnlineCallback(client); };
+	m_callback_module->AddMasterCallback(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), server_online_callback);
 }
 
 void ServerObjModule::SaveServerToMap(const std::string& server_name, const std::string& uuid)
@@ -46,7 +49,11 @@ const std::string ServerObjModule::GetServerUUIDByName(const std::string& server
 
 // callback
 
-void ServerObjModule::OnServerOnlineCallback(IPollClient& client)
+/// <summary>
+/// current is online server list (when startup trigger)
+/// </summary>
+/// <param name="client"></param>
+void ServerObjModule::OnCurrentOnlineListCallback(IPollClient& client)
 {
 	// buffer
 	auto buffer = client.GetBuffer();
@@ -78,4 +85,38 @@ void ServerObjModule::OnServerOnlineCallback(IPollClient& client)
 			}
 		}
 	);
+}
+
+/// <summary>
+/// a server is online (when other server online trigger)
+/// </summary>
+/// <param name="client"></param>
+void ServerObjModule::OnServerOnlineCallback(IPollClient& client)
+{
+	// buffer
+	auto buffer = client.GetBuffer();
+
+	ServerOnlineData online_data;
+	UnpackStructForEachField(online_data, buffer);
+
+	// server config
+	auto server_data = m_config_module->GetServerDataByName(online_data.m_server_name);
+
+	// connect condition
+	if ((m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND || m_config_module->GetServerType() == EnumDefine::ServerType::BACKEND) && server_data->m_server_type.compare(STR_SERVER))
+	{
+		// connect server
+		m_poll_module->ConnectServerWithServerName(server_data->m_server_ip, server_data->m_port, server_data->m_server_name);
+
+		// struct msg
+		ConnectServerOnline connect_server_online;
+		connect_server_online.m_server_name = m_config_module->GetMyServerInfo()->m_server_name;
+
+		// package
+		std::vector<char> buffer;
+		PackageStructForEachField(connect_server_online, buffer);
+
+		auto ptr_client = m_poll_module->GetClientByServerName(server_data->m_server_name);
+		ptr_client->SendData(static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE), 0, buffer);
+	}
 }

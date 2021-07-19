@@ -132,7 +132,7 @@ void PollModule::AddClientToMapByFD(const int fd, std::shared_ptr<IPollClient> p
 	m_map_client_fd.emplace(fd, ptr_client);
 }
 
-std::shared_ptr<IPollClient> PollModule::GetClientFromMapByDF(const int fd)
+std::shared_ptr<IPollClient> PollModule::GetClientFromMapByFD(const int fd)
 {
 	std::shared_ptr<IPollClient> ptr_client = nullptr;
 
@@ -161,7 +161,7 @@ bool PollModule::HandleRead(struct pollfd& poll_fd)
 	ssize_t s = read(poll_fd.fd, buf.data(), DEFAULT_BUFLEN);
 	if (s > 0)
 	{
-		auto ptr_client = GetClientFromMapByDF(poll_fd.fd);
+		auto ptr_client = GetClientFromMapByFD(poll_fd.fd);
 		if (ptr_client != nullptr)
 		{
 			ptr_client->PushData(buf.data(), s);

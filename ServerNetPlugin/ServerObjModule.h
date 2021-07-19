@@ -33,6 +33,7 @@ public:
 	virtual void SaveServerToMap(const std::string& server_name, const std::string& uuid);
 
 	// callback
+	virtual void OnCurrentOnlineListCallback(IPollClient& client);
 	virtual void OnServerOnlineCallback(IPollClient& client);
 };
 

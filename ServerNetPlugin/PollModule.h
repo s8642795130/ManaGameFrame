@@ -33,7 +33,7 @@ private:
 	std::map<int, std::shared_ptr<IPollClient>> m_map_client_fd; // key: fd
 protected:
 	void AddClientToMapByFD(const int fd, std::shared_ptr<IPollClient> ptr_client);
-	std::shared_ptr<IPollClient> GetClientFromMapByDF(const int fd);
+	std::shared_ptr<IPollClient> GetClientFromMapByFD(const int fd);
 protected:
 	void InitFD();
 	bool ConnectMasterServer();

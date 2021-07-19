@@ -32,10 +32,8 @@ const std::string GetServerNameFromParam(int argc, char* argv[])
 	std::string server_name;
 
 	//
-	std::cout << "param count: " << argc << std::endl;
 	if (argc > 1)
 	{
-		std::cout << "param is: " << argv[1] << std::endl;
 		server_name = argv[1];
 	}
 	else
