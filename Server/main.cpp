@@ -14,13 +14,11 @@ void PrintLogo()
 {
 	// SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 
-	std::cout << "\n" << std::endl;
 	std::cout << "************************************************" << std::endl;
 	std::cout << "*                                              *" << std::endl;
 	std::cout << "*                 ManaFrame                    *" << std::endl;
 	std::cout << "*                                              *" << std::endl;
 	std::cout << "************************************************" << std::endl;
-	std::cout << "\n" << std::endl;
 }
 
 const std::string GetServerNameFromParam(int argc, char* argv[])
