@@ -107,6 +107,7 @@
     <ClInclude Include="GlobalDef.h" />
     <ClInclude Include="HPSocket.h" />
     <ClInclude Include="HPTypeDef.h" />
+    <ClInclude Include="HttpListener.h" />
     <ClInclude Include="IBackendActor.h" />
     <ClInclude Include="IClientNetModule.h" />
     <ClInclude Include="IFrontendActor.h" />
