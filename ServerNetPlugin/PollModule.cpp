@@ -10,6 +10,8 @@
 #include "../Server/PackageNetMsg.h"
 #include "../Server/BuiltInMsgDefine.h"
 
+int test_fd = 0;
+
 void PollModule::Init()
 {
 	// module
@@ -61,8 +63,12 @@ bool PollModule::ConnectMasterServer()
 			break;
 		}
 
+		// test code
+		test_fd = ptr_client->m_fd;
+
 		// add map
 		AddClientToMap(vec_server_name[0]->m_server_name, ptr_client);
+		AddClientToMapByFD(ptr_client->m_fd, ptr_client);
 
 		// send this server is online
 		ConnectServerOnline connect_server_online;
@@ -113,7 +119,7 @@ bool PollModule::ConnectServer(const std::string& ip, const int port, int& fd)
 
 void PollModule::AddSocket(int fd)
 {
-	for (auto item : m_arr_poll_fd)
+	for (auto& item : m_arr_poll_fd)
 	{
 		if (item.fd < 0)
 		{
@@ -183,6 +189,14 @@ bool PollModule::HandleRead(struct pollfd& poll_fd)
 
 void PollModule::EventLoop()
 {
+	if (m_config_module->GetServerType() == EnumDefine::ServerType::MASTER)
+	{
+		while (true)
+		{
+
+		}
+	}
+	
 	auto ret = 0;
 	auto timeout = -1;
 
@@ -199,13 +213,15 @@ void PollModule::EventLoop()
 		default:
 		{
 			auto temp_count = 0;
-			while (temp_count == ret)
+			auto temp_index = 0;
+			while (temp_count != ret)
 			{
-				if (m_arr_poll_fd[temp_count].fd != -1 && m_arr_poll_fd[temp_count].revents & POLLIN)
+				if (m_arr_poll_fd[temp_index].fd != -1 && m_arr_poll_fd[temp_index].revents & POLLIN)
 				{
-					HandleRead(m_arr_poll_fd[temp_count]);
+					++temp_count;
+					HandleRead(m_arr_poll_fd[temp_index]);
 				}
-				++temp_count;
+				++temp_index;
 			}
 		}
 		break;
@@ -221,8 +237,7 @@ bool PollModule::ConnectServerWithServerName(const std::string& ip, const int po
 	bool ret = true;
 
 	//
-	auto vec_server_name = m_config_module->GetServersByType(STR_MASTER);
-	auto server_data = m_config_module->GetServerDataByName(vec_server_name[0]->m_server_name);
+	auto server_data = m_config_module->GetServerDataByName(server_name);
 
 	// create master client
 	auto ptr_client{ m_client_net_module->CreatePollClient() };
@@ -236,7 +251,8 @@ bool PollModule::ConnectServerWithServerName(const std::string& ip, const int po
 	else
 	{
 		// add map
-		AddClientToMap(vec_server_name[0]->m_server_name, ptr_client);
+		AddClientToMap(server_name, ptr_client);
+		AddClientToMapByFD(ptr_client->m_fd, ptr_client);
 	}
 
 	return ret;

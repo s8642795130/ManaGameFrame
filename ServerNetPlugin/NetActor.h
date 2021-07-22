@@ -12,6 +12,7 @@ protected:
 	std::shared_ptr<ClientPimpl> m_client_impl;
 	//
 	std::shared_ptr<ByteBuffer> m_buffer;
+	unsigned long m_conn_id;
 public:
 	NetActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, ITcpServer* ptr_sender) :
 		INetActor(ptr_manager),
@@ -21,7 +22,10 @@ public:
 	{
 	}
 
-	unsigned long m_conn_id;
+	virtual void SetSid(const unsigned long conn_id) override
+	{
+		m_conn_id = conn_id;
+	}
 
 	virtual const unsigned long GetSid() const override
 	{
@@ -113,6 +117,7 @@ public:
 		{
 			std::memcpy(temp_data.data() + HEADER_LENGTH, value.data(), length);
 		}
+
 		m_ptr_sender->Send(m_conn_id, reinterpret_cast<const BYTE*>(temp_data.data()), HEADER_LENGTH + length);
 	}
 

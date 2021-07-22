@@ -65,9 +65,9 @@ void ServerObjModule::OnCurrentOnlineListCallback(IPollClient& client)
 	std::for_each(std::cbegin(server_online_info.m_vec_server), std::cend(server_online_info.m_vec_server), [this](const ServerOnlineData& item) -> void
 		{
 			// get server data
-			auto server_data = m_config_module->GetServerDataByName(item.m_server_name);
+			const auto& server_data = m_config_module->GetServerDataByName(item.m_server_name);
 
-			if (!(server_data->m_server_type.compare(STR_CONNECTOR) && m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND))
+			if (server_data->m_server_type.compare(STR_SERVER) == 0)
 			{
 				// connect server
 				m_poll_module->ConnectServerWithServerName(server_data->m_server_ip, server_data->m_port, item.m_server_name);
@@ -100,10 +100,10 @@ void ServerObjModule::OnServerOnlineCallback(IPollClient& client)
 	UnpackStructForEachField(online_data, buffer);
 
 	// server config
-	auto server_data = m_config_module->GetServerDataByName(online_data.m_server_name);
+	const auto& server_data = m_config_module->GetServerDataByName(online_data.m_server_name);
 
 	// connect condition
-	if ((m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND || m_config_module->GetServerType() == EnumDefine::ServerType::BACKEND) && server_data->m_server_type.compare(STR_SERVER))
+	if ((m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND || m_config_module->GetServerType() == EnumDefine::ServerType::BACKEND) && server_data->m_server_type.compare(STR_SERVER) == 0)
 	{
 		// connect server
 		m_poll_module->ConnectServerWithServerName(server_data->m_server_ip, server_data->m_port, server_data->m_server_name);

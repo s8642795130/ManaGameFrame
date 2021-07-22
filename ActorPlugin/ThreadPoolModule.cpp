@@ -19,7 +19,7 @@ void ThreadPoolModule::StartThreadPool()
 {
 	// get cpu thread
 	m_thread_count = std::thread::hardware_concurrency();
-	std::cout << "Thread count: " << m_thread_count << " run" << std::endl;
+	std::cout << "Thread count: " << m_thread_count << std::endl;
 
 	// create thread cell
 	for (unsigned int i = 0; i < m_thread_count; ++i)

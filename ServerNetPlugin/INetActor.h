@@ -16,6 +16,7 @@ public:
 	}
 
 	//client's unique id
+	virtual void SetSid(const unsigned long conn_id) = 0;
 	virtual const unsigned long GetSid() const = 0;
 	
 	virtual void ClientClose() = 0;

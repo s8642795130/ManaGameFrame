@@ -68,6 +68,7 @@ void BackendServerActor::ProcessRPCIO()
 
 void BackendServerActor::ProcessServerOnline()
 {
+	std::cout << "heheda" << std::endl;
 	// check login msg
 	if (m_buffer->GetMajorId() != static_cast<int>(BuiltInMsg::ServerMsg::SERVER_ONLINE))
 	{

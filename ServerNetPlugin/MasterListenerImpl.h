@@ -16,6 +16,7 @@ public:
 
 		//
 		auto ptr_client = m_client_net_module->CreateMasterNet(ptr_sender);
+		ptr_client->SetSid(dwConnID);
 		ptr_sender->SetConnectionExtra(dwConnID, ptr_client.get());
 		m_thread_pool_module->AddActorToThreadCell(ptr_client);
 		//
