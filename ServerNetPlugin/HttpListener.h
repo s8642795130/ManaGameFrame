@@ -1,7 +1,7 @@
 #pragma once
 
 #include "HPSocket.h"
-
+/*
 class CHttpServerListenerImpl : public CHttpServerListener
 {
 private:
@@ -33,12 +33,8 @@ private:
 
 public:
 	CHttpServerListenerImpl(LPCTSTR lpszName)
-		: m_strName(lpszName)
 	{
 	}
-
-public:
-	CString m_strName;
 };
 
 // ------------------------------------------------------------------------------------------------------------- //
@@ -50,7 +46,6 @@ EnHandleResult CHttpServerListenerImpl::OnPrepareListen(ITcpServer* pSender, SOC
 	USHORT usPort;
 
 	pSender->GetListenAddress(szAddress, iAddressLen, usPort);
-	::PostOnPrepareListen(szAddress, usPort, m_strName);
 
 	return HR_OK;
 }
@@ -64,21 +59,16 @@ EnHandleResult CHttpServerListenerImpl::OnAccept(ITcpServer* pSender, CONNID dwC
 
 	pSender->GetRemoteAddress(dwConnID, szAddress, iAddressLen, usPort);
 
-	::PostOnAccept(dwConnID, szAddress, usPort, bPass, m_strName);
-
 	return bPass ? HR_OK : HR_ERROR;
 }
 
 EnHandleResult CHttpServerListenerImpl::OnHandShake(ITcpServer* pSender, CONNID dwConnID)
 {
-	::PostOnHandShake(dwConnID, m_strName);
 	return HR_OK;
 }
 
 EnHandleResult CHttpServerListenerImpl::OnReceive(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 {
-	::PostOnReceive(dwConnID, pData, iLength, m_strName);
-
 	if (pSender->Send(dwConnID, pData, iLength))
 		return HR_OK;
 	else
@@ -87,7 +77,6 @@ EnHandleResult CHttpServerListenerImpl::OnReceive(ITcpServer* pSender, CONNID dw
 
 EnHandleResult CHttpServerListenerImpl::OnSend(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 {
-	::PostOnSend(dwConnID, pData, iLength, m_strName);
 	return HR_OK;
 }
 
@@ -146,7 +135,6 @@ EnHttpParseResult CHttpServerListenerImpl::OnBody(IHttpServer* pSender, CONNID d
 
 EnHttpParseResult CHttpServerListenerImpl::OnChunkHeader(IHttpServer* pSender, CONNID dwConnID, int iLength)
 {
-	::PostOnChunkHeader(dwConnID, iLength, m_strName);
 	return HPR_OK;
 }
 
@@ -288,8 +276,6 @@ EnHandleResult CHttpServerListenerImpl::OnWSMessageHeader(IHttpServer* pSender, 
 
 EnHandleResult CHttpServerListenerImpl::OnWSMessageBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 {
-	::PostOnWSMessageBody(dwConnID, pData, iLength, m_strName);
-
 	CBufferPtr* pBuffer = nullptr;
 	pSender->GetConnectionExtra(dwConnID, (PVOID*)&pBuffer);
 	VERIFY(pBuffer);
@@ -301,8 +287,6 @@ EnHandleResult CHttpServerListenerImpl::OnWSMessageBody(IHttpServer* pSender, CO
 
 EnHandleResult CHttpServerListenerImpl::OnWSMessageComplete(IHttpServer* pSender, CONNID dwConnID)
 {
-	::PostOnWSMessageComplete(dwConnID, m_strName);
-
 	CBufferPtr* pBuffer = nullptr;
 	pSender->GetConnectionExtra(dwConnID, (PVOID*)&pBuffer);
 	VERIFY(pBuffer);
@@ -320,3 +304,4 @@ EnHandleResult CHttpServerListenerImpl::OnWSMessageComplete(IHttpServer* pSender
 
 	return HR_OK;
 }
+*/

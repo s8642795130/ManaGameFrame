@@ -10,8 +10,6 @@
 #include "../Server/PackageNetMsg.h"
 #include "../Server/BuiltInMsgDefine.h"
 
-int test_fd = 0;
-
 void PollModule::Init()
 {
 	// module
@@ -62,9 +60,6 @@ bool PollModule::ConnectMasterServer()
 			std::perror(CAN_NOT_CONNECT_MASTER);
 			break;
 		}
-
-		// test code
-		test_fd = ptr_client->m_fd;
 
 		// add map
 		AddClientToMap(vec_server_name[0]->m_server_name, ptr_client);

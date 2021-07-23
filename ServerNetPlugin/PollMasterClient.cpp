@@ -3,12 +3,14 @@
 void PollMasterClient::ProcessIO()
 {
 	int majorId = m_buffer->GetMajorId();
-	auto map_callback = m_client_impl->m_callback_module->GetMasterCallbackMap();
+	const auto& map_callback = m_client_impl->m_callback_module->GetMasterCallbackMap();
+
+	std::cout << "Poll ProcessIO() " << majorId << std::endl;
 
 	// check
 	if (map_callback.find(majorId) != std::cend(map_callback))
 	{
-		auto callback = map_callback[majorId];
+		auto callback = map_callback.at(majorId);
 		callback(*this);
 	}
 }

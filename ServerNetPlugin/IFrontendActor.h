@@ -47,8 +47,8 @@ protected:
 		if (CheckClientIsLogin())
 		{
 			const auto major_id = m_buffer->GetMajorId();
-			auto map_msg = m_client_impl->m_callback_module->GetGameMsgMap();
-			auto plugin_name = map_msg[major_id];
+			const auto& map_msg = m_client_impl->m_callback_module->GetGameMsgMap();
+			auto plugin_name = map_msg.at(major_id);
 
 			// get all the servers that the plugin exists
 			const auto server_list = m_client_impl->m_config_module->GetServersByPluginName(plugin_name);

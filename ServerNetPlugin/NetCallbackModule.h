@@ -18,7 +18,7 @@ public:
 	}
 
 	// interface
-	virtual const std::map<int, std::string> GetGameMsgMap(); // for router // bug
+	virtual const std::map<int, std::string>& GetGameMsgMap(); // for router // bug
 	//
 	virtual void AddReceiveCallback(const int msg_id, std::shared_ptr<IBindFunc> bind_func);
 	virtual const std::map<int, std::shared_ptr<IBindFunc>>& GetReceiveCallbackMap();

@@ -12,12 +12,12 @@ public:
 	virtual void ProcessIO()
 	{
 		int majorId = m_buffer->GetMajorId();
-		auto map_callback = m_client_impl->m_callback_module->GetReceiveCallbackMap();
+		const auto& map_callback = m_client_impl->m_callback_module->GetReceiveCallbackMap();
 
 		// check
 		if (map_callback.find(majorId) != std::cend(map_callback))
 		{
-			auto callback = map_callback[majorId];
+			auto callback = map_callback.at(majorId);
 			callback->Trigger(m_client_impl->m_thread_pool_module, shared_from_this());
 		}
 	}

@@ -36,7 +36,7 @@ void BackendServerActor::ProcessServerBackendIO()
 	std::unique_ptr<ByteBuffer> buffer{ std::make_unique<ByteBuffer>() };
 
 	// call callback
-	auto map_callback = m_client_impl->m_callback_module->GetBackendCallbackMap();
+	const auto& map_callback = m_client_impl->m_callback_module->GetBackendCallbackMap();
 	if (map_callback.find(buffer->GetMajorId()) != std::cend(map_callback))
 	{
 		// create param
@@ -45,7 +45,7 @@ void BackendServerActor::ProcessServerBackendIO()
 		backend_client.m_client_data = backend_msg.m_client_data;
 
 		// call callback
-		auto callback = map_callback[buffer->GetMajorId()];
+		auto callback = map_callback.at(buffer->GetMajorId());
 		callback(backend_client);
 	}
 }
@@ -57,12 +57,12 @@ void BackendServerActor::ProcessRPCIO()
 	UnpackStructForEachField(rpc_data, m_buffer);
 
 	// map callback
-	auto map_callback = m_client_impl->m_callback_module->GetRPCCallbackMap();
+	const auto& map_callback = m_client_impl->m_callback_module->GetRPCCallbackMap();
 
 	// find callback
 	if (map_callback.find(rpc_data.m_major_id) != std::cend(map_callback))
 	{
-		map_callback[rpc_data.m_major_id](rpc_data.m_major_id, rpc_data.m_minor_id, rpc_data.m_stream);
+		map_callback.at(rpc_data.m_major_id)(rpc_data.m_major_id, rpc_data.m_minor_id, rpc_data.m_stream);
 	}
 }
 

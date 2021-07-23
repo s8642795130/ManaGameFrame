@@ -1,6 +1,6 @@
 #include "NetCallbackModule.h"
 
-const std::map<int, std::string> NetCallbackModule::GetGameMsgMap()
+const std::map<int, std::string>& NetCallbackModule::GetGameMsgMap()
 {
 	return m_map_game_msg;
 }
