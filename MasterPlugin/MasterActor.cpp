@@ -9,6 +9,10 @@
 #include "../Server/BuiltInMsgDefine.h"
 #include "../ActorPlugin/ActorMsg.h"
 
+#include <chrono>
+#include <thread>
+
+
 void MasterActor::OnServerOnlineCallback(std::shared_ptr<INetActor> ptr_client)
 {
 	// notify other servers that a server online
@@ -22,6 +26,9 @@ void MasterActor::OnServerOnlineCallback(std::shared_ptr<INetActor> ptr_client)
 
 void MasterActor::ServerOnline(const std::string& server_name, const std::string& online_server_uuid)
 {
+	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+	std::cout << "run sleep" << std::endl;
+
 	// broadcast server online
 	BroadcastServerOnline(server_name);
 

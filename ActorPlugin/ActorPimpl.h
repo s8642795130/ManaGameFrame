@@ -71,8 +71,8 @@ public:
 		rpc_data.m_stream = stream;
 
 		// get msg corresponding to plugin
-		auto map_msg = m_callback_module->GetGameMsgMap();
-		auto plugin_name = map_msg[major_id];
+		const auto& map_msg = m_callback_module->GetGameMsgMap();
+		auto plugin_name = map_msg.at(major_id);
 
 		// get all the servers that the plugin exists
 		const auto server_list = m_config_module->GetServersByPluginName(plugin_name);
