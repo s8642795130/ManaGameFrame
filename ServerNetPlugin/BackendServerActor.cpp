@@ -11,6 +11,8 @@ void BackendServerActor::SetClientType(EnumDefine::ClientType client_type)
 
 void BackendServerActor::ProcessIO()
 {
+	std::cout << "lowpower" << std::endl;
+
 	switch (m_client_type)
 	{
 	case EnumDefine::ClientType::FRONTEND:

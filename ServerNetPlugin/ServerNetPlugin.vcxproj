@@ -133,7 +133,7 @@
     <ClInclude Include="ServerNetPlugin.h" />
     <ClInclude Include="ServerObjModule.h" />
     <ClInclude Include="SocketInterface.h" />
-    <ClInclude Include="SocketListenerImpl.h" />
+    <ClInclude Include="BackendListenerImpl.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

@@ -91,9 +91,6 @@
     <ClInclude Include="SocketInterface.h">
       <Filter>HPSocket</Filter>
     </ClInclude>
-    <ClInclude Include="SocketListenerImpl.h">
-      <Filter>ListenerImpl</Filter>
-    </ClInclude>
     <ClInclude Include="HPTypeDef.h">
       <Filter>HPSocket</Filter>
     </ClInclude>
@@ -126,6 +123,9 @@
       <Filter>ListenerImpl</Filter>
     </ClInclude>
     <ClInclude Include="HttpListener.h">
+      <Filter>ListenerImpl</Filter>
+    </ClInclude>
+    <ClInclude Include="BackendListenerImpl.h">
       <Filter>ListenerImpl</Filter>
     </ClInclude>
   </ItemGroup>

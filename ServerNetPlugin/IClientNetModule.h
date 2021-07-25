@@ -14,6 +14,7 @@ public:
 
 	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender) = 0;
 	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender) = 0;
+	virtual std::shared_ptr<INetActor> CreateBackendClientNet(ITcpServer* ptr_sender) = 0;
 	virtual std::shared_ptr<INetActor> CreateMasterNet(ITcpServer* ptr_sender) = 0;
 	virtual std::shared_ptr<IPollClient> CreatePollMasterClient() = 0;
 	virtual std::shared_ptr<IPollClient> CreatePollClient() = 0;

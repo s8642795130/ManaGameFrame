@@ -16,7 +16,7 @@
 #include "HPSocket.h"
 #include "FrontendListenerImpl.h"
 #include "MasterListenerImpl.h"
-#include "SocketListenerImpl.h"
+#include "BackendListenerImpl.h"
 
 ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 	IServerNetModule(ptr)
@@ -41,6 +41,8 @@ void ServerNetModule::AfterInit()
 	// auto port = m_config_module->GetMyServerInfo()->m_port;
 	// StartNetwork(static_cast<uint16_t>(port), 30);
 
+	std::cout << "m_config_module->GetServerType() " << static_cast<int>(m_config_module->GetServerType()) << std::endl;
+
 	// server
 	if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN ||
 		(m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET))
@@ -56,7 +58,7 @@ void ServerNetModule::AfterInit()
 	}
 	else if (m_config_module->GetServerType() == EnumDefine::ServerType::BACKEND)
 	{
-		m_ptr_listener = std::make_shared<CSocketListenerImpl>();
+		m_ptr_listener = std::make_shared<CBackendListenerImpl>();
 	}
 	
 	m_ptr_listener->SetManagerPtr(m_ptr_manager);

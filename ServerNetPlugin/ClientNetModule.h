@@ -26,6 +26,7 @@ public:
 	// interface
 	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender) override;
 	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender) override;
+	virtual std::shared_ptr<INetActor> CreateBackendClientNet(ITcpServer* ptr_sender);
 	virtual std::shared_ptr<INetActor> CreateMasterNet(ITcpServer* ptr_sender) override;
 	virtual std::shared_ptr<IPollClient> CreatePollMasterClient() override;
 	virtual std::shared_ptr<IPollClient> CreatePollClient() override;

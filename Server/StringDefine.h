@@ -21,6 +21,7 @@
 // config
 #define CAN_NOT_READ_CONFIG_FILE ("cannot read config file")
 #define CONFIG_DUPLICATE_SERVER_NAME ("duplicate server names in the configuration file")
+#define PLUGIN_LIST_NOT_EXIST ("plugin list not exist")
 
 // net
 #define CAN_NOT_CONNECT_MASTER ("cannot connect to master server")

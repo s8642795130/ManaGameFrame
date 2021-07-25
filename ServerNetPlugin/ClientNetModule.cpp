@@ -1,6 +1,7 @@
 #include "ClientNetModule.h"
 #include "FrontendHttpActor.h"
 #include "FrontendSocketActor.h"
+#include "BackendServerActor.h"
 #include "BackendMasterActor.h"
 #include "PollMasterClient.h"
 #include "HPSocket.h"
@@ -36,6 +37,12 @@ std::shared_ptr<INetActor> ClientNetModule::CreateHttpClientNet(ITcpServer* ptr_
 std::shared_ptr<INetActor> ClientNetModule::CreateSocketClientNet(ITcpServer* ptr_sender)
 {
 	std::shared_ptr<INetActor> client = std::make_shared<FrontendSocketActor>(m_ptr_manager, m_client_pimpl, ptr_sender);
+	return client;
+}
+
+std::shared_ptr<INetActor> ClientNetModule::CreateBackendClientNet(ITcpServer* ptr_sender)
+{
+	std::shared_ptr<INetActor> client = std::make_shared<BackendServerActor>(m_ptr_manager, m_client_pimpl, ptr_sender);
 	return client;
 }
 

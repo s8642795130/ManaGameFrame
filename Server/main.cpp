@@ -71,6 +71,7 @@ int main(int argc, char* argv[])
 	// load plugin
 	auto plugin_list = config_file->GetPluginsByServerName(config_file->GetMyServerInfo()->m_server_name);
 	manager->LoadAllPluginLibrary(plugin_list);
+	
 
 	// life cycle
 	manager->Init();

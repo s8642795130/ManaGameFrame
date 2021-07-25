@@ -1,11 +1,11 @@
 #pragma once
 
+#include <array>
+
 #include "IListenerImpl.h"
 
-class CFrontendListenerImpl : public IListenerImpl
+class CBackendListenerImpl : public IListenerImpl
 {
-public:
-
 	virtual EnHandleResult OnAccept(ITcpServer* ptr_sender, CONNID dwConnID, UINT_PTR soClient) override
 	{
 		std::array<char, 50> szAddress;
@@ -15,7 +15,7 @@ public:
 		ptr_sender->GetRemoteAddress(dwConnID, szAddress.data(), iAddressLen, usPort);
 
 		//
-		auto ptr_client = m_client_net_module->CreateSocketClientNet(ptr_sender);
+		auto ptr_client = m_client_net_module->CreateBackendClientNet(ptr_sender);
 		ptr_client->SetSid(dwConnID);
 		ptr_sender->SetConnectionExtra(dwConnID, ptr_client.get());
 		m_thread_pool_module->AddActorToThreadCell(ptr_client);
@@ -29,7 +29,6 @@ public:
 		INetActor* ptr_client = nullptr;
 		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
 		{
-			m_client_net_module->RemoveLoginClientFromMap(ptr_client->GetUUID());
 			m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
 		}
 
