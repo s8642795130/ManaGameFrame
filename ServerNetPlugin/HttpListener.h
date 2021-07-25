@@ -1,9 +1,22 @@
 #pragma once
 
 #include "HPSocket.h"
-/*
+
+#include "../Server/IPluginManager.h"
+#include "../ActorPlugin/IThreadPoolModule.h"
+#include "IClientNetModule.h"
+#include "INetActor.h"
+
 class CHttpServerListenerImpl : public CHttpServerListener
 {
+protected:
+	// manager
+	std::shared_ptr<IPluginManager> m_ptr_manager;
+
+	// module
+	std::shared_ptr<IThreadPoolModule> m_thread_pool_module;
+	std::shared_ptr<IClientNetModule> m_client_net_module;
+
 private:
 	virtual EnHandleResult OnPrepareListen(ITcpServer* pSender, SOCKET soListen);
 	virtual EnHandleResult OnAccept(ITcpServer* pSender, CONNID dwConnID, UINT_PTR soClient);
@@ -28,12 +41,20 @@ private:
 	virtual EnHandleResult OnWSMessageBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength);
 	virtual EnHandleResult OnWSMessageComplete(IHttpServer* pSender, CONNID dwConnID);
 
-private:
-	CStringA GetHeaderSummary(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszSep = "  ", int iSepCount = 0, BOOL bWithContentLength = TRUE);
-
 public:
 	CHttpServerListenerImpl(LPCTSTR lpszName)
 	{
+	}
+
+	void SetManagerPtr(std::shared_ptr<IPluginManager> ptr)
+	{
+		m_ptr_manager = ptr;
+	}
+
+	void Init()
+	{
+		m_thread_pool_module = m_ptr_manager->GetModule<IThreadPoolModule>();
+		m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
 	}
 };
 
@@ -59,6 +80,13 @@ EnHandleResult CHttpServerListenerImpl::OnAccept(ITcpServer* pSender, CONNID dwC
 
 	pSender->GetRemoteAddress(dwConnID, szAddress, iAddressLen, usPort);
 
+	//
+	auto ptr_client = m_client_net_module->CreateHttpClientNet(pSender);
+	ptr_client->SetSid(dwConnID);
+	pSender->SetConnectionExtra(dwConnID, ptr_client.get());
+	m_thread_pool_module->AddActorToThreadCell(ptr_client);
+	//
+
 	return bPass ? HR_OK : HR_ERROR;
 }
 
@@ -69,10 +97,14 @@ EnHandleResult CHttpServerListenerImpl::OnHandShake(ITcpServer* pSender, CONNID 
 
 EnHandleResult CHttpServerListenerImpl::OnReceive(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 {
-	if (pSender->Send(dwConnID, pData, iLength))
-		return HR_OK;
-	else
-		return HR_ERROR;
+	// if (pSender->Send(dwConnID, pData, iLength))
+	// 	return HR_OK;
+	// else
+	// 	return HR_ERROR;
+
+	std::cout << "http OnReceive" << std::endl;
+
+	return HR_OK;
 }
 
 EnHandleResult CHttpServerListenerImpl::OnSend(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
@@ -82,20 +114,22 @@ EnHandleResult CHttpServerListenerImpl::OnSend(ITcpServer* pSender, CONNID dwCon
 
 EnHandleResult CHttpServerListenerImpl::OnClose(ITcpServer* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)
 {
-	iErrorCode == SE_OK ? ::PostOnClose(dwConnID, m_strName) :
-		::PostOnError(dwConnID, enOperation, iErrorCode, m_strName);
+	INetActor* ptr_client = nullptr;
+	if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
+	{
+		m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
+	}
 
-	CBufferPtr* pBuffer = nullptr;
-	pSender->GetConnectionExtra(dwConnID, (PVOID*)&pBuffer);
-
-	if (pBuffer) delete pBuffer;
+	if (iErrorCode == SE_OK)
+	{
+		return HR_ERROR;
+	}
 
 	return HR_OK;
 }
 
 EnHandleResult CHttpServerListenerImpl::OnShutdown(ITcpServer* pSender)
 {
-	::PostOnShutdown(m_strName);
 	return HR_OK;
 }
 
@@ -103,33 +137,30 @@ EnHandleResult CHttpServerListenerImpl::OnShutdown(ITcpServer* pSender)
 
 EnHttpParseResult CHttpServerListenerImpl::OnMessageBegin(IHttpServer* pSender, CONNID dwConnID)
 {
-	::PostOnMessageBegin(dwConnID, m_strName);
 	return HPR_OK;
 }
 
 EnHttpParseResult CHttpServerListenerImpl::OnRequestLine(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)
 {
-	::PostOnRequestLine(dwConnID, lpszMethod, pSender->GetUrlFieldSet(dwConnID), lpszUrl, m_strName);
 	return HPR_OK;
 }
 
 EnHttpParseResult CHttpServerListenerImpl::OnHeader(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)
 {
-	::PostOnHeader(dwConnID, lpszName, lpszValue, m_strName);
+	std::cout << "http OnHeader" << std::endl;
+
 	return HPR_OK;
 }
 
 EnHttpParseResult CHttpServerListenerImpl::OnHeadersComplete(IHttpServer* pSender, CONNID dwConnID)
 {
-	CStringA strSummary = GetHeaderSummary(pSender, dwConnID, "    ", 0, TRUE);
-	::PostOnHeadersComplete(dwConnID, strSummary, m_strName);
-
 	return HPR_OK;
 }
 
 EnHttpParseResult CHttpServerListenerImpl::OnBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 {
-	::PostOnBody(dwConnID, pData, iLength, m_strName);
+	std::cout << "http OnBody" << std::endl;
+
 	return HPR_OK;
 }
 
@@ -140,7 +171,6 @@ EnHttpParseResult CHttpServerListenerImpl::OnChunkHeader(IHttpServer* pSender, C
 
 EnHttpParseResult CHttpServerListenerImpl::OnChunkComplete(IHttpServer* pSender, CONNID dwConnID)
 {
-	::PostOnChunkComplete(dwConnID, m_strName);
 	return HPR_OK;
 }
 
@@ -261,7 +291,6 @@ EnHttpParseResult CHttpServerListenerImpl::OnUpgrade(IHttpServer* pSender, CONNI
 
 EnHttpParseResult CHttpServerListenerImpl::OnParseError(IHttpServer* pSender, CONNID dwConnID, int iErrorCode, LPCSTR lpszErrorDesc)
 {
-	::PostOnParseError(dwConnID, iErrorCode, lpszErrorDesc, m_strName);
 	return HPR_OK;
 }
 
@@ -269,8 +298,6 @@ EnHttpParseResult CHttpServerListenerImpl::OnParseError(IHttpServer* pSender, CO
 
 EnHandleResult CHttpServerListenerImpl::OnWSMessageHeader(IHttpServer* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)
 {
-	::PostOnWSMessageHeader(dwConnID, bFinal, iReserved, iOperationCode, lpszMask, ullBodyLen, m_strName);
-
 	return HR_OK;
 }
 
@@ -304,4 +331,3 @@ EnHandleResult CHttpServerListenerImpl::OnWSMessageComplete(IHttpServer* pSender
 
 	return HR_OK;
 }
-*/

@@ -238,26 +238,23 @@ const std::vector<std::shared_ptr<ServerData>>& ConfigFile::GetServersByType(con
 
 const std::shared_ptr<ServerData>& ConfigFile::GetMyServerInfo()
 {
-	return m_server_config[m_server_name];
+	if (m_server_config.find(m_server_name) == std::cend(m_server_config))
+	{
+		std::cerr << SERVER_CONFIG_NOT_EXIST << std::endl;
+		std::exit(1);
+	}
+	else
+	{
+		return m_server_config[m_server_name];
+	}
 }
 
 const std::vector<std::shared_ptr<PluginData>>& ConfigFile::GetPluginsByServerName(const std::string& server_name)
 {
-	try
-	{
-		auto test = m_plugin_list.find(server_name);
-	}
-	catch (const std::exception&)
-	{
-		std::cout << "etstsss2" << std::endl;
-	}
-	
 	if (m_plugin_list.find(server_name) == std::cend(m_plugin_list))
 	{
-		std::cout << "etst2" << std::endl;
 		std::cerr << PLUGIN_LIST_NOT_EXIST << std::endl;
-		std::exit(0);
+		std::exit(1);
 	}
-	std::cout << "etst3" << std::endl;
 	return m_plugin_list[server_name];
 }
