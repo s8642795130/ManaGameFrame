@@ -25,6 +25,12 @@
     <ClCompile Include="PollMasterClient.cpp">
       <Filter>PollClient</Filter>
     </ClCompile>
+    <ClCompile Include="Helper.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Crypto.cpp">
+      <Filter>Crypto</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientNetModule.h" />
@@ -128,6 +134,12 @@
     <ClInclude Include="BackendListenerImpl.h">
       <Filter>ListenerImpl</Filter>
     </ClInclude>
+    <ClInclude Include="Helper.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Crypto.h">
+      <Filter>Crypto</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Interface">
@@ -147,6 +159,12 @@
     </Filter>
     <Filter Include="PollClient">
       <UniqueIdentifier>{9ee8cdc3-d502-4184-86cd-67862cf51ecf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{52f982b2-053e-4247-a62f-ca362c34b82b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Crypto">
+      <UniqueIdentifier>{2a27de2c-f9e5-4fa4-9e2b-9f1833d948e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

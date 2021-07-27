@@ -8,6 +8,7 @@
 #include "../Server/DefineHeader.h"
 
 #include "IListenerImpl.h"
+#include "HttpListener.h"
 
 class ServerNetModule : public IServerNetModule
 {
@@ -20,6 +21,9 @@ private:
 	// listener
 	std::shared_ptr<IListenerImpl> m_ptr_listener;
 	std::shared_ptr<CTcpServerPtr> m_server;
+	// http
+	std::shared_ptr<CHttpServerListenerImpl> m_ptr_http_listener;
+	std::shared_ptr<CHttpServerPtr> m_http_server;
 protected:
 public:
 	ServerNetModule(std::shared_ptr<IPluginManager> ptr);

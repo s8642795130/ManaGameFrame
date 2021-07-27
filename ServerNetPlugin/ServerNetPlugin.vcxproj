@@ -81,9 +81,11 @@
   <ItemGroup>
     <ClCompile Include="BackendServerActor.cpp" />
     <ClCompile Include="ClientNetModule.cpp" />
+    <ClCompile Include="Crypto.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FrontendHttpActor.cpp" />
     <ClCompile Include="FrontendSocketActor.cpp" />
+    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
     <ClCompile Include="NetProccessModule.cpp" />
@@ -101,10 +103,12 @@
     <ClInclude Include="BindFunc.h" />
     <ClInclude Include="ClientPimpl.h" />
     <ClInclude Include="ClientNetModule.h" />
+    <ClInclude Include="Crypto.h" />
     <ClInclude Include="FrontendHttpActor.h" />
     <ClInclude Include="FrontendListenerImpl.h" />
     <ClInclude Include="FrontendSocketActor.h" />
     <ClInclude Include="GlobalDef.h" />
+    <ClInclude Include="Helper.h" />
     <ClInclude Include="HPSocket.h" />
     <ClInclude Include="HPTypeDef.h" />
     <ClInclude Include="HttpListener.h" />

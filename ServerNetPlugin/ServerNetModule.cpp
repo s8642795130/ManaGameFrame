@@ -17,6 +17,7 @@
 #include "FrontendListenerImpl.h"
 #include "MasterListenerImpl.h"
 #include "BackendListenerImpl.h"
+#include "HttpListener.h"
 
 ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 	IServerNetModule(ptr)
@@ -45,25 +46,30 @@ void ServerNetModule::AfterInit()
 	if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN ||
 		(m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET))
 	{
+		m_ptr_http_listener = std::make_shared<CHttpServerListenerImpl>();
+		m_http_server = std::make_shared<CHttpServerPtr>(m_ptr_http_listener.get());
 	}
-	else if (m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::SOCKET)
+	else
 	{
-		m_ptr_listener = std::make_shared<CFrontendListenerImpl>();
-	}
-	else if (m_config_module->GetServerType() == EnumDefine::ServerType::MASTER)
-	{
-		m_ptr_listener = std::make_shared<CMasterListenerImpl>();
-	}
-	else if (m_config_module->GetServerType() == EnumDefine::ServerType::BACKEND)
-	{
-		m_ptr_listener = std::make_shared<CBackendListenerImpl>();
-	}
-	
-	m_ptr_listener->SetManagerPtr(m_ptr_manager);
-	m_ptr_listener->Init();
+		if (m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::SOCKET)
+		{
+			m_ptr_listener = std::make_shared<CFrontendListenerImpl>();
+		}
+		else if (m_config_module->GetServerType() == EnumDefine::ServerType::MASTER)
+		{
+			m_ptr_listener = std::make_shared<CMasterListenerImpl>();
+		}
+		else if (m_config_module->GetServerType() == EnumDefine::ServerType::BACKEND)
+		{
+			m_ptr_listener = std::make_shared<CBackendListenerImpl>();
+		}
 
-	// network
-	m_server = std::make_shared<CTcpServerPtr>(m_ptr_listener.get());
-	auto port = m_config_module->GetMyServerInfo()->m_port;
-	m_server->Get()->Start("0.0.0.0", static_cast<USHORT>(port));
+		m_ptr_listener->SetManagerPtr(m_ptr_manager);
+		m_ptr_listener->Init();
+
+		// network
+		m_server = std::make_shared<CTcpServerPtr>(m_ptr_listener.get());
+		auto port = m_config_module->GetMyServerInfo()->m_port;
+		m_server->Get()->Start("0.0.0.0", static_cast<USHORT>(port));
+	}
 }
