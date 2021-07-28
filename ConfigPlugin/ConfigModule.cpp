@@ -13,7 +13,8 @@ void ConfigModule::Init()
 	SetServerName(m_ptr_manager->GetServerName());
 	ReadServerConfigFile();
 	SetServerType();
-	SetProtocolType(EnumDefine::ProtocolType::SOCKET); // need to code
+	// SetProtocolType(EnumDefine::ProtocolType::SOCKET); // need to code
+	SetProtocolType(EnumDefine::ProtocolType::WEBSOCKET);
 }
 
 /// <summary>

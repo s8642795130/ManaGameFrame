@@ -26,7 +26,7 @@ ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 
 ServerNetModule::~ServerNetModule()
 {
-	m_server->Get()->Stop();
+	// m_server->Get()->Stop();
 }
 
 void ServerNetModule::Init()
@@ -43,11 +43,24 @@ void ServerNetModule::AfterInit()
 	// StartNetwork(static_cast<uint16_t>(port), 30);
 
 	// server
-	if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN ||
-		(m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET))
+	// if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN ||
+	//	(m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET))
+	std::cout << "GetServerType: " << static_cast<int>(m_config_module->GetServerType()) << std::endl;
+	std::cout << "GetProtocolType: " << static_cast<int>(m_config_module->GetProtocolType()) << std::endl;
+	if (m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET)
 	{
+		std::cout << "start http server" << std::endl;
+
+		// init
+		m_ptr_http_listener->SetManagerPtr(m_ptr_manager);
+		m_ptr_http_listener->Init();
+
+		// network
 		m_ptr_http_listener = std::make_shared<CHttpServerListenerImpl>();
 		m_http_server = std::make_shared<CHttpServerPtr>(m_ptr_http_listener.get());
+		// start
+		auto port = m_config_module->GetMyServerInfo()->m_port;
+		m_http_server->Get()->Start("0.0.0.0", static_cast<USHORT>(port));
 	}
 	else
 	{

@@ -76,7 +76,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\..\..\..\..\out\</OutDir>
+    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\..\..\..\..\out_test\</OutDir>
     <IntDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemGroup>
@@ -112,7 +112,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>-lpthread;-ldl;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(TargetPath)</OutputFile>
+      <OutputFile>$(ProjectDir)..\out\$(ProjectName).out</OutputFile>
       <LibraryDependencies>%(LibraryDependencies)</LibraryDependencies>
       <AdditionalOptions>
       </AdditionalOptions>

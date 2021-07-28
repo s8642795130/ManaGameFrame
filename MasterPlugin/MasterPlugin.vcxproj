@@ -96,7 +96,7 @@
       <CLanguageStandard>gnu11</CLanguageStandard>
     </ClCompile>
     <Link>
-      <OutputFile>$(TargetPath)</OutputFile>
+      <OutputFile>$(ProjectDir)..\out\lib$(ProjectName).so</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">

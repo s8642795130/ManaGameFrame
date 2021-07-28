@@ -76,7 +76,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\..\..\..\..\out\</OutDir>
+    <OutDir>$(ProjectDir)..\out\</OutDir>
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="BackendServerActor.cpp" />
@@ -150,6 +150,7 @@
     </ClCompile>
     <Link>
       <LibraryDependencies>hpsocket;%(LibraryDependencies)</LibraryDependencies>
+      <OutputFile>$(ProjectDir)..\out\lib$(ProjectName).so</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
