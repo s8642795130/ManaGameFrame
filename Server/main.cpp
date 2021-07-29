@@ -19,7 +19,6 @@ void PrintLogo()
 	std::cout << "*                 ManaFrame                    *" << std::endl;
 	std::cout << "*                                              *" << std::endl;
 	std::cout << "************************************************" << std::endl;
-	std::cout << "************************************************" << std::endl;
 }
 
 const std::string GetServerNameFromParam(int argc, char* argv[])

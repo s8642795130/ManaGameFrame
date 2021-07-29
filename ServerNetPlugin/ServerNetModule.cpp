@@ -52,12 +52,13 @@ void ServerNetModule::AfterInit()
 		std::cout << "start http server" << std::endl;
 
 		// init
+		m_ptr_http_listener = std::make_shared<CHttpServerListenerImpl>();
 		m_ptr_http_listener->SetManagerPtr(m_ptr_manager);
 		m_ptr_http_listener->Init();
 
 		// network
-		m_ptr_http_listener = std::make_shared<CHttpServerListenerImpl>();
 		m_http_server = std::make_shared<CHttpServerPtr>(m_ptr_http_listener.get());
+
 		// start
 		auto port = m_config_module->GetMyServerInfo()->m_port;
 		m_http_server->Get()->Start("0.0.0.0", static_cast<USHORT>(port));
