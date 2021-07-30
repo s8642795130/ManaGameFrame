@@ -76,7 +76,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(ProjectDir)..\out\</OutDir>
+    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\..\..\..\..\out\</OutDir>
   </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="BackendServerActor.cpp" />
@@ -85,32 +85,42 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FrontendHttpActor.cpp" />
     <ClCompile Include="FrontendSocketActor.cpp" />
+    <ClCompile Include="FuncHelper.cpp" />
     <ClCompile Include="Helper.cpp" />
+    <ClCompile Include="HttpCookie.cpp" />
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
     <ClCompile Include="NetProccessModule.cpp" />
     <ClCompile Include="PollClient.cpp" />
     <ClCompile Include="PollMasterClient.cpp" />
     <ClCompile Include="PollModule.cpp" />
+    <ClCompile Include="RWLock.cpp" />
     <ClCompile Include="ServerNetModule.cpp" />
     <ClCompile Include="ServerNetPlugin.cpp" />
     <ClCompile Include="ServerObjModule.cpp" />
+    <ClCompile Include="Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackendClient.h" />
     <ClInclude Include="BackendMasterActor.h" />
     <ClInclude Include="BackendServerActor.h" />
     <ClInclude Include="BindFunc.h" />
+    <ClInclude Include="BufferPtr.h" />
     <ClInclude Include="ClientPimpl.h" />
     <ClInclude Include="ClientNetModule.h" />
+    <ClInclude Include="CriSec.h" />
     <ClInclude Include="Crypto.h" />
     <ClInclude Include="FrontendHttpActor.h" />
     <ClInclude Include="FrontendListenerImpl.h" />
     <ClInclude Include="FrontendSocketActor.h" />
+    <ClInclude Include="FuncHelper.h" />
+    <ClInclude Include="GeneralHelper.h" />
     <ClInclude Include="GlobalDef.h" />
+    <ClInclude Include="GlobalErrno.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="HPSocket.h" />
     <ClInclude Include="HPTypeDef.h" />
+    <ClInclude Include="HttpCookie.h" />
     <ClInclude Include="HttpListener.h" />
     <ClInclude Include="IBackendActor.h" />
     <ClInclude Include="IClientNetModule.h" />
@@ -133,11 +143,17 @@
     <ClInclude Include="PollClient.h" />
     <ClInclude Include="PollMasterClient.h" />
     <ClInclude Include="PollModule.h" />
+    <ClInclude Include="RWLock.h" />
     <ClInclude Include="ServerNetModule.h" />
     <ClInclude Include="ServerNetPlugin.h" />
     <ClInclude Include="ServerObjModule.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="SocketInterface.h" />
     <ClInclude Include="BackendListenerImpl.h" />
+    <ClInclude Include="STLHelper.h" />
+    <ClInclude Include="StringT.h" />
+    <ClInclude Include="SysHelper.h" />
+    <ClInclude Include="Thread.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -150,7 +166,7 @@
     </ClCompile>
     <Link>
       <LibraryDependencies>hpsocket;%(LibraryDependencies)</LibraryDependencies>
-      <OutputFile>$(ProjectDir)..\out\lib$(ProjectName).so</OutputFile>
+      <OutputFile>$(TargetPath)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">

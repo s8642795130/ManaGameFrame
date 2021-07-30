@@ -31,6 +31,18 @@
     <ClCompile Include="Crypto.cpp">
       <Filter>Crypto</Filter>
     </ClCompile>
+    <ClCompile Include="HttpCookie.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="RWLock.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="FuncHelper.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ClientNetModule.h" />
@@ -139,6 +151,42 @@
     </ClInclude>
     <ClInclude Include="Crypto.h">
       <Filter>Crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferPtr.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="StringT.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="FuncHelper.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="SysHelper.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalErrno.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpCookie.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralHelper.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="STLHelper.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="RWLock.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="CriSec.h">
+      <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

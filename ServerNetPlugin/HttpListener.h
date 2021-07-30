@@ -8,6 +8,10 @@
 #include "IClientNetModule.h"
 #include "INetActor.h"
 
+#include "BufferPtr.h"
+#include "StringT.h"
+#include "HttpCookie.h"
+
 class CHttpServerListenerImpl : public CHttpServerListener
 {
 protected:
@@ -19,7 +23,8 @@ protected:
 	std::shared_ptr<IClientNetModule> m_client_net_module;
 
 private:
-	virtual EnHandleResult OnPrepareListen(ITcpServer* pSender, SOCKET soListen)
+	/*
+	EnHandleResult OnPrepareListen(ITcpServer* pSender, SOCKET soListen)
 	{
 		TCHAR szAddress[50];
 		int iAddressLen = sizeof(szAddress) / sizeof(TCHAR);
@@ -30,7 +35,7 @@ private:
 		return HR_OK;
 	}
 
-	virtual EnHandleResult OnAccept(ITcpServer* pSender, CONNID dwConnID, UINT_PTR soClient)
+	EnHandleResult OnAccept(ITcpServer* pSender, CONNID dwConnID, UINT_PTR soClient)
 	{
 		BOOL bPass = TRUE;
 		TCHAR szAddress[50];
@@ -39,101 +44,92 @@ private:
 
 		pSender->GetRemoteAddress(dwConnID, szAddress, iAddressLen, usPort);
 
-		std::cout << "OnAccept " << szAddress << std::endl;
-
 		return bPass ? HR_OK : HR_ERROR;
 	}
 
-	virtual EnHandleResult OnHandShake(ITcpServer* pSender, CONNID dwConnID)
+	EnHandleResult OnHandShake(ITcpServer* pSender, CONNID dwConnID)
 	{
 		return HR_OK;
 	}
 
-	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
+	EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 	{
-		// if (pSender->Send(dwConnID, pData, iLength))
-		// 	return HR_OK;
-		// else
-		// 	return HR_ERROR;
 
-		std::cout << "http OnReceive" << std::endl;
-
-		return HR_OK;
-	}
-
-	virtual EnHandleResult OnSend(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
-	{
-		return HR_OK;
-	}
-
-	virtual EnHandleResult OnClose(ITcpServer* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)
-	{
-		INetActor* ptr_client = nullptr;
-		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
-		{
-			m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
-		}
-
-		if (iErrorCode == SE_OK)
-		{
+		if (pSender->Send(dwConnID, pData, iLength))
+			return HR_OK;
+		else
 			return HR_ERROR;
-		}
+	}
+
+	EnHandleResult OnSend(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
+	{
+		return HR_OK;
+	}
+	*/
+
+	EnHandleResult OnClose(ITcpServer* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)
+	{
+		// iErrorCode == SE_OK ? ::PostOnClose(dwConnID, m_strName) :
+		//	::PostOnError(dwConnID, enOperation, iErrorCode, m_strName);
+
+		CBufferPtr* pBuffer = nullptr;
+		pSender->GetConnectionExtra(dwConnID, (PVOID*)&pBuffer);
+
+		if (pBuffer) delete pBuffer;
 
 		return HR_OK;
 	}
 
-	virtual EnHandleResult OnShutdown(ITcpServer* pSender)
+	EnHandleResult OnShutdown(ITcpServer* pSender)
 	{
 		return HR_OK;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------- //
 
-	virtual EnHttpParseResult OnMessageBegin(IHttpServer* pSender, CONNID dwConnID)
+	EnHttpParseResult OnMessageBegin(IHttpServer* pSender, CONNID dwConnID)
 	{
 		return HPR_OK;
 	}
 
-	virtual EnHttpParseResult OnRequestLine(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)
+	EnHttpParseResult OnRequestLine(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)
 	{
 		return HPR_OK;
 	}
 
-	virtual EnHttpParseResult OnHeader(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)
-	{
-		std::cout << "http OnHeader" << std::endl;
-
-		return HPR_OK;
-	}
-
-	virtual EnHttpParseResult OnHeadersComplete(IHttpServer* pSender, CONNID dwConnID)
+	EnHttpParseResult OnHeader(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)
 	{
 		return HPR_OK;
 	}
 
-	virtual EnHttpParseResult OnBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
+	EnHttpParseResult OnHeadersComplete(IHttpServer* pSender, CONNID dwConnID)
 	{
-		std::cout << "http OnBody" << std::endl;
+		CStringA strSummary = GetHeaderSummary(pSender, dwConnID, "    ", 0, TRUE);
 
 		return HPR_OK;
 	}
 
-	virtual EnHttpParseResult OnChunkHeader(IHttpServer* pSender, CONNID dwConnID, int iLength)
+	EnHttpParseResult OnBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 	{
 		return HPR_OK;
 	}
 
-	virtual EnHttpParseResult OnChunkComplete(IHttpServer* pSender, CONNID dwConnID)
+	EnHttpParseResult OnChunkHeader(IHttpServer* pSender, CONNID dwConnID, int iLength)
 	{
 		return HPR_OK;
 	}
 
-	virtual EnHttpParseResult OnMessageComplete(IHttpServer* pSender, CONNID dwConnID)
+	EnHttpParseResult OnChunkComplete(IHttpServer* pSender, CONNID dwConnID)
 	{
+		return HPR_OK;
+	}
+
+	EnHttpParseResult OnMessageComplete(IHttpServer* pSender, CONNID dwConnID)
+	{
+
 		if (pSender->IsUpgrade(dwConnID))
 			return HPR_OK;
 
-		/*
 		CStringA strBody = GetHeaderSummary(pSender, dwConnID, "    ", 0, FALSE);
 		int iBodyLength = strBody.GetLength();
 		BOOL bSkipBody = FALSE;
@@ -173,16 +169,13 @@ private:
 			strBody.Empty();
 			iBodyLength = 0;
 		}
-		*/
 
-		/*
 		pSender->SendResponse(dwConnID,
 			HSC_OK,
 			"HP Http Server OK",
 			header, iHeaderCount,
 			(const BYTE*)(LPCSTR)strBody,
 			iBodyLength);
-		*/
 
 		if (!pSender->IsKeepAlive(dwConnID))
 			pSender->Release(dwConnID);
@@ -190,8 +183,9 @@ private:
 		return HPR_OK;
 	}
 
-	virtual EnHttpParseResult OnUpgrade(IHttpServer* pSender, CONNID dwConnID, EnHttpUpgradeType enUpgradeType)
+	EnHttpParseResult OnUpgrade(IHttpServer* pSender, CONNID dwConnID, EnHttpUpgradeType enUpgradeType)
 	{
+
 		if (enUpgradeType == HUT_HTTP_TUNNEL)
 		{
 			pSender->SendResponse(dwConnID, HSC_OK, "Connection Established");
@@ -210,20 +204,18 @@ private:
 			if (!pSender->GetHeader(dwConnID, "Sec-WebSocket-Key", &lpszAccept))
 				return HPR_ERROR;
 
-			// CStringA strAccept;
-			// ::MakeSecWebSocketAccept(lpszAccept, strAccept);
-			auto strAccept = ::MakeSecWebSocketAccept(lpszAccept);
+			CStringA strAccept;
+			::MakeSecWebSocketAccept(lpszAccept, strAccept);
 
 			header[2].name = "Sec-WebSocket-Accept";
-			header[2].value = (LPCSTR)strAccept.data();
+			header[2].value = strAccept;
 			++iHeaderCount;
 
-			// CStringA strFirst;
+			CStringA strFirst;
 			LPCSTR lpszProtocol = nullptr;
 
 			if (pSender->GetHeader(dwConnID, "Sec-WebSocket-Protocol", &lpszProtocol))
 			{
-				/*
 				int i = 0;
 				CStringA strProtocol(lpszProtocol);
 				strFirst = strProtocol.Tokenize(", ", i);
@@ -234,64 +226,141 @@ private:
 					header[3].value = strFirst;
 					++iHeaderCount;
 				}
-				*/
 			}
 
 			pSender->SendResponse(dwConnID, HSC_SWITCHING_PROTOCOLS, nullptr, header, iHeaderCount);
-			// pSender->SetConnectionExtra(dwConnID, new CBufferPtr);
-
-			//
-			auto ptr_client = m_client_net_module->CreateHttpClientNet(pSender);
-			ptr_client->SetSid(dwConnID);
-			pSender->SetConnectionExtra(dwConnID, ptr_client.get());
-			m_thread_pool_module->AddActorToThreadCell(ptr_client);
-			//
+			pSender->SetConnectionExtra(dwConnID, new CBufferPtr);
 		}
 		else
-		{
-			std::cerr << "OnUpgrade Error" << std::endl;
-			std::exit(1);
-		}
+			ASSERT(FALSE);
 
 		return HPR_OK;
 	}
 
-	virtual EnHttpParseResult OnParseError(IHttpServer* pSender, CONNID dwConnID, int iErrorCode, LPCSTR lpszErrorDesc)
+	EnHttpParseResult OnParseError(IHttpServer* pSender, CONNID dwConnID, int iErrorCode, LPCSTR lpszErrorDesc)
 	{
 		return HPR_OK;
 	}
 
 	// ------------------------------------------------------------------------------------------------------------- //
 
-	virtual EnHandleResult OnWSMessageHeader(IHttpServer* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)
+	EnHandleResult OnWSMessageHeader(IHttpServer* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)
 	{
-		return HR_OK;
-	}
-
-	virtual EnHandleResult OnWSMessageBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
-	{
-		INetActor* ptr_client = nullptr;
-		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
-		{
-			ptr_client->PushData(pData, iLength);
-		}
 
 		return HR_OK;
 	}
 
-	virtual EnHandleResult OnWSMessageComplete(IHttpServer* pSender, CONNID dwConnID)
+	EnHandleResult OnWSMessageBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 	{
+
+		CBufferPtr* pBuffer = nullptr;
+		pSender->GetConnectionExtra(dwConnID, (PVOID*)&pBuffer);
+		VERIFY(pBuffer);
+
+		pBuffer->Cat(pData, iLength);
+
+		return HR_OK;
+	}
+
+	EnHandleResult OnWSMessageComplete(IHttpServer* pSender, CONNID dwConnID)
+	{
+
+		CBufferPtr* pBuffer = nullptr;
+		pSender->GetConnectionExtra(dwConnID, (PVOID*)&pBuffer);
+		VERIFY(pBuffer);
+
 		BOOL bFinal;
 		BYTE iReserved, iOperationCode;
 
-		pSender->GetWSMessageState(dwConnID, &bFinal, &iReserved, &iOperationCode, nullptr, nullptr, nullptr);
+		VERIFY(pSender->GetWSMessageState(dwConnID, &bFinal, &iReserved, &iOperationCode, nullptr, nullptr, nullptr));
+
+		pSender->SendWSMessage(dwConnID, bFinal, iReserved, iOperationCode, pBuffer->Ptr(), (int)pBuffer->Size());
+		pBuffer->Free();
 
 		if (iOperationCode == 0x8)
-		{
 			pSender->Disconnect(dwConnID);
-		}
 
 		return HR_OK;
+	}
+
+	// ------------------------------------------------------------------------------------------------------------- //
+
+	CStringA GetHeaderSummary(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszSep, int iSepCount, BOOL bWithContentLength)
+	{
+		CStringA strSEP1;
+
+		for (int i = 0; i < iSepCount; i++)
+			strSEP1 += lpszSep;
+
+		CStringA strSEP2(strSEP1);
+		strSEP2 += lpszSep;
+
+		LPCSTR SEP1 = (LPCSTR)strSEP1;
+		LPCSTR SEP2 = (LPCSTR)strSEP2;
+
+		CStringA strResult;
+
+		//USHORT usUrlFieldSet = pSender->GetUrlFieldSet(dwConnID);
+
+		strResult.AppendFormat("%s[URL Fields]%s", SEP1, CRLF);
+		strResult.AppendFormat("%s%8s: %s%s", SEP2, "SCHEMA", pSender->GetUrlField(dwConnID, HUF_SCHEMA), CRLF);
+		strResult.AppendFormat("%s%8s: %s%s", SEP2, "HOST", pSender->GetUrlField(dwConnID, HUF_HOST), CRLF);
+		strResult.AppendFormat("%s%8s: %s%s", SEP2, "PORT", pSender->GetUrlField(dwConnID, HUF_PORT), CRLF);
+		strResult.AppendFormat("%s%8s: %s%s", SEP2, "PATH", pSender->GetUrlField(dwConnID, HUF_PATH), CRLF);
+		strResult.AppendFormat("%s%8s: %s%s", SEP2, "QUERY", pSender->GetUrlField(dwConnID, HUF_QUERY), CRLF);
+		strResult.AppendFormat("%s%8s: %s%s", SEP2, "FRAGMENT", pSender->GetUrlField(dwConnID, HUF_FRAGMENT), CRLF);
+		strResult.AppendFormat("%s%8s: %s%s", SEP2, "USERINFO", pSender->GetUrlField(dwConnID, HUF_USERINFO), CRLF);
+
+		DWORD dwHeaderCount = 0;
+		pSender->GetAllHeaders(dwConnID, nullptr, dwHeaderCount);
+
+		strResult.AppendFormat("%s[Request Headers]%s", SEP1, CRLF);
+
+		if (dwHeaderCount == 0)
+			strResult.AppendFormat("%s(no header)%s", SEP2, CRLF);
+		else
+		{
+			unique_ptr<THeader[]> headers(new THeader[dwHeaderCount]);
+			VERIFY(pSender->GetAllHeaders(dwConnID, headers.get(), dwHeaderCount));
+
+			for (DWORD i = 0; i < dwHeaderCount; i++)
+				strResult.AppendFormat("%s%s: %s%s", SEP2, headers[i].name, headers[i].value, CRLF);
+		}
+
+		DWORD dwCookieCount = 0;
+		pSender->GetAllCookies(dwConnID, nullptr, dwCookieCount);
+
+		strResult.AppendFormat("%s[Cookies]%s", SEP1, CRLF);
+
+		if (dwCookieCount == 0)
+			strResult.AppendFormat("%s(no cookie)%s", SEP2, CRLF);
+		else
+		{
+			unique_ptr<TCookie[]> cookies(new TCookie[dwCookieCount]);
+			VERIFY(pSender->GetAllCookies(dwConnID, cookies.get(), dwCookieCount));
+
+			for (DWORD i = 0; i < dwCookieCount; i++)
+				strResult.AppendFormat("%s%s: %s%s", SEP2, cookies[i].name, cookies[i].value, CRLF);
+		}
+
+		CStringA strVersion;
+		::HttpVersionToString((EnHttpVersion)pSender->GetVersion(dwConnID), strVersion);
+		EnHttpUpgradeType enUpgType = pSender->GetUpgradeType(dwConnID);
+		LPCSTR lpszUpgrade = enUpgType != HUT_NONE ? "true" : "false";
+		LPCSTR lpszKeepAlive = pSender->IsKeepAlive(dwConnID) ? "true" : "false";
+
+		strResult.AppendFormat("%s[Basic Info]%s", SEP1, CRLF);
+		strResult.AppendFormat("%s%13s: %s%s", SEP2, "Version", (LPCSTR)strVersion, CRLF);
+		strResult.AppendFormat("%s%13s: %s%s", SEP2, "Method", pSender->GetMethod(dwConnID), CRLF);
+		strResult.AppendFormat("%s%13s: %s%s", SEP2, "IsUpgrade", lpszUpgrade, CRLF);
+		if (enUpgType != HUT_NONE)
+			strResult.AppendFormat("%s%13s: %d%s", SEP2, "UpgradeType", enUpgType, CRLF);
+		strResult.AppendFormat("%s%13s: %s%s", SEP2, "IsKeepAlive", lpszKeepAlive, CRLF);
+		if (bWithContentLength)
+			strResult.AppendFormat("%s%13s: %lld%s", SEP2, "ContentLength", pSender->GetContentLength(dwConnID), CRLF);
+		strResult.AppendFormat("%s%13s: %s%s", SEP2, "ContentType", pSender->GetContentType(dwConnID), CRLF);
+
+		return strResult;
 	}
 
 public:

@@ -45,12 +45,8 @@ void ServerNetModule::AfterInit()
 	// server
 	// if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN ||
 	//	(m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET))
-	std::cout << "GetServerType: " << static_cast<int>(m_config_module->GetServerType()) << std::endl;
-	std::cout << "GetProtocolType: " << static_cast<int>(m_config_module->GetProtocolType()) << std::endl;
 	if (m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET)
 	{
-		std::cout << "start http server" << std::endl;
-
 		// init
 		m_ptr_http_listener = std::make_shared<CHttpServerListenerImpl>();
 		m_ptr_http_listener->SetManagerPtr(m_ptr_manager);

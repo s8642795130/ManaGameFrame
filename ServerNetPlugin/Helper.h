@@ -35,5 +35,10 @@
 
 #define HTTP_WEB_SOCKET_SEC_SALT	"258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 
-std::string HttpVersionToString(EnHttpVersion enVersion);
-std::vector<BYTE> MakeSecWebSocketAccept(LPCSTR lpszKey);
+// std::string HttpVersionToString(EnHttpVersion enVersion);
+// std::vector<BYTE> MakeSecWebSocketAccept(LPCSTR lpszKey);
+
+#include "StringT.h"
+
+CStringA& HttpVersionToString(EnHttpVersion enVersion, CStringA& strResult);
+CStringA& MakeSecWebSocketAccept(LPCSTR lpszKey, CStringA& strAccept);
