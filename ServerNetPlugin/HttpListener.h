@@ -23,49 +23,6 @@ protected:
 	std::shared_ptr<IClientNetModule> m_client_net_module;
 
 private:
-	/*
-	EnHandleResult OnPrepareListen(ITcpServer* pSender, SOCKET soListen)
-	{
-		TCHAR szAddress[50];
-		int iAddressLen = sizeof(szAddress) / sizeof(TCHAR);
-		USHORT usPort;
-
-		pSender->GetListenAddress(szAddress, iAddressLen, usPort);
-
-		return HR_OK;
-	}
-
-	EnHandleResult OnAccept(ITcpServer* pSender, CONNID dwConnID, UINT_PTR soClient)
-	{
-		BOOL bPass = TRUE;
-		TCHAR szAddress[50];
-		int iAddressLen = sizeof(szAddress) / sizeof(TCHAR);
-		USHORT usPort;
-
-		pSender->GetRemoteAddress(dwConnID, szAddress, iAddressLen, usPort);
-
-		return bPass ? HR_OK : HR_ERROR;
-	}
-
-	EnHandleResult OnHandShake(ITcpServer* pSender, CONNID dwConnID)
-	{
-		return HR_OK;
-	}
-
-	EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
-	{
-
-		if (pSender->Send(dwConnID, pData, iLength))
-			return HR_OK;
-		else
-			return HR_ERROR;
-	}
-
-	EnHandleResult OnSend(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
-	{
-		return HR_OK;
-	}
-	*/
 
 	EnHandleResult OnClose(ITcpServer* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)
 	{
@@ -246,13 +203,11 @@ private:
 
 	EnHandleResult OnWSMessageHeader(IHttpServer* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)
 	{
-
 		return HR_OK;
 	}
 
 	EnHandleResult OnWSMessageBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 	{
-
 		CBufferPtr* pBuffer = nullptr;
 		pSender->GetConnectionExtra(dwConnID, (PVOID*)&pBuffer);
 		VERIFY(pBuffer);
