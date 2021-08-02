@@ -12,7 +12,7 @@
 #include "StringT.h"
 #include "HttpCookie.h"
 
-class CHttpServerListenerImpl : public CHttpServerListener
+class CWebSocketListenerImpl : public CHttpServerListener
 {
 protected:
 	// manager
@@ -319,7 +319,7 @@ private:
 	}
 
 public:
-	CHttpServerListenerImpl()
+	CWebSocketListenerImpl()
 	{
 	}
 

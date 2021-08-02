@@ -8,7 +8,8 @@
 #include "../Server/DefineHeader.h"
 
 #include "IListenerImpl.h"
-#include "HttpListener.h"
+#include "HttpServerListenerImpl.h"
+#include "WebSocketListenerImpl.h"
 
 class ServerNetModule : public IServerNetModule
 {
@@ -23,6 +24,7 @@ private:
 	std::shared_ptr<CTcpServerPtr> m_server;
 	// http
 	std::shared_ptr<CHttpServerListenerImpl> m_ptr_http_listener;
+	std::shared_ptr<CWebSocketListenerImpl> m_ptr_ws_listener;
 	std::shared_ptr<CHttpServerPtr> m_http_server;
 protected:
 public:

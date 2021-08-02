@@ -140,9 +140,6 @@
     <ClInclude Include="IListenerImpl.h">
       <Filter>ListenerImpl</Filter>
     </ClInclude>
-    <ClInclude Include="HttpListener.h">
-      <Filter>ListenerImpl</Filter>
-    </ClInclude>
     <ClInclude Include="BackendListenerImpl.h">
       <Filter>ListenerImpl</Filter>
     </ClInclude>
@@ -187,6 +184,12 @@
     </ClInclude>
     <ClInclude Include="Thread.h">
       <Filter>Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="WebSocketListenerImpl.h">
+      <Filter>ListenerImpl</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpServerListenerImpl.h">
+      <Filter>ListenerImpl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

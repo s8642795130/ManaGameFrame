@@ -121,7 +121,7 @@
     <ClInclude Include="HPSocket.h" />
     <ClInclude Include="HPTypeDef.h" />
     <ClInclude Include="HttpCookie.h" />
-    <ClInclude Include="HttpListener.h" />
+    <ClInclude Include="HttpServerListenerImpl.h" />
     <ClInclude Include="IBackendActor.h" />
     <ClInclude Include="IClientNetModule.h" />
     <ClInclude Include="IFrontendActor.h" />
@@ -154,6 +154,7 @@
     <ClInclude Include="StringT.h" />
     <ClInclude Include="SysHelper.h" />
     <ClInclude Include="Thread.h" />
+    <ClInclude Include="WebSocketListenerImpl.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

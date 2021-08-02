@@ -13,11 +13,12 @@
 #include <iostream>
 
 #include "ServerNetModule.h"
+
 #include "HPSocket.h"
+
 #include "FrontendListenerImpl.h"
 #include "MasterListenerImpl.h"
 #include "BackendListenerImpl.h"
-#include "HttpListener.h"
 
 ServerNetModule::ServerNetModule(std::shared_ptr<IPluginManager> ptr) :
 	IServerNetModule(ptr)
@@ -45,7 +46,7 @@ void ServerNetModule::AfterInit()
 	// server
 	// if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN ||
 	//	(m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET))
-	if (m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET)
+	if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN)
 	{
 		// init
 		m_ptr_http_listener = std::make_shared<CHttpServerListenerImpl>();
@@ -54,6 +55,20 @@ void ServerNetModule::AfterInit()
 
 		// network
 		m_http_server = std::make_shared<CHttpServerPtr>(m_ptr_http_listener.get());
+
+		// start
+		auto port = m_config_module->GetMyServerInfo()->m_port;
+		m_http_server->Get()->Start("0.0.0.0", static_cast<USHORT>(port));
+	}
+	else if (m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET)
+	{
+		// init
+		m_ptr_ws_listener = std::make_shared<CWebSocketListenerImpl>();
+		m_ptr_ws_listener->SetManagerPtr(m_ptr_manager);
+		m_ptr_ws_listener->Init();
+
+		// network
+		m_http_server = std::make_shared<CHttpServerPtr>(m_ptr_ws_listener.get());
 
 		// start
 		auto port = m_config_module->GetMyServerInfo()->m_port;
