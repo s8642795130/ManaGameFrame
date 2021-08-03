@@ -18,7 +18,7 @@ protected:
 	bool m_is_process_work = false;
 	std::queue<FrontendMsg> m_queue_msg;
 	
-protected:
+public:
 	IFrontendActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, ITcpServer* ptr_sender) :
 		NetActor(ptr_manager, ptr_impl, ptr_sender)
 	{

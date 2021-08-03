@@ -85,6 +85,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="FrontendHttpActor.cpp" />
     <ClCompile Include="FrontendSocketActor.cpp" />
+    <ClCompile Include="FrontendWsActor.cpp" />
     <ClCompile Include="FuncHelper.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="HttpCookie.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="FrontendHttpActor.h" />
     <ClInclude Include="FrontendListenerImpl.h" />
     <ClInclude Include="FrontendSocketActor.h" />
+    <ClInclude Include="FrontendWsActor.h" />
     <ClInclude Include="FuncHelper.h" />
     <ClInclude Include="GeneralHelper.h" />
     <ClInclude Include="GlobalDef.h" />

@@ -1,6 +1,8 @@
 #pragma once
 #include <memory>
 
+#include "HPSocket.h"
+
 #include "../ActorPlugin/ThreadSafeMap.h"
 #include "IClientNetModule.h"
 #include "ClientPimpl.h"
@@ -20,11 +22,11 @@ public:
 	}
 
 	// life cycle
-	virtual void Init();
-	virtual void AfterInit();
+	virtual void Init() override;
 
 	// interface
-	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender) override;
+	virtual std::shared_ptr<INetActor> CreateHttpClientNet(IHttpServer* ptr_sender) override;
+	virtual std::shared_ptr<INetActor> CreateWsClientNet(IHttpServer* ptr_sender) override;
 	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender) override;
 	virtual std::shared_ptr<INetActor> CreateBackendClientNet(ITcpServer* ptr_sender);
 	virtual std::shared_ptr<INetActor> CreateMasterNet(ITcpServer* ptr_sender) override;

@@ -29,10 +29,11 @@ private:
 		// iErrorCode == SE_OK ? ::PostOnClose(dwConnID, m_strName) :
 		//	::PostOnError(dwConnID, enOperation, iErrorCode, m_strName);
 
-		CBufferPtr* pBuffer = nullptr;
-		pSender->GetConnectionExtra(dwConnID, (PVOID*)&pBuffer);
-
-		if (pBuffer) delete pBuffer;
+		INetActor* ptr_client = nullptr;
+		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
+		{
+			m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
+		}
 
 		return HR_OK;
 	}
@@ -43,16 +44,6 @@ private:
 	}
 
 	// ------------------------------------------------------------------------------------------------------------- //
-
-	EnHttpParseResult OnMessageBegin(IHttpServer* pSender, CONNID dwConnID)
-	{
-		return HPR_OK;
-	}
-
-	EnHttpParseResult OnRequestLine(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)
-	{
-		return HPR_OK;
-	}
 
 	EnHttpParseResult OnHeader(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)
 	{
@@ -67,16 +58,6 @@ private:
 	}
 
 	EnHttpParseResult OnBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
-	{
-		return HPR_OK;
-	}
-
-	EnHttpParseResult OnChunkHeader(IHttpServer* pSender, CONNID dwConnID, int iLength)
-	{
-		return HPR_OK;
-	}
-
-	EnHttpParseResult OnChunkComplete(IHttpServer* pSender, CONNID dwConnID)
 	{
 		return HPR_OK;
 	}
@@ -186,7 +167,13 @@ private:
 			}
 
 			pSender->SendResponse(dwConnID, HSC_SWITCHING_PROTOCOLS, nullptr, header, iHeaderCount);
-			pSender->SetConnectionExtra(dwConnID, new CBufferPtr);
+			// pSender->SetConnectionExtra(dwConnID, new CBufferPtr);
+
+			auto ptr_client = m_client_net_module->CreateWsClientNet(pSender);
+
+			ptr_client->SetSid(dwConnID);
+			pSender->SetConnectionExtra(dwConnID, ptr_client.get());
+			m_thread_pool_module->AddActorToThreadCell(ptr_client);
 		}
 		else
 			ASSERT(FALSE);

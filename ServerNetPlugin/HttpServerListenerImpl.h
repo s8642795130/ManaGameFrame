@@ -29,10 +29,11 @@ private:
 		// iErrorCode == SE_OK ? ::PostOnClose(dwConnID, m_strName) :
 		//	::PostOnError(dwConnID, enOperation, iErrorCode, m_strName);
 
-		CBufferPtr* pBuffer = nullptr;
-		pSender->GetConnectionExtra(dwConnID, (PVOID*)&pBuffer);
-
-		if (pBuffer) delete pBuffer;
+		INetActor* ptr_client = nullptr;
+		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
+		{
+			m_thread_pool_module->RemoveActorFromThreadCell(ptr_client->GetUUID());
+		}
 
 		return HR_OK;
 	}
@@ -53,12 +54,19 @@ private:
 
 	EnHttpParseResult OnBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 	{
+		/*
+		INetActor* ptr_client = nullptr;
+		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
+		{
+			ptr_client->PushData(pData, iLength);
+		}
+		*/
+
 		return HPR_OK;
 	}
 
 	EnHttpParseResult OnMessageComplete(IHttpServer* pSender, CONNID dwConnID)
 	{
-
 		if (pSender->IsUpgrade(dwConnID))
 			return HPR_OK;
 
@@ -102,12 +110,25 @@ private:
 			iBodyLength = 0;
 		}
 
+		// create client
+		auto ptr_client = m_client_net_module->CreateHttpClientNet(pSender);
+
+		// add client actor
+		ptr_client->SetSid(dwConnID);
+		pSender->SetConnectionExtra(dwConnID, ptr_client.get());
+		m_thread_pool_module->AddActorToThreadCell(ptr_client);
+
+		// push data
+		ptr_client->PushData((BYTE*)strBody.c_str(), strBody.GetLength());
+
+		/*
 		pSender->SendResponse(dwConnID,
 			HSC_OK,
 			"HP Http Server OK",
 			header, iHeaderCount,
 			(const BYTE*)(LPCSTR)strBody,
 			iBodyLength);
+		*/
 
 		if (!pSender->IsKeepAlive(dwConnID))
 			pSender->Release(dwConnID);

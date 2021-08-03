@@ -1,10 +1,10 @@
 #include "ClientNetModule.h"
 #include "FrontendHttpActor.h"
+#include "FrontendWsActor.h"
 #include "FrontendSocketActor.h"
 #include "BackendServerActor.h"
 #include "BackendMasterActor.h"
 #include "PollMasterClient.h"
-#include "HPSocket.h"
 
 void ClientNetModule::Init()
 {
@@ -21,16 +21,17 @@ void ClientNetModule::Init()
 	m_config_module = m_ptr_manager->GetModule<IConfigModule>();
 }
 
-void ClientNetModule::AfterInit()
-{
-	
-}
-
 // client interface
 
-std::shared_ptr<INetActor> ClientNetModule::CreateHttpClientNet(ITcpServer* ptr_sender)
+std::shared_ptr<INetActor> ClientNetModule::CreateHttpClientNet(IHttpServer* ptr_sender)
 {
 	std::shared_ptr<INetActor> client = std::make_shared<FrontendHttpActor>(m_ptr_manager, m_client_pimpl, ptr_sender);
+	return client;
+}
+
+std::shared_ptr<INetActor> ClientNetModule::CreateWsClientNet(IHttpServer* ptr_sender)
+{
+	std::shared_ptr<INetActor> client = std::make_shared<FrontendWsActor>(m_ptr_manager, m_client_pimpl, ptr_sender);
 	return client;
 }
 

@@ -4,15 +4,11 @@
 class FrontendHttpActor : public IFrontendActor
 {
 private:
-	std::shared_ptr<ByteBuffer> m_http_buffer;
-protected:
-	virtual void PushData(const BYTE* ptr_data, int length) override;
-	virtual void ProcessIO() override;
-	virtual void BackStream(const std::vector<char> stream) override;
+	IHttpServer* m_ptr_http_sender;
 public:
-	FrontendHttpActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, ITcpServer* ptr_sender) :
-		IFrontendActor(ptr_manager, ptr_impl, ptr_sender)
-	{
-	}
+	FrontendHttpActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr, IHttpServer* ptr_sender);
+	virtual void BackStream(const std::vector<char> stream) override;
+	virtual void SendStream(const std::vector<char> stream) override;
+	virtual void SendData(const int major, const int minor, std::vector<char> value) override;
 };
 

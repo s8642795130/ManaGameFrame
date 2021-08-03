@@ -44,8 +44,6 @@ void ServerNetModule::AfterInit()
 	// StartNetwork(static_cast<uint16_t>(port), 30);
 
 	// server
-	// if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN ||
-	//	(m_config_module->GetServerType() == EnumDefine::ServerType::FRONTEND && m_config_module->GetProtocolType() == EnumDefine::ProtocolType::WEBSOCKET))
 	if (m_config_module->GetServerType() == EnumDefine::ServerType::LOGIN)
 	{
 		// init

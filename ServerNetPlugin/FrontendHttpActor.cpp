@@ -1,88 +1,49 @@
 #include "FrontendHttpActor.h"
-#include "../Server/StringDefine.h"
 
-void FrontendHttpActor::PushData(const BYTE* ptr_data, int length)
+FrontendHttpActor::FrontendHttpActor(std::shared_ptr<IPluginManager> ptr_manager, std::shared_ptr<ClientPimpl> ptr_impl, IHttpServer* ptr_sender) :
+	IFrontendActor(ptr_manager, ptr_impl, nullptr)
 {
-	/*
-	auto state = m_http_buffer->GetDataState();
-
-	// local
-	bool pass_by = true;
-	ssize_t less = len;
-
-	switch (state)
-	{
-	case -1: // need more data, but length unkonw
-	{
-		m_http_buffer->PushData(buffer.data(), static_cast<int>(len));
-		less = 0;
-		m_http_buffer->DetectHeader();
-
-		// exit
-		break;
-	}
-	case 0: // process io
-	{
-		ProcessIO();
-		m_http_buffer->Reset();
-
-		// exit
-		break;
-	}
-	case 1: // need more data, by length
-	{
-		ssize_t push_length = m_http_buffer->GetRemainingLen() <= len ? m_http_buffer->GetRemainingLen() : len;
-		m_http_buffer->PushData(buffer.data(), static_cast<int>(push_length));
-		less -= push_length;
-		m_http_buffer->DetectHeader();
-
-		// exit
-		break;
-	}
-	case 2: // more data
-	{
-		auto more_len = m_http_buffer->GetMoreDataLength();
-		less = more_len;
-		ProcessIO();
-		m_http_buffer->Reset();
-
-		// exit
-		break;
-	}
-	case 3:
-	{
-		std::perror(HTTP_PACKAGE_ERROR);
-		ClientClose();
-		pass_by = false;
-		break;
-	}
-	case 4:
-	{
-		std::perror(HTTP_PACKAGE_ERROR);
-		ClientClose();
-		pass_by = false;
-		break;
-	}
-	default:
-		break;
-	}
-
-	if (pass_by && (less != 0 || m_http_buffer->ReadyToExecute()))
-	{
-		std::array<char, DEFAULT_BUFLEN> next_buffer;
-		std::memcpy(next_buffer.data(), buffer.data() + (len - less), less);
-		Parsing(next_buffer, less);
-	}
-	*/
-	return;
-}
-
-void FrontendHttpActor::ProcessIO()
-{
-
+	m_ptr_http_sender = ptr_sender;
 }
 
 void FrontendHttpActor::BackStream(const std::vector<char> stream)
 {
+	SendStream(stream);
+	NextIO();
+}
 
+void FrontendHttpActor::SendStream(const std::vector<char> stream)
+{
+	// header
+	THeader header[] = { {"Content-Type", "text/plain"}, {"Content-Length", std::to_string(stream.size()).c_str()} };
+	int header_count = sizeof(header) / sizeof(THeader);
+
+	// sender
+	m_ptr_http_sender->SendResponse(m_conn_id,
+		HSC_OK,
+		"HP Http Server OK",
+		header, header_count,
+		(const BYTE*)(LPCSTR)stream.data(),
+		static_cast<int>(stream.size()));
+
+	// test code
+	m_ptr_http_sender->Disconnect(m_conn_id);
+}
+
+void FrontendHttpActor::SendData(const int major, const int minor, std::vector<char> value)
+{
+	// get length
+	int length = static_cast<int>(value.size());
+
+	//
+	std::vector<char> temp_data(HEADER_LENGTH + length);
+	std::memcpy(temp_data.data(), &major, sizeof(MAJOR_LENGTH)); // copy major
+	std::memcpy(temp_data.data() + MAJOR_LENGTH, &minor, sizeof(MINOR_LENGTH)); // copy minor
+	std::memcpy(temp_data.data() + MAJOR_LENGTH + MINOR_LENGTH, &length, sizeof(INT_LENGTH)); // copy length
+	if (length != 0)
+	{
+		std::memcpy(temp_data.data() + HEADER_LENGTH, value.data(), length);
+	}
+
+	SendStream(temp_data);
 }

@@ -1,8 +1,11 @@
 #pragma once
 #include "../Server/IModule.h"
 
+#include "SocketInterface.h"
+
 class INetActor;
-class ITcpServer;
+// class IHttpServer;
+// class ITcpServer;
 class IPollClient;
 
 class IClientNetModule : public IModule
@@ -12,7 +15,8 @@ public:
 	{
 	}
 
-	virtual std::shared_ptr<INetActor> CreateHttpClientNet(ITcpServer* ptr_sender) = 0;
+	virtual std::shared_ptr<INetActor> CreateHttpClientNet(IHttpServer* ptr_sender) = 0;
+	virtual std::shared_ptr<INetActor> CreateWsClientNet(IHttpServer* ptr_sender) = 0;
 	virtual std::shared_ptr<INetActor> CreateSocketClientNet(ITcpServer* ptr_sender) = 0;
 	virtual std::shared_ptr<INetActor> CreateBackendClientNet(ITcpServer* ptr_sender) = 0;
 	virtual std::shared_ptr<INetActor> CreateMasterNet(ITcpServer* ptr_sender) = 0;
