@@ -67,12 +67,13 @@ private:
 	EnHttpParseResult OnBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 	{
 		std::cout << __func__ << std::endl;
-
+		/*
 		INetActor* ptr_client = nullptr;
 		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
 		{
 			ptr_client->PushData(pData, iLength);
 		}
+		*/
 
 		return HPR_OK;
 	}
@@ -127,7 +128,10 @@ private:
 
 		// save path
 		std::string req_path(pSender->GetUrlField(dwConnID, HUF_PATH));
-		std::cout << req_path << std::endl;
+		std::cout << "req_path: " << req_path << std::endl;
+
+		std::string req_query(pSender->GetUrlField(dwConnID, HUF_QUERY));
+		std::cout << "req_query: " << req_query << std::endl;
 
 		// push data
 		// ptr_client->PushData((BYTE*)strBody.c_str(), strBody.GetLength());
