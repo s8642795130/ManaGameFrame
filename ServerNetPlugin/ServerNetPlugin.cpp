@@ -3,7 +3,6 @@
 #include "ClientNetModule.h"
 #include "NetCallbackModule.h"
 #include "MsgRouterModule.h"
-#include "NetProccessModule.h"
 #include "ServerObjModule.h"
 #include "PollModule.h"
 
@@ -13,7 +12,6 @@ void ServerNetPlugin::Install()
 	m_ptr_manager->RegisterModule<IClientNetModule, ClientNetModule>();
 	m_ptr_manager->RegisterModule<IMsgRouterModule, MsgRouterModule>();
 	m_ptr_manager->RegisterModule<INetCallbackModule, NetCallbackModule>();
-	m_ptr_manager->RegisterModule<INetProccessModule, NetProccessModule>();
 	m_ptr_manager->RegisterModule<IServerNetModule, ServerNetModule>();
 	m_ptr_manager->RegisterModule<IServerObjModule, ServerObjModule>();
 	m_ptr_manager->RegisterModule<IPollModule, PollModule>();

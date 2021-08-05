@@ -21,7 +21,7 @@ void FrontendHttpActor::SendStream(const std::vector<char> stream)
 	// sender
 	m_ptr_http_sender->SendResponse(m_conn_id,
 		HSC_OK,
-		"HP Http Server OK",
+		nullptr, // "HP Http Server OK",
 		header, header_count,
 		(const BYTE*)(LPCSTR)stream.data(),
 		static_cast<int>(stream.size()));
@@ -46,4 +46,18 @@ void FrontendHttpActor::SendData(const int major, const int minor, std::vector<c
 	}
 
 	SendStream(temp_data);
+}
+
+void FrontendHttpActor::ProcessIO()
+{
+	// int majorId = m_buffer->GetMajorId();
+	auto map_callback = m_client_impl->m_callback_module->GetHTTPCallbackMap();
+
+	// check
+	// if (map_callback.find(majorId) != std::cend(map_callback))
+	if (map_callback.find("/login") != std::cend(map_callback))
+	{
+		auto callback = map_callback["/login"];
+		callback->Trigger(m_client_impl->m_thread_pool_module, shared_from_this());
+	}
 }

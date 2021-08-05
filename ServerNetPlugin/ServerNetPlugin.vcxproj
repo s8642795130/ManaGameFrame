@@ -91,7 +91,6 @@
     <ClCompile Include="HttpCookie.cpp" />
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
-    <ClCompile Include="NetProccessModule.cpp" />
     <ClCompile Include="PollClient.cpp" />
     <ClCompile Include="PollMasterClient.cpp" />
     <ClCompile Include="PollModule.cpp" />
@@ -132,7 +131,6 @@
     <ClInclude Include="IMsgRouterModule.h" />
     <ClInclude Include="INetActor.h" />
     <ClInclude Include="INetCallbackModule.h" />
-    <ClInclude Include="INetProccessModule.h" />
     <ClInclude Include="IPollClient.h" />
     <ClInclude Include="IPollModule.h" />
     <ClInclude Include="IServerNetModule.h" />
@@ -141,7 +139,6 @@
     <ClInclude Include="MsgRouterModule.h" />
     <ClInclude Include="NetActor.h" />
     <ClInclude Include="NetCallbackModule.h" />
-    <ClInclude Include="NetProccessModule.h" />
     <ClInclude Include="PollClient.h" />
     <ClInclude Include="PollMasterClient.h" />
     <ClInclude Include="PollModule.h" />

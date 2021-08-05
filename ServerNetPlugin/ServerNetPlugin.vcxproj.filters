@@ -5,7 +5,6 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ServerNetModule.cpp" />
     <ClCompile Include="ServerNetPlugin.cpp" />
-    <ClCompile Include="NetProccessModule.cpp" />
     <ClCompile Include="MsgRouterModule.cpp" />
     <ClCompile Include="ServerObjModule.cpp" />
     <ClCompile Include="NetCallbackModule.cpp" />
@@ -55,10 +54,6 @@
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="IServerNetModule.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="NetProccessModule.h" />
-    <ClInclude Include="INetProccessModule.h">
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="MsgRouterModule.h" />

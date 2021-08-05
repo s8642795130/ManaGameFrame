@@ -29,6 +29,8 @@ private:
 		// iErrorCode == SE_OK ? ::PostOnClose(dwConnID, m_strName) :
 		//	::PostOnError(dwConnID, enOperation, iErrorCode, m_strName);
 
+		std::cout << __func__ << std::endl;
+
 		INetActor* ptr_client = nullptr;
 		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
 		{
@@ -47,26 +49,38 @@ private:
 
 	EnHttpParseResult OnHeadersComplete(IHttpServer* pSender, CONNID dwConnID)
 	{
+		std::cout << __func__ << std::endl;
+
 		CStringA strSummary = GetHeaderSummary(pSender, dwConnID, "    ", 0, TRUE);
+
+		// create client
+		auto ptr_client = m_client_net_module->CreateHttpClientNet(pSender);
+
+		// add client actor
+		ptr_client->SetSid(dwConnID);
+		pSender->SetConnectionExtra(dwConnID, ptr_client.get());
+		m_thread_pool_module->AddActorToThreadCell(ptr_client);
 
 		return HPR_OK;
 	}
 
 	EnHttpParseResult OnBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 	{
-		/*
+		std::cout << __func__ << std::endl;
+
 		INetActor* ptr_client = nullptr;
 		if (pSender->GetConnectionExtra(dwConnID, reinterpret_cast<PVOID*>(&ptr_client)) == TRUE)
 		{
 			ptr_client->PushData(pData, iLength);
 		}
-		*/
 
 		return HPR_OK;
 	}
 
 	EnHttpParseResult OnMessageComplete(IHttpServer* pSender, CONNID dwConnID)
 	{
+		std::cout << __func__ << std::endl;
+
 		if (pSender->IsUpgrade(dwConnID))
 			return HPR_OK;
 
@@ -103,6 +117,7 @@ private:
 
 		THeader header[] = { {"Content-Type", "text/plain"}, {"Content-Length", strContentLength}, {"Set-Cookie", strSeqCookie1}, {"Set-Cookie", strSeqCookie2} };
 		int iHeaderCount = sizeof(header) / sizeof(THeader);
+		std::cout << "iHeaderCount: " << iHeaderCount << std::endl;
 
 		if (bSkipBody)
 		{
@@ -110,16 +125,12 @@ private:
 			iBodyLength = 0;
 		}
 
-		// create client
-		auto ptr_client = m_client_net_module->CreateHttpClientNet(pSender);
-
-		// add client actor
-		ptr_client->SetSid(dwConnID);
-		pSender->SetConnectionExtra(dwConnID, ptr_client.get());
-		m_thread_pool_module->AddActorToThreadCell(ptr_client);
+		// save path
+		std::string req_path(pSender->GetUrlField(dwConnID, HUF_PATH));
+		std::cout << req_path << std::endl;
 
 		// push data
-		ptr_client->PushData((BYTE*)strBody.c_str(), strBody.GetLength());
+		// ptr_client->PushData((BYTE*)strBody.c_str(), strBody.GetLength());
 
 		/*
 		pSender->SendResponse(dwConnID,

@@ -12,7 +12,6 @@ void ClientNetModule::Init()
 	m_client_pimpl = std::make_shared<ClientPimpl>();
 	m_client_pimpl->m_config_module = m_ptr_manager->GetModule<IConfigModule>();
 	m_client_pimpl->m_callback_module = m_ptr_manager->GetModule<INetCallbackModule>();
-	m_client_pimpl->m_proccess_module = m_ptr_manager->GetModule<INetProccessModule>();
 	m_client_pimpl->m_router_module = m_ptr_manager->GetModule<IMsgRouterModule>();
 	m_client_pimpl->m_server_obj_module = m_ptr_manager->GetModule<IServerObjModule>();
 	m_client_pimpl->m_client_net_module = m_ptr_manager->GetModule<IClientNetModule>();
