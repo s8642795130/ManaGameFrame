@@ -184,6 +184,21 @@ void ConfigFile::AnalysePluginList()
 
 void ConfigFile::PushBuiltInPlugin(const std::string& server_type, std::vector<std::shared_ptr<PluginData>>& vec_plugin_data)
 {
+	std::shared_ptr<PluginData> plugin_data_config = std::make_shared<PluginData>();
+	plugin_data_config->m_plugin = CONFIG_PLUGIN;
+	plugin_data_config->m_plugin_name = CONFIG_PLUGIN;
+	vec_plugin_data.push_back(plugin_data_config);
+
+	std::shared_ptr<PluginData> plugin_data_actor = std::make_shared<PluginData>();
+	plugin_data_actor->m_plugin = ACTOR_PLUGIN;
+	plugin_data_actor->m_plugin_name = ACTOR_PLUGIN;
+	vec_plugin_data.push_back(plugin_data_actor);
+
+	std::shared_ptr<PluginData> plugin_data_server_net = std::make_shared<PluginData>();
+	plugin_data_server_net->m_plugin = SERVER_NET_PLUGIN;
+	plugin_data_server_net->m_plugin_name = SERVER_NET_PLUGIN;
+	vec_plugin_data.push_back(plugin_data_server_net);
+
 	if (server_type.compare(STR_MASTER) == 0)
 	{
 		std::shared_ptr<PluginData> plugin_data_master = std::make_shared<PluginData>();
@@ -199,21 +214,6 @@ void ConfigFile::PushBuiltInPlugin(const std::string& server_type, std::vector<s
 		plugin_data_login->m_plugin_name = LOGIN_PLUGIN;
 		vec_plugin_data.push_back(plugin_data_login);
 	}
-
-	std::shared_ptr<PluginData> plugin_data_config = std::make_shared<PluginData>();
-	plugin_data_config->m_plugin = CONFIG_PLUGIN;
-	plugin_data_config->m_plugin_name = CONFIG_PLUGIN;
-	vec_plugin_data.push_back(plugin_data_config);
-
-	std::shared_ptr<PluginData> plugin_data_actor = std::make_shared<PluginData>();
-	plugin_data_actor->m_plugin = ACTOR_PLUGIN;
-	plugin_data_actor->m_plugin_name = ACTOR_PLUGIN;
-	vec_plugin_data.push_back(plugin_data_actor);
-
-	std::shared_ptr<PluginData> plugin_data_server_net = std::make_shared<PluginData>();
-	plugin_data_server_net->m_plugin = SERVER_NET_PLUGIN;
-	plugin_data_server_net->m_plugin_name = SERVER_NET_PLUGIN;
-	vec_plugin_data.push_back(plugin_data_server_net);
 }
 
 /// <summary>

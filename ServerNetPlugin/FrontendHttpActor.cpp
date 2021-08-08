@@ -14,6 +14,7 @@ void FrontendHttpActor::BackStream(const std::vector<char> stream)
 
 void FrontendHttpActor::SendStream(const std::vector<char> stream)
 {
+	std::cout << "FrontendHttpActor::SendStream" << std::endl;
 	// header
 	THeader header[] = { {"Content-Type", "text/plain"}, {"Content-Length", std::to_string(stream.size()).c_str()} };
 	int header_count = sizeof(header) / sizeof(THeader);
@@ -27,7 +28,7 @@ void FrontendHttpActor::SendStream(const std::vector<char> stream)
 		static_cast<int>(stream.size()));
 
 	// test code
-	m_ptr_http_sender->Disconnect(m_conn_id);
+	// m_ptr_http_sender->Disconnect(m_conn_id);
 }
 
 void FrontendHttpActor::SendData(const int major, const int minor, std::vector<char> value)
@@ -50,14 +51,17 @@ void FrontendHttpActor::SendData(const int major, const int minor, std::vector<c
 
 void FrontendHttpActor::ProcessIO()
 {
-	// int majorId = m_buffer->GetMajorId();
-	auto map_callback = m_client_impl->m_callback_module->GetHTTPCallbackMap();
+	auto map_callback = m_client_impl->m_callback_module->GetHttpCallbackMap();
 
 	// check
-	// if (map_callback.find(majorId) != std::cend(map_callback))
-	if (map_callback.find("/login") != std::cend(map_callback))
+	std::string path(m_ptr_http_sender->GetUrlField(m_conn_id, HUF_PATH));
+	std::string query(m_ptr_http_sender->GetUrlField(m_conn_id, HUF_QUERY));
+	std::string uuid(GetUUID());
+
+	// find path
+	if (map_callback.find(path) != std::cend(map_callback))
 	{
-		auto callback = map_callback["/login"];
-		callback->Trigger(m_client_impl->m_thread_pool_module, shared_from_this());
+		auto callback = map_callback[path];
+		callback->HttpTrigger(m_client_impl->m_thread_pool_module, shared_from_this(), uuid, path, query);
 	}
 }

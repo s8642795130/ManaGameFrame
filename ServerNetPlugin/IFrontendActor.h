@@ -42,7 +42,7 @@ public:
 		return ret;
 	}
 
-	virtual void ProcessIO()
+	virtual void ProcessIO() override
 	{
 		if (CheckClientIsLogin())
 		{
