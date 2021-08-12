@@ -66,8 +66,6 @@ private:
 
 	EnHttpParseResult OnMessageComplete(IHttpServer* pSender, CONNID dwConnID)
 	{
-		std::cout << __func__ << std::endl;
-
 		if (pSender->IsUpgrade(dwConnID))
 		{
 			return HPR_OK;
